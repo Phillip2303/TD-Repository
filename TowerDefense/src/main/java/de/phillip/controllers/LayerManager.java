@@ -2,6 +2,7 @@ package de.phillip.controllers;
 
 import de.phillip.controls.Constants;
 import de.phillip.controls.ResourcePool;
+import de.phillip.ui.ActionLayer;
 import de.phillip.ui.TerrainLayer;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
@@ -11,6 +12,7 @@ public class LayerManager {
 	
 	private Canvas backgroundLayer;
 	private Canvas terrainLayer;
+	private Canvas actionLayer;
 	private int level = 0;
 	private StackPane stackPane;
 	
@@ -26,9 +28,10 @@ public class LayerManager {
 	}
 	
 	private void createLevel() {
-		stackPane.getChildren().removeAll(backgroundLayer);
-		terrainLayer = new TerrainLayer(Constants.TERRAINLAYER_WIDTH*Constants.TILESIZE, Constants.TERRAINLAYER_HEIGHT*Constants.TILESIZE);
+		stackPane.getChildren().removeAll(backgroundLayer, terrainLayer, actionLayer);
+		terrainLayer = new TerrainLayer(Constants.TERRAINLAYER_WIDTH*Constants.TILESIZE, Constants.TERRAINLAYER_HEIGHT*Constants.TILESIZE, level);
+		actionLayer = new ActionLayer(Constants.TERRAINLAYER_WIDTH*Constants.TILESIZE, Constants.TERRAINLAYER_HEIGHT*Constants.TILESIZE, level);
 		StackPane.setAlignment(terrainLayer, Pos.TOP_LEFT);
-		stackPane.getChildren().addAll(backgroundLayer, terrainLayer);
+		stackPane.getChildren().addAll(backgroundLayer, terrainLayer, actionLayer);
 	}
 }

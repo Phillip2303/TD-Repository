@@ -13,8 +13,6 @@ public class TerrainTile extends Tile {
 
 	@Override
 	public void drawToCanvas(GraphicsContext gc) {
-		/*gc.setStroke(Color.RED);
-		gc.strokeRect(getPosX(), getPosY(), getWidth(), getHeight());*/
 		gc.drawImage(ResourcePool.getInstance().getTerrain(), 0, getID()*getHeight(), getWidth(), getHeight(), getPosX(), getPosY(), getWidth(), getHeight());
 	}
 
