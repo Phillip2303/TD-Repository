@@ -7,6 +7,7 @@ public class GameController {
 	
 	private GameLoopTimer gameLoopTimer;
 	private LayerManager layerManager;
+	private boolean isStarted;
 
 	public GameController(StackPane stackPane) {
 		layerManager = new LayerManager(stackPane);
@@ -14,11 +15,15 @@ public class GameController {
 
 			@Override
 			public void tic(float secondsSinceLastFrame) {
-				
+				layerManager.update(secondsSinceLastFrame);
 			}
-			
 		};
-		layerManager.nextLevel();
 	}
-
+	
+	public void startGame() {
+		if (!isStarted) {
+			gameLoopTimer.start();
+			isStarted = true;
+		}
+	}
 }

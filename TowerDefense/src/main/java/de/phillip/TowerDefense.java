@@ -23,6 +23,7 @@ public class TowerDefense extends Application {
 		primaryStage.setResizable(false);
 		primaryStage.setScene(createScene());
 		primaryStage.show();
+		gameController.startGame();
 	}
 	
 	public static void main(String[] args) {

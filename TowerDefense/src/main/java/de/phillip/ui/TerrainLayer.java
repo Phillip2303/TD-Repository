@@ -10,24 +10,16 @@ public class TerrainLayer extends Canvas {
 	private int layerHeight;
 	private Tile[][] terrainTiles;
 	private Tile[][] paths;
+	private int level;
 	
 	public TerrainLayer(int width, int height, int level) {
 		super(width, height);
+		this.level = level;
 		terrainTiles = ResourcePool.getInstance().getTerrainTiles(level);
 		paths = ResourcePool.getInstance().getPaths(level);
 		layerWidth = Constants.TERRAINLAYER_WIDTH;
 		layerHeight = Constants.TERRAINLAYER_HEIGHT;
-		//defineLayer();
 		showLayer();
-	}
-	
-	private void defineLayer() {
-		terrainTiles = new Tile[layerHeight][layerWidth];
-		for(int y = 0; y < terrainTiles.length; y++) {
-			for (int x = 0; x < terrainTiles[y].length; x++) {
-				terrainTiles[y][x] = new TerrainTile(x*Constants.TILESIZE, y*Constants.TILESIZE, 0 ,Constants.TILESIZE);
-			}
-		}
 	}
 	
 	private void showLayer() {
@@ -36,5 +28,12 @@ public class TerrainLayer extends Canvas {
 				terrainTiles[y][x].drawToCanvas(getGraphicsContext2D());
 			}
 		}
+	}
+	
+	public void setLevel(int level) { 
+		this.level = level;
+		terrainTiles = ResourcePool.getInstance().getTerrainTiles(level);
+		paths = ResourcePool.getInstance().getPaths(level);
+		showLayer();
 	}
 }
