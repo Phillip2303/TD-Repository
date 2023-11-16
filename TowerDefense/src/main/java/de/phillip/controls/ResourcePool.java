@@ -34,7 +34,7 @@ public class ResourcePool {
 	public void loadResources() {
 		background = new Image(getClass().getResource("/assets/images/background.png").toString());
 		terrain = new Image(getClass().getResource("/assets/images/tiles/terrain.png").toString());
-		enemy1 = new Image(getClass().getResource("/assets/images/enemies/enemy-red-1.png").toString());
+		enemy1 = new Image(getClass().getResource("/assets/images/enemies/enemy-red-3.png").toString());
 		terrainTiles1 = new Tile[Constants.TERRAINLAYER_HEIGHT][Constants.TERRAINLAYER_WIDTH];
 		try (InputStream input = getClass().getResourceAsStream("/assets/maps/terrain1.pxt")) {
 			try(Scanner scanner = new Scanner(input)) {

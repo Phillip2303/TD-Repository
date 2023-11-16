@@ -9,14 +9,12 @@ public class TerrainLayer extends Canvas {
 	private int layerWidth;
 	private int layerHeight;
 	private Tile[][] terrainTiles;
-	private Tile[][] paths;
 	private int level;
 	
 	public TerrainLayer(int width, int height, int level) {
 		super(width, height);
 		this.level = level;
 		terrainTiles = ResourcePool.getInstance().getTerrainTiles(level);
-		paths = ResourcePool.getInstance().getPaths(level);
 		layerWidth = Constants.TERRAINLAYER_WIDTH;
 		layerHeight = Constants.TERRAINLAYER_HEIGHT;
 		showLayer();
@@ -33,7 +31,6 @@ public class TerrainLayer extends Canvas {
 	public void setLevel(int level) { 
 		this.level = level;
 		terrainTiles = ResourcePool.getInstance().getTerrainTiles(level);
-		paths = ResourcePool.getInstance().getPaths(level);
 		showLayer();
 	}
 }

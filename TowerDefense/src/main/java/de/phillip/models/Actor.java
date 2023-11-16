@@ -10,7 +10,7 @@ public abstract class Actor {
 	private double width;
 	private double height;
 	private Point2D position;
-	private float rotation;
+	private double rotation;
 	private Point2D currentThrustVector = new Point2D(0, 0);
 	
 	public Actor(double width, double height) {
@@ -48,7 +48,7 @@ public abstract class Actor {
 		return height;
 	}
 
-	public void setRotation(float rotation) {
+	public void setRotation(double rotation) {
 		this.rotation = rotation;
 	}
 
@@ -69,7 +69,7 @@ public abstract class Actor {
 	}
 
 	public void setCurrentThrustVector(double value) {
-		currentThrustVector = calculateNewThrust(value, Math.toRadians(getRotation()));
+		currentThrustVector = calculateNewThrust(value, Math.toRadians(-getRotation()));
 	}
 	
 	public void setCurrentThrustVector(Point2D currentThrustVector) {
