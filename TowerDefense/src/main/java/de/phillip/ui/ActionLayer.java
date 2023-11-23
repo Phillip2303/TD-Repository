@@ -51,7 +51,7 @@ public class ActionLayer extends Canvas {
 		if (isPath(enemy, speed)) {
 			enemy.setRotation(enemy.getRotation());
 		} else {
-			enemy.setRotation(180);
+			enemy.setRotation(getNewRotation(enemy));
 		}
 		enemy.setCurrentThrustVector(speed);
 		enemy.update();
@@ -61,22 +61,60 @@ public class ActionLayer extends Canvas {
 		return enemies;
 	}
 	
-	public boolean isPath(Enemy enemy, double speed) {
-		Point2D newPosition = enemy.getCenter().
+	private boolean isPath(Enemy enemy, double speed) {
+		Point2D futurePosition = enemy.getCenter().
 				add(enemy.calculateNewThrust(speed, Math.toRadians(-enemy.getRotation())));
-		for(int y = 0; y < paths.length; y++) {
-			for (int x = 0; x < paths[y].length; x++) {
-				int posX = paths[y][x].getPosX() + Constants.TILESIZE / 2;
-				int posY = paths[y][x].getPosY() + Constants.TILESIZE / 2;
-				if (posX == newPosition.getX() && posY == newPosition.getY()) {
-					int ID = paths[y][x].getID();
-					System.out.println("PosX: " + posX + " PosY: " + posY + " ID: " + ID);
-					if (ID == 1) {
-						return true;
-					}
-				}
-			}
+		Point2D tilePosition = calculateTilePosition(futurePosition, enemy.getRotation());
+		if (paths[(int) tilePosition.getY()][(int) tilePosition.getX()].getID() == 1) {
+			return true;
 		}
 		return false;
+	}
+	
+	private double getNewRotation(Enemy enemy) {
+		Point2D tilePosition = calculateTilePosition(enemy.getCenter(), enemy.getRotation());
+		double rotation = 0;
+		switch ((int) enemy.getRotation()) {
+		case 0, 180:
+			if (paths[(int) tilePosition.getY()][(int) tilePosition.getX() - 1].getID() == 1) {
+				rotation = 90;
+			} else {
+				rotation = 270;
+			}
+			break;
+		case 90, 270:
+			if (paths[(int) tilePosition.getY() - 1][(int) tilePosition.getX()].getID() == 1) {
+				rotation = 180;
+			} else {
+				rotation = 0;
+			}
+			break;
+		}
+		return rotation;
+	}
+	
+	private Point2D calculateTilePosition(Point2D point, double rotation) {
+		int xIndex = 0, yIndex = 0;
+		int x = (int) point.getX();
+		int y = (int) point.getY();
+		switch ((int) rotation) {
+		case 0: 
+			yIndex = (y + Constants.TILESIZE/2)/Constants.TILESIZE;
+			xIndex = x/Constants.TILESIZE;
+			break;
+		case 90:
+			xIndex = (x - Constants.TILESIZE/2)/Constants.TILESIZE;
+			yIndex = y/Constants.TILESIZE;
+			break;
+		case 180:
+			yIndex = (y - Constants.TILESIZE/2)/Constants.TILESIZE;
+			xIndex = x/Constants.TILESIZE;
+			break;
+		case 270:
+			xIndex = (x + Constants.TILESIZE/2)/Constants.TILESIZE;
+			yIndex = y/Constants.TILESIZE;
+			break;
+		}
+		return new Point2D(xIndex, yIndex);
 	}
 }
