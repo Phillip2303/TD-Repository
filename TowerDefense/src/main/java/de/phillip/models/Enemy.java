@@ -2,13 +2,19 @@ package de.phillip.models;
 
 import de.phillip.controls.Constants;
 import de.phillip.controls.ResourcePool;
+import javafx.animation.FadeTransition;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
+import javafx.util.Duration;
 
 public class Enemy extends Actor {
 	
 	private int spriteIndex;
 	private int tic;
 	private static final int ANIMATION = 10; 
+	private boolean reachedEnd;
+	private boolean isOff;
 
 	public Enemy(double width, double height) {
 		super(width, height);
@@ -16,7 +22,13 @@ public class Enemy extends Actor {
 
 	@Override
 	public void drawToCanvas(GraphicsContext gc) {
-		gc.drawImage(ResourcePool.getInstance().getEnemy(1), 0, spriteIndex*Constants.TILESIZE, getWidth(), getHeight(), getDrawPosition().getX(), getDrawPosition().getY(), getWidth(), getHeight());
+		if (reachedEnd) {
+			gc.setGlobalAlpha(0.5);
+		} else {
+			gc.setGlobalAlpha(1.0);
+		}
+		gc.drawImage(ResourcePool.getInstance().getEnemy(1), 0, spriteIndex*Constants.TILESIZE, getWidth(), 
+				getHeight(), getDrawPosition().getX(), getDrawPosition().getY(), getWidth(), getHeight());
 	}
 	
 	private void updateSpriteIndex() {
@@ -33,5 +45,25 @@ public class Enemy extends Actor {
 	public void update() {
 		super.update();
 		updateSpriteIndex();
+	}
+	
+	public void setReachedEnd() {
+		reachedEnd = true;
+	}
+	
+	public boolean hasReachedEnd() {
+		return reachedEnd;
+	}
+	
+	public void leavePath(double speed) {
+		setCurrentThrustVector(speed);
+		update();
+		if (getDrawPosition().getX() > Constants.TILESIZE * Constants.TERRAINLAYER_WIDTH + Constants.TILESIZE) {
+			isOff = true;
+		}
+	}
+	
+	public boolean getIsOff() {
+		return isOff;
 	}
 }

@@ -46,15 +46,31 @@ public class ActionLayer extends Canvas {
 	}
 	
 	public void update(float secondsSinceLastFrame) {
-		double speed = speedLevel*secondsSinceLastFrame;
-		//check for path
-		if (isPath(enemy, speed)) {
-			enemy.setRotation(enemy.getRotation());
-		} else {
-			enemy.setRotation(getNewRotation(enemy));
+		if (enemy == null) {
+			return;
 		}
-		enemy.setCurrentThrustVector(speed);
-		enemy.update();
+		double speed = speedLevel*secondsSinceLastFrame;
+		Point2D currentPosition = calculateTilePosition(enemy.getCenter(), enemy.getRotation());
+		if (!enemy.hasReachedEnd() && paths[(int) currentPosition.getY()][(int) currentPosition.getX()].getID() == 9) {
+			enemy.setReachedEnd();
+			enemy.leavePath(speed);
+		} else {
+			if (!enemy.hasReachedEnd()) {
+				//check for path
+				if (!isPath(enemy, speed)) {
+					enemy.setRotation(getNewRotation(enemy));
+					//enemy.setRotation(enemy.getRotation());
+				}
+				enemy.setCurrentThrustVector(speed);
+				enemy.update();
+			} else {
+				enemy.leavePath(speed);
+			}
+		}
+		if (enemy.getIsOff()) {
+			enemies.remove(enemy);
+			enemy = null;
+		}
 	}
 
 	public List<Enemy> getEnemies() {
