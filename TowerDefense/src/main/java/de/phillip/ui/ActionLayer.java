@@ -3,6 +3,7 @@ package de.phillip.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.phillip.controllers.WaveController;
 import de.phillip.controls.Constants;
 import de.phillip.controls.ResourcePool;
 import de.phillip.models.Enemy;
@@ -18,6 +19,7 @@ public class ActionLayer extends Canvas {
 	private List<Enemy> enemies;
 	private int speedLevel = 85;
 	private Tile[][] paths;
+	private WaveController waveController;
 
 	public ActionLayer(double width, double height, int level) {
 		super(width, height);
@@ -27,7 +29,7 @@ public class ActionLayer extends Canvas {
 		layerHeight = Constants.TERRAINLAYER_HEIGHT;
 		paths = ResourcePool.getInstance().getPaths(level);
 		defineLayer();
-		//showLayer();
+		waveController = new WaveController();
 	}
 	
 	public void defineLayer() {
@@ -35,14 +37,11 @@ public class ActionLayer extends Canvas {
 		enemy.setDrawPosition(6*Constants.TILESIZE, 0*Constants.TILESIZE);
 		enemies.add(enemy);
 	}
-	
-	/*public void showLayer() {
-		enemy.drawToCanvas(getGraphicsContext2D());
-	}*/
 
 	public void setLevel(int level) { 
 		this.level = level;
 		paths = ResourcePool.getInstance().getPaths(level);
+		waveController.setLevel(level);
 	}
 	
 	public void update(float secondsSinceLastFrame) {

@@ -1,10 +1,13 @@
 package de.phillip.controls;
 
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -34,7 +37,7 @@ public class ResourcePool {
 	public void loadResources() {
 		background = new Image(getClass().getResource("/assets/images/background.png").toString());
 		terrain = new Image(getClass().getResource("/assets/images/tiles/terrain.png").toString());
-		enemy1 = new Image(getClass().getResource("/assets/images/enemies/enemy-red-3.png").toString());
+	//	enemy1 = new Image(getClass().getResource("/assets/images/enemies/enemy-red.png").toString());
 		terrainTiles1 = new Tile[Constants.TERRAINLAYER_HEIGHT][Constants.TERRAINLAYER_WIDTH];
 		try (InputStream input = getClass().getResourceAsStream("/assets/maps/terrain1.pxt")) {
 			try(Scanner scanner = new Scanner(input)) {
@@ -108,6 +111,25 @@ public class ResourcePool {
 		default:
 			return null;
 		}
+	}
+	
+	public Image getEnemySprite(String resourcePath) {
+		return new Image(getClass().getResource(resourcePath).toString());
+	}
+	
+	public File loadLevelResource(int level) {
+		String resourcePath = "assets/level/enemy" + level + ".json";
+		URL url = getClass().getClassLoader().getResource(resourcePath);
+		if (url == null) {
+			throw new IllegalArgumentException("file not found: " + resourcePath);
+		} else {
+			try {
+				return new File(url.toURI());
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
 	}
 }
 
