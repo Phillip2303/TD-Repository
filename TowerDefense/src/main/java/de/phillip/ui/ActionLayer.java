@@ -7,6 +7,7 @@ import de.phillip.controllers.WaveController;
 import de.phillip.controls.Constants;
 import de.phillip.controls.ResourcePool;
 import de.phillip.models.Enemy;
+import de.phillip.rendering.Renderer;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 
@@ -16,27 +17,28 @@ public class ActionLayer extends Canvas {
 	private int layerHeight;
 	Enemy enemy;
 	private int level;
-	private List<Enemy> enemies;
 	private int speedLevel = 85;
 	private Tile[][] paths;
 	private WaveController waveController;
+	private Renderer renderer;
 
 	public ActionLayer(double width, double height, int level) {
 		super(width, height);
-		enemies = new ArrayList<Enemy>();
+		renderer = new Renderer(getGraphicsContext2D());
 		this.level = level;
 		layerWidth = Constants.TERRAINLAYER_WIDTH;
 		layerHeight = Constants.TERRAINLAYER_HEIGHT;
 		paths = ResourcePool.getInstance().getPaths(level);
-		defineLayer();
+		//defineLayer();
 		waveController = new WaveController();
+		waveController.setLevel(level);
 	}
 	
-	public void defineLayer() {
+	/*public void defineLayer() {
 		enemy = new Enemy(Constants.TILESIZE, Constants.TILESIZE);
 		enemy.setDrawPosition(6*Constants.TILESIZE, 0*Constants.TILESIZE);
 		enemies.add(enemy);
-	}
+	}*/
 
 	public void setLevel(int level) { 
 		this.level = level;
@@ -45,35 +47,42 @@ public class ActionLayer extends Canvas {
 	}
 	
 	public void update(float secondsSinceLastFrame) {
-		if (enemy == null) {
-			return;
-		}
-		double speed = speedLevel*secondsSinceLastFrame;
-		Point2D currentPosition = calculateTilePosition(enemy.getCenter(), enemy.getRotation());
-		if (!enemy.hasReachedEnd() && paths[(int) currentPosition.getY()][(int) currentPosition.getX()].getID() == 9) {
-			enemy.setReachedEnd();
-			enemy.leavePath(speed);
-		} else {
-			if (!enemy.hasReachedEnd()) {
-				//check for path
-				if (!isPath(enemy, speed)) {
-					enemy.setRotation(getNewRotation(enemy));
-					//enemy.setRotation(enemy.getRotation());
-				}
-				enemy.setCurrentThrustVector(speed);
-				enemy.update();
-			} else {
-				enemy.leavePath(speed);
+		renderer.prepare();
+		updateEnemies(secondsSinceLastFrame);
+		renderer.render();
+	}
+	
+	public void updateEnemies(float secondsSinceLastFrame) {
+		if (waveController.hasMoreEnemies()) {
+			Enemy newEnemy = waveController.getEnemy(secondsSinceLastFrame);
+			if (newEnemy != null) {
+				renderer.getActors().add(newEnemy);
 			}
 		}
-		if (enemy.getIsOff()) {
-			enemies.remove(enemy);
-			enemy = null;
-		}
-	}
-
-	public List<Enemy> getEnemies() {
-		return enemies;
+		renderer.getActors().forEach(actor -> {
+			double speed = speedLevel*secondsSinceLastFrame;
+			Enemy enemy = (Enemy) actor;
+			Point2D currentPosition = calculateTilePosition(enemy.getCenter(), enemy.getRotation());
+			if (!enemy.hasReachedEnd() && paths[(int) currentPosition.getY()][(int) currentPosition.getX()].getID() == 9) {
+				enemy.setReachedEnd();
+				enemy.leavePath(speed);
+			} else {
+				if (!enemy.hasReachedEnd()) {
+					//check for path
+					if (!isPath(enemy, speed)) {
+						enemy.setRotation(getNewRotation(enemy));
+						//enemy.setRotation(enemy.getRotation());
+					}
+					enemy.setCurrentThrustVector(speed);
+					enemy.update();
+				} else {
+					enemy.leavePath(speed);
+				}
+			}
+			if (enemy.getIsOff()) {
+				enemy = null;
+			}
+		});
 	}
 	
 	private boolean isPath(Enemy enemy, double speed) {

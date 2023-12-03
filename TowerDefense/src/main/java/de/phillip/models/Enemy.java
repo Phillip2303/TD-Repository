@@ -2,6 +2,7 @@ package de.phillip.models;
 
 import de.phillip.controls.Constants;
 import de.phillip.controls.ResourcePool;
+import de.phillip.models.transferObjects.WaveBlockTO;
 import javafx.animation.FadeTransition;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -15,9 +16,11 @@ public class Enemy extends Actor {
 	private static final int ANIMATION = 10; 
 	private boolean reachedEnd;
 	private boolean isOff;
+	private WaveBlockTO waveBlock;
 
-	public Enemy(double width, double height) {
+	public Enemy(double width, double height, WaveBlockTO waveBlock) {
 		super(width, height);
+		this.waveBlock = waveBlock;
 	}
 
 	@Override
@@ -27,7 +30,7 @@ public class Enemy extends Actor {
 		} else {
 			gc.setGlobalAlpha(1.0);
 		}
-		gc.drawImage(ResourcePool.getInstance().getEnemy(1), 0, spriteIndex*Constants.TILESIZE, getWidth(), 
+		gc.drawImage(waveBlock.getSprite(), 0, spriteIndex*Constants.TILESIZE, getWidth(), 
 				getHeight(), getDrawPosition().getX(), getDrawPosition().getY(), getWidth(), getHeight());
 	}
 	

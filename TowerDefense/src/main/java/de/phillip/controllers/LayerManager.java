@@ -17,7 +17,6 @@ public class LayerManager {
 	private ActionLayer actionLayer;
 	private int level = 1;
 	private StackPane stackPane;
-	private Renderer renderer;
 	
 	public LayerManager(StackPane stackPane) {
 		this.stackPane = stackPane;
@@ -28,8 +27,6 @@ public class LayerManager {
 		StackPane.setAlignment(terrainLayer, Pos.TOP_LEFT);
 		StackPane.setAlignment(actionLayer, Pos.TOP_LEFT);
 		stackPane.getChildren().addAll(backgroundLayer, terrainLayer, actionLayer);
-		renderer = new Renderer(actionLayer.getGraphicsContext2D());
-		renderer.getActors().addAll(actionLayer.getEnemies());
 	}
 	
 	public void nextLevel() {
@@ -39,8 +36,6 @@ public class LayerManager {
 	}
 	
 	public void update(float secondsSinceLastFrame) {
-		renderer.prepare();
 		actionLayer.update(secondsSinceLastFrame);
-		renderer.render();
 	}
 }

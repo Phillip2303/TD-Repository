@@ -2,22 +2,22 @@
   "waveBlocks" : [ {
     "speed" : 85,
     "health" : 5,
-    "imagePath" : "/assets/images/level/enemy-red.png",
+    "imagePath" : "/assets/images/enemies/enemy-red.png",
     "amount" : 10
   }, {
     "speed" : 85,
     "health" : 10,
-    "imagePath" : "/assets/images/level/enemy-blue.png",
+    "imagePath" : "/assets/images/enemies/enemy-blue.png",
     "amount" : 10
   }, {
     "speed" : 85,
     "health" : 15,
-    "imagePath" : "/assets/images/level/enemy-green.png",
+    "imagePath" : "/assets/images/enemies/enemy-green.png",
     "amount" : 10
   }, {
     "speed" : 85,
     "health" : 20,
-    "imagePath" : "/assets/images/level/enemy-yellow.png",
+    "imagePath" : "/assets/images/enemies/enemy-yellow.png",
     "amount" : 10
   } ],
   "waveCount" : 4

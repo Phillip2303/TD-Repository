@@ -1,5 +1,7 @@
 package de.phillip.models.transferObjects;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javafx.scene.image.Image;
 
 public class WaveBlockTO {
@@ -8,6 +10,7 @@ public class WaveBlockTO {
 	 private int health;
 	 private String imagePath;
 	 private int amount;
+	 @JsonIgnore
 	 private Image sprite;
 	 
 	 public WaveBlockTO() {

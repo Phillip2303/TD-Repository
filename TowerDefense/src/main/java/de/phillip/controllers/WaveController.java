@@ -18,8 +18,9 @@ import javafx.scene.image.Image;
 public class WaveController {
 	
 	private int level;
-	private WaveBlockTO waveBlock;
 	private WaveTO wave;
+	private int blockIndex, enemyIndex;
+	private float enemyDelay;
 
 	public WaveController() {
 
@@ -36,10 +37,10 @@ public class WaveController {
 			Image image = ResourcePool.getInstance().getEnemySprite(b.getImagePath());
 			b.setSprite(image);
 		});
-		WaveBlockTO firstWaveBlock = wave.getWaveBlocks().get(0);
+		/*WaveBlockTO firstWaveBlock = wave.getWaveBlocks().get(0);
 		for (int x = 0; x < firstWaveBlock.getAmount(); x++) {
 			Enemy enemy = new Enemy(Constants.TILESIZE, Constants.TILESIZE);
-		}
+		}*/
 	}
 	
 	private void loadLevelResource() {
@@ -57,6 +58,32 @@ public class WaveController {
 
 	public int getLevel() {
 		return level;
+	}
+	
+	public boolean hasMoreEnemies() {
+		if (blockIndex < wave.getWaveCount()) {
+			WaveBlockTO waveBlock = wave.getWaveBlocks().get(blockIndex);
+			if (enemyIndex < waveBlock.getAmount()) {
+				return true;
+			} 
+		}
+		return false;
+	}
+	
+	public Enemy getEnemy(float secondsSinceLastFrame) {
+		enemyDelay += secondsSinceLastFrame;
+		if (enemyDelay > 0.5) {
+			Enemy enemy = new Enemy(Constants.TILESIZE, Constants.TILESIZE, wave.getWaveBlocks().get(blockIndex));
+			enemy.setDrawPosition(6*Constants.TILESIZE, 0*Constants.TILESIZE);
+			enemyIndex++;
+			if (enemyIndex >= wave.getWaveBlocks().get(blockIndex).getAmount()) {
+				enemyIndex = 0;
+				blockIndex++;
+			}
+			enemyDelay = 0;
+			return enemy;
+		}
+		return null;
 	}
 
 }
