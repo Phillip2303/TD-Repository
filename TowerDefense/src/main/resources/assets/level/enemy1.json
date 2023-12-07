@@ -20,5 +20,7 @@
     "imagePath" : "/assets/images/enemies/enemy-yellow.png",
     "amount" : 10
   } ],
-  "waveCount" : 4
+  "waveCount" : 4,
+  "blockDelay": 5,
+  "enemyDelay": 0.5
 }

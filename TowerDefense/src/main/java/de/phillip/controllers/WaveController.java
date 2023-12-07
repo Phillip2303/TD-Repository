@@ -21,6 +21,7 @@ public class WaveController {
 	private WaveTO wave;
 	private int blockIndex, enemyIndex;
 	private float enemyDelay;
+	private float blockDelay;
 
 	public WaveController() {
 
@@ -72,16 +73,20 @@ public class WaveController {
 	
 	public Enemy getEnemy(float secondsSinceLastFrame) {
 		enemyDelay += secondsSinceLastFrame;
-		if (enemyDelay > 0.5) {
-			Enemy enemy = new Enemy(Constants.TILESIZE, Constants.TILESIZE, wave.getWaveBlocks().get(blockIndex));
-			enemy.setDrawPosition(6*Constants.TILESIZE, 0*Constants.TILESIZE);
-			enemyIndex++;
-			if (enemyIndex >= wave.getWaveBlocks().get(blockIndex).getAmount()) {
-				enemyIndex = 0;
-				blockIndex++;
+		blockDelay += secondsSinceLastFrame;
+		if (blockDelay > wave.getBlockDelay()) {
+			if (enemyDelay > wave.getEnemyDelay()) {
+				Enemy enemy = new Enemy(Constants.TILESIZE, Constants.TILESIZE, wave.getWaveBlocks().get(blockIndex));
+				enemy.setDrawPosition(6*Constants.TILESIZE, 0*Constants.TILESIZE);
+				enemyIndex++;
+				if (enemyIndex >= wave.getWaveBlocks().get(blockIndex).getAmount()) {
+					enemyIndex = 0;
+					blockIndex++;
+					blockDelay = 0;
+				}
+				enemyDelay = 0;
+				return enemy;
 			}
-			enemyDelay = 0;
-			return enemy;
 		}
 		return null;
 	}

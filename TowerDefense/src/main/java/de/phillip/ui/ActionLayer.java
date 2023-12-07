@@ -15,7 +15,6 @@ public class ActionLayer extends Canvas {
 	
 	private int layerWidth;
 	private int layerHeight;
-	Enemy enemy;
 	private int level;
 	private int speedLevel = 85;
 	private Tile[][] paths;
@@ -79,10 +78,8 @@ public class ActionLayer extends Canvas {
 					enemy.leavePath(speed);
 				}
 			}
-			if (enemy.getIsOff()) {
-				enemy = null;
-			}
 		});
+		renderer.getActors().removeIf(b -> ((Enemy)b).getIsOff());
 	}
 	
 	private boolean isPath(Enemy enemy, double speed) {
@@ -97,6 +94,7 @@ public class ActionLayer extends Canvas {
 	
 	private double getNewRotation(Enemy enemy) {
 		Point2D tilePosition = calculateTilePosition(enemy.getCenter(), enemy.getRotation());
+		double presentRotation = enemy.getRotation();
 		double rotation = 0;
 		switch ((int) enemy.getRotation()) {
 		case 0, 180:
@@ -113,6 +111,12 @@ public class ActionLayer extends Canvas {
 				rotation = 0;
 			}
 			break;
+		default:
+			System.out.println("Default");
+			break;
+		}
+		if ((rotation + 90 > presentRotation) || (rotation - 90 > presentRotation)) {
+			System.out.println("Error");
 		}
 		return rotation;
 	}
@@ -137,6 +141,9 @@ public class ActionLayer extends Canvas {
 		case 270:
 			xIndex = (x + Constants.TILESIZE/2)/Constants.TILESIZE;
 			yIndex = y/Constants.TILESIZE;
+			break;
+		default:
+			System.out.println("Calculate Tile Position");
 			break;
 		}
 		return new Point2D(xIndex, yIndex);
