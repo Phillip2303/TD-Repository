@@ -1,9 +1,7 @@
 package de.phillip.controllers;
 
-import de.phillip.animation.GameLoopTimer;
 import de.phillip.controls.Constants;
 import de.phillip.controls.ResourcePool;
-import de.phillip.rendering.Renderer;
 import de.phillip.ui.ActionLayer;
 import de.phillip.ui.TerrainLayer;
 import javafx.geometry.Pos;
@@ -16,10 +14,8 @@ public class LayerManager {
 	private TerrainLayer terrainLayer;
 	private ActionLayer actionLayer;
 	private int level = 1;
-	private StackPane stackPane;
 	
 	public LayerManager(StackPane stackPane) {
-		this.stackPane = stackPane;
 		backgroundLayer = new Canvas(1012, 1012);
 		backgroundLayer.getGraphicsContext2D().drawImage(ResourcePool.getInstance().getBackground(), 0, 0);
 		terrainLayer = new TerrainLayer(Constants.TERRAINLAYER_WIDTH*Constants.TILESIZE, Constants.TERRAINLAYER_HEIGHT*Constants.TILESIZE, level);

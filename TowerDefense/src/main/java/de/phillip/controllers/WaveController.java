@@ -1,10 +1,8 @@
 package de.phillip.controllers;
 
 import java.io.IOException;
-import java.util.List;
 
 import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -30,18 +28,14 @@ public class WaveController {
 	public void setLevel(int level) {
 		this.level = level;
 		loadLevelResource();
-		createBlockEnemies();
+		createBlockSprites();
 	}
 	
-	private void createBlockEnemies() {
+	private void createBlockSprites() {
 		wave.getWaveBlocks().forEach(b -> {
 			Image image = ResourcePool.getInstance().getEnemySprite(b.getImagePath());
 			b.setSprite(image);
 		});
-		/*WaveBlockTO firstWaveBlock = wave.getWaveBlocks().get(0);
-		for (int x = 0; x < firstWaveBlock.getAmount(); x++) {
-			Enemy enemy = new Enemy(Constants.TILESIZE, Constants.TILESIZE);
-		}*/
 	}
 	
 	private void loadLevelResource() {
@@ -62,8 +56,8 @@ public class WaveController {
 	}
 	
 	public boolean hasMoreEnemies() {
-		if (blockIndex < wave.getWaveCount()) {
-			WaveBlockTO waveBlock = wave.getWaveBlocks().get(blockIndex);
+		for (int i = blockIndex; i < wave.getWaveCount(); i++) {
+			WaveBlockTO waveBlock = wave.getWaveBlocks().get(i);
 			if (enemyIndex < waveBlock.getAmount()) {
 				return true;
 			} 
@@ -76,18 +70,26 @@ public class WaveController {
 		blockDelay += secondsSinceLastFrame;
 		if (blockDelay > wave.getBlockDelay()) {
 			if (enemyDelay > wave.getEnemyDelay()) {
-				Enemy enemy = new Enemy(Constants.TILESIZE, Constants.TILESIZE, wave.getWaveBlocks().get(blockIndex));
-				enemy.setDrawPosition(6*Constants.TILESIZE, 0*Constants.TILESIZE);
-				enemyIndex++;
-				if (enemyIndex >= wave.getWaveBlocks().get(blockIndex).getAmount()) {
+				if (wave.getWaveBlocks().get(blockIndex).getAmount() > 0) {
+					Enemy enemy = new Enemy(Constants.TILESIZE, Constants.TILESIZE, wave.getWaveBlocks().get(blockIndex));
+					enemy.setDrawPosition(6*Constants.TILESIZE, 0*Constants.TILESIZE);
+					enemy.setIndex(enemyIndex);
+					enemyIndex++;
+					if (enemyIndex >= wave.getWaveBlocks().get(blockIndex).getAmount()) {
+						enemyIndex = 0;
+						blockIndex++;
+						blockDelay = 0;
+					}
+					enemyDelay = 0;
+					return enemy;
+				} else {
 					enemyIndex = 0;
 					blockIndex++;
 					blockDelay = 0;
 				}
-				enemyDelay = 0;
-				return enemy;
 			}
 		}
+		
 		return null;
 	}
 

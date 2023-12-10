@@ -7,13 +7,11 @@ import de.phillip.controls.Constants;
 import de.phillip.models.Actor;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.transform.Rotate;
 
 public class Renderer {
 
 	private GraphicsContext graphicsContext;
-	private Image background;
 	private List<Actor> actors = new ArrayList<>();
 	
 	public Renderer(GraphicsContext graphicsContext) {

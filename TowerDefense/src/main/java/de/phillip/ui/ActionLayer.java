@@ -1,8 +1,5 @@
 package de.phillip.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.phillip.controllers.WaveController;
 import de.phillip.controls.Constants;
 import de.phillip.controls.ResourcePool;
@@ -28,16 +25,9 @@ public class ActionLayer extends Canvas {
 		layerWidth = Constants.TERRAINLAYER_WIDTH;
 		layerHeight = Constants.TERRAINLAYER_HEIGHT;
 		paths = ResourcePool.getInstance().getPaths(level);
-		//defineLayer();
 		waveController = new WaveController();
 		waveController.setLevel(level);
 	}
-	
-	/*public void defineLayer() {
-		enemy = new Enemy(Constants.TILESIZE, Constants.TILESIZE);
-		enemy.setDrawPosition(6*Constants.TILESIZE, 0*Constants.TILESIZE);
-		enemies.add(enemy);
-	}*/
 
 	public void setLevel(int level) { 
 		this.level = level;
@@ -47,17 +37,12 @@ public class ActionLayer extends Canvas {
 	
 	public void update(float secondsSinceLastFrame) {
 		renderer.prepare();
+		checkForNewEnemies(secondsSinceLastFrame);
 		updateEnemies(secondsSinceLastFrame);
 		renderer.render();
 	}
 	
-	public void updateEnemies(float secondsSinceLastFrame) {
-		if (waveController.hasMoreEnemies()) {
-			Enemy newEnemy = waveController.getEnemy(secondsSinceLastFrame);
-			if (newEnemy != null) {
-				renderer.getActors().add(newEnemy);
-			}
-		}
+	private void updateEnemies(float secondsSinceLastFrame) {
 		renderer.getActors().forEach(actor -> {
 			double speed = speedLevel*secondsSinceLastFrame;
 			Enemy enemy = (Enemy) actor;
@@ -70,7 +55,6 @@ public class ActionLayer extends Canvas {
 					//check for path
 					if (!isPath(enemy, speed)) {
 						enemy.setRotation(getNewRotation(enemy));
-						//enemy.setRotation(enemy.getRotation());
 					}
 					enemy.setCurrentThrustVector(speed);
 					enemy.update();
@@ -82,11 +66,20 @@ public class ActionLayer extends Canvas {
 		renderer.getActors().removeIf(b -> ((Enemy)b).getIsOff());
 	}
 	
+	private void checkForNewEnemies(float secondsSinceLastFrame) {
+		if (waveController.hasMoreEnemies()) {
+			Enemy newEnemy = waveController.getEnemy(secondsSinceLastFrame);
+			if (newEnemy != null) {
+				renderer.getActors().add(newEnemy);
+			}
+		}
+	}
+	
 	private boolean isPath(Enemy enemy, double speed) {
 		Point2D futurePosition = enemy.getCenter().
 				add(enemy.calculateNewThrust(speed, Math.toRadians(-enemy.getRotation())));
 		Point2D tilePosition = calculateTilePosition(futurePosition, enemy.getRotation());
-		if (paths[(int) tilePosition.getY()][(int) tilePosition.getX()].getID() == 1) {
+		if (paths[(int) tilePosition.getY()][(int) tilePosition.getX()].getID() == 1 || paths[(int) tilePosition.getY()][(int) tilePosition.getX()].getID() == 9) {
 			return true;
 		}
 		return false;
@@ -94,7 +87,6 @@ public class ActionLayer extends Canvas {
 	
 	private double getNewRotation(Enemy enemy) {
 		Point2D tilePosition = calculateTilePosition(enemy.getCenter(), enemy.getRotation());
-		double presentRotation = enemy.getRotation();
 		double rotation = 0;
 		switch ((int) enemy.getRotation()) {
 		case 0, 180:
@@ -114,9 +106,6 @@ public class ActionLayer extends Canvas {
 		default:
 			System.out.println("Default");
 			break;
-		}
-		if ((rotation + 90 > presentRotation) || (rotation - 90 > presentRotation)) {
-			System.out.println("Error");
 		}
 		return rotation;
 	}

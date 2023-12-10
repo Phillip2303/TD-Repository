@@ -3,7 +3,6 @@ package de.phillip.models;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 
 public abstract class Actor {
 
@@ -12,6 +11,7 @@ public abstract class Actor {
 	private Point2D position;
 	private double rotation;
 	private Point2D currentThrustVector = new Point2D(0, 0);
+	private boolean debug;
 	
 	public Actor(double width, double height) {
 		this.width = width;
@@ -86,5 +86,15 @@ public abstract class Actor {
 				moveableActor.getWidth(), moveableActor.getHeight()));
 	}
 	
+	public boolean isDebug() {
+		return debug;
+	}
+
+	public void setDebug(boolean debug) {
+		this.debug = debug;
+	}
+	
 	public abstract void drawToCanvas(GraphicsContext gc);
+	
+	public abstract void debugOut();
 }

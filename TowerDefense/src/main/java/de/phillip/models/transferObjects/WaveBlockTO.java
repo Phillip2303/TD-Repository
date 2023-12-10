@@ -10,6 +10,7 @@ public class WaveBlockTO {
 	 private int health;
 	 private String imagePath;
 	 private int amount;
+	 private String type;
 	 @JsonIgnore
 	 private Image sprite;
 	 
@@ -55,5 +56,13 @@ public class WaveBlockTO {
 
 	public void setAmount(int amount) {
 		this.amount = amount;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }

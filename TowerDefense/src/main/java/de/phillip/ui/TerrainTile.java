@@ -1,9 +1,7 @@
 package de.phillip.ui;
 
-import de.phillip.controls.Constants;
 import de.phillip.controls.ResourcePool;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.paint.Color;
 
 public class TerrainTile extends Tile {
 

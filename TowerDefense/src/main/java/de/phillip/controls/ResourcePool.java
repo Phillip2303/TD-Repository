@@ -2,19 +2,15 @@ package de.phillip.controls;
 
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.Properties;
 import java.util.Scanner;
 
 import de.phillip.ui.TerrainTile;
 import de.phillip.ui.Tile;
 import javafx.scene.image.Image;
-import javafx.scene.media.AudioClip;
 
 public class ResourcePool {
 	private static ResourcePool resourcePool;

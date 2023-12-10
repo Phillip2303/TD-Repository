@@ -1,13 +1,8 @@
 package de.phillip.models;
 
 import de.phillip.controls.Constants;
-import de.phillip.controls.ResourcePool;
 import de.phillip.models.transferObjects.WaveBlockTO;
-import javafx.animation.FadeTransition;
-import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
-import javafx.util.Duration;
 
 public class Enemy extends Actor {
 	
@@ -17,6 +12,7 @@ public class Enemy extends Actor {
 	private boolean reachedEnd;
 	private boolean isOff;
 	private WaveBlockTO waveBlock;
+	private int index;
 
 	public Enemy(double width, double height, WaveBlockTO waveBlock) {
 		super(width, height);
@@ -48,6 +44,7 @@ public class Enemy extends Actor {
 	public void update() {
 		super.update();
 		updateSpriteIndex();
+		debugOut();
 	}
 	
 	public void setReachedEnd() {
@@ -68,5 +65,23 @@ public class Enemy extends Actor {
 	
 	public boolean getIsOff() {
 		return isOff;
+	}
+	
+	public String getType() {
+		return waveBlock.getType();
+	}
+	
+	public int getIndex() {
+		return index;
+	}
+	
+	public void setIndex(int index) {
+		this.index = index;
+	}
+	
+	public void debugOut() {
+		if (isDebug()) {
+			System.out.println("Enemy Debug -> Type: " + getType() + "; Index: " + getIndex() + "; Direction: " + getRotation() + "; Center: " + getCenter().getX() + " | "+ getCenter().getY());
+		}
 	}
 }

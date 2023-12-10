@@ -1,7 +1,6 @@
 package de.phillip;
 
 import de.phillip.controllers.GameController;
-import de.phillip.controllers.LayerManager;
 import de.phillip.controls.ResourcePool;
 import javafx.application.Application;
 import javafx.scene.Scene;
