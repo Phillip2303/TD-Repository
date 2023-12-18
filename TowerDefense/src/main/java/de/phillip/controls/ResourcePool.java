@@ -15,6 +15,7 @@ import javafx.scene.image.Image;
 public class ResourcePool {
 	private static ResourcePool resourcePool;
 	private Image background;
+	private Image galaxy;
 	private Tile[][] terrainTiles1, path1;
 	private Image terrain;
 	private Image enemy1;
@@ -32,6 +33,7 @@ public class ResourcePool {
 	
 	public void loadResources() {
 		background = new Image(getClass().getResource("/assets/images/background.png").toString());
+		galaxy = new Image(getClass().getResource("/assets/images/galaxy.jpg").toString());
 		terrain = new Image(getClass().getResource("/assets/images/tiles/terrain.png").toString());
 	//	enemy1 = new Image(getClass().getResource("/assets/images/enemies/enemy-red.png").toString());
 		terrainTiles1 = new Tile[Constants.TERRAINLAYER_HEIGHT][Constants.TERRAINLAYER_WIDTH];
@@ -113,6 +115,10 @@ public class ResourcePool {
 		return new Image(getClass().getResource(resourcePath).toString());
 	}
 	
+	public Image getGalaxy() {
+		return galaxy;
+	}
+
 	public File loadLevelResource(int level) {
 		String resourcePath = "assets/level/enemy" + level + ".json";
 		URL url = getClass().getClassLoader().getResource(resourcePath);

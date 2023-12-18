@@ -1,15 +1,22 @@
 package de.phillip;
 
+import de.phillip.components.GameMenu;
 import de.phillip.controllers.GameController;
 import de.phillip.controls.ResourcePool;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 public class TowerDefense extends Application {
 	
 	private GameController gameController;
+	private GameMenu gameMenu;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -22,7 +29,6 @@ public class TowerDefense extends Application {
 		primaryStage.setResizable(false);
 		primaryStage.setScene(createScene());
 		primaryStage.show();
-		gameController.startGame();
 	}
 	
 	public static void main(String[] args) {
@@ -31,7 +37,16 @@ public class TowerDefense extends Application {
 	
 	private Scene createScene() {
 		StackPane stackPane = new StackPane();
+		BackgroundImage bgi = new BackgroundImage(ResourcePool.getInstance().getGalaxy(), BackgroundRepeat.NO_REPEAT,  
+                BackgroundRepeat.NO_REPEAT,  
+                BackgroundPosition.DEFAULT,  
+                BackgroundSize.DEFAULT);
+		stackPane.setBackground(new Background(bgi));
 		gameController = new GameController(stackPane);
+		gameMenu = new GameMenu(gameController);
+		gameController.setMenu(gameMenu);
+		gameMenu.setVisible(true);
+		stackPane.getChildren().add(gameMenu);
 		return new Scene(stackPane);
 	}
 
