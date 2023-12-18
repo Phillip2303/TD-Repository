@@ -18,8 +18,8 @@ public class ActionLayer extends Canvas {
 	private WaveController waveController;
 	private Renderer renderer;
 
-	public ActionLayer(double width, double height, int level) {
-		super(width, height);
+	public ActionLayer(double tileWidth, double tileHeight, int level) {
+		super(tileWidth*Constants.TILESIZE, tileHeight*Constants.TILESIZE);
 		renderer = new Renderer(getGraphicsContext2D());
 		this.level = level;
 		layerWidth = Constants.TERRAINLAYER_WIDTH;

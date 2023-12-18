@@ -19,6 +19,7 @@ public class ResourcePool {
 	private Tile[][] terrainTiles1, path1;
 	private Image terrain;
 	private Image enemy1;
+	private Image turretBase;
 
 	private ResourcePool() {
 		
@@ -34,6 +35,7 @@ public class ResourcePool {
 	public void loadResources() {
 		background = new Image(getClass().getResource("/assets/images/background.png").toString());
 		galaxy = new Image(getClass().getResource("/assets/images/galaxy.jpg").toString());
+		turretBase = new Image(getClass().getResource("/assets/images/turrets/turret-base.png").toString());
 		terrain = new Image(getClass().getResource("/assets/images/tiles/terrain.png").toString());
 	//	enemy1 = new Image(getClass().getResource("/assets/images/enemies/enemy-red.png").toString());
 		terrainTiles1 = new Tile[Constants.TERRAINLAYER_HEIGHT][Constants.TERRAINLAYER_WIDTH];
@@ -117,6 +119,10 @@ public class ResourcePool {
 	
 	public Image getGalaxy() {
 		return galaxy;
+	}
+
+	public Image getTurretBase() {
+		return turretBase;
 	}
 
 	public File loadLevelResource(int level) {

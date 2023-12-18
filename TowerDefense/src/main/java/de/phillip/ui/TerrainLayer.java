@@ -11,8 +11,8 @@ public class TerrainLayer extends Canvas {
 	private Tile[][] terrainTiles;
 	private int level;
 	
-	public TerrainLayer(int width, int height, int level) {
-		super(width, height);
+	public TerrainLayer(int tileWidth, int tileHeight, int level) {
+		super(tileWidth*Constants.TILESIZE, tileHeight*Constants.TILESIZE);
 		this.level = level;
 		terrainTiles = ResourcePool.getInstance().getTerrainTiles(level);
 		layerWidth = Constants.TERRAINLAYER_WIDTH;
