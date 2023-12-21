@@ -1,6 +1,6 @@
 package de.phillip.ui;
 
-import de.phillip.controls.ResourcePool;
+import de.phillip.gameUtils.ResourcePool;
 import javafx.scene.canvas.GraphicsContext;
 
 public class TerrainTile extends Tile {

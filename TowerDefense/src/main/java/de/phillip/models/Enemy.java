@@ -1,6 +1,6 @@
 package de.phillip.models;
 
-import de.phillip.controls.Constants;
+import de.phillip.gameUtils.Constants;
 import de.phillip.models.transferObjects.WaveBlockTO;
 import javafx.scene.canvas.GraphicsContext;
 

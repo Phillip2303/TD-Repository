@@ -1,4 +1,4 @@
-package de.phillip.controls;
+package de.phillip.gameUtils;
 
 public class Constants {
 	

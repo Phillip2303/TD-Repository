@@ -6,8 +6,8 @@ import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.phillip.controls.Constants;
-import de.phillip.controls.ResourcePool;
+import de.phillip.gameUtils.Constants;
+import de.phillip.gameUtils.ResourcePool;
 import de.phillip.models.Enemy;
 import de.phillip.models.transferObjects.WaveBlockTO;
 import de.phillip.models.transferObjects.WaveTO;

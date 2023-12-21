@@ -1,7 +1,7 @@
 package de.phillip.ui;
 
-import de.phillip.controls.Constants;
-import de.phillip.controls.ResourcePool;
+import de.phillip.gameUtils.Constants;
+import de.phillip.gameUtils.ResourcePool;
 import javafx.scene.canvas.Canvas;
 
 public class TerrainLayer extends Canvas {

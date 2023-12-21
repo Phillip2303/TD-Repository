@@ -2,7 +2,7 @@ package de.phillip;
 
 import de.phillip.components.GameMenu;
 import de.phillip.controllers.GameController;
-import de.phillip.controls.ResourcePool;
+import de.phillip.gameUtils.ResourcePool;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.Background;
@@ -47,7 +47,9 @@ public class TowerDefense extends Application {
 		gameController.setMenu(gameMenu);
 		gameMenu.setVisible(true);
 		stackPane.getChildren().add(gameMenu);
-		return new Scene(stackPane);
+		Scene scene = new Scene(stackPane);
+		scene.setOnMouseClicked(gameController);
+		return scene;
 	}
 
 }

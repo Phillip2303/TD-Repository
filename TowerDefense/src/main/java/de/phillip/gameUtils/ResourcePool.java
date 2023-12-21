@@ -1,4 +1,4 @@
-package de.phillip.controls;
+package de.phillip.gameUtils;
 
 
 import java.io.File;

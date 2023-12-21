@@ -3,7 +3,7 @@ package de.phillip.rendering;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.phillip.controls.Constants;
+import de.phillip.gameUtils.Constants;
 import de.phillip.models.Actor;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;

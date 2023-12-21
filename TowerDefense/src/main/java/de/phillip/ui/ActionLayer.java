@@ -1,8 +1,8 @@
 package de.phillip.ui;
 
 import de.phillip.controllers.WaveController;
-import de.phillip.controls.Constants;
-import de.phillip.controls.ResourcePool;
+import de.phillip.gameUtils.Constants;
+import de.phillip.gameUtils.ResourcePool;
 import de.phillip.models.Enemy;
 import de.phillip.rendering.Renderer;
 import javafx.geometry.Point2D;

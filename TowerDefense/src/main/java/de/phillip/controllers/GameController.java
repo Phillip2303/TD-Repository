@@ -2,9 +2,12 @@ package de.phillip.controllers;
 
 import de.phillip.animation.GameLoopTimer;
 import de.phillip.components.GameMenu;
+import javafx.event.Event;
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
-public class GameController {
+public class GameController implements EventHandler<MouseEvent> {
 	
 	private GameLoopTimer gameLoopTimer;
 	private LayerManager layerManager;
@@ -34,5 +37,11 @@ public class GameController {
 	
 	public void setMenu(GameMenu gameMenu) {
 		this.gameMenu = gameMenu;
+	}
+
+	@Override
+	public void handle(MouseEvent event) {
+		System.out.println("X: " + event.getX());
+		System.out.println("Y: " + event.getY());
 	}
 }

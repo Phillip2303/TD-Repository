@@ -1,7 +1,7 @@
 package de.phillip.controllers;
 
-import de.phillip.controls.Constants;
-import de.phillip.controls.ResourcePool;
+import de.phillip.gameUtils.Constants;
+import de.phillip.gameUtils.ResourcePool;
 import de.phillip.ui.ActionLayer;
 import de.phillip.ui.InfoLayer;
 import de.phillip.ui.TerrainLayer;
