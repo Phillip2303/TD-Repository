@@ -3,6 +3,7 @@ package de.phillip.ui;
 import de.phillip.controllers.WaveController;
 import de.phillip.gameUtils.Constants;
 import de.phillip.gameUtils.ResourcePool;
+import de.phillip.gameUtils.Transformer;
 import de.phillip.models.Enemy;
 import de.phillip.rendering.Renderer;
 import javafx.geometry.Point2D;
@@ -111,30 +112,24 @@ public class ActionLayer extends Canvas {
 	}
 	
 	private Point2D calculateTilePosition(Point2D point, double rotation) {
-		int xIndex = 0, yIndex = 0;
-		int x = (int) point.getX();
-		int y = (int) point.getY();
+		Point2D tile = new Point2D(0, 0);
 		switch ((int) rotation) {
 		case 0: 
-			yIndex = (y + Constants.TILESIZE/2)/Constants.TILESIZE;
-			xIndex = x/Constants.TILESIZE;
+			tile = Transformer.transformPixelsCoordinatesToTile(point.getX(), point.getY() + Constants.TILESIZE/2);
 			break;
 		case 90:
-			xIndex = (x - Constants.TILESIZE/2)/Constants.TILESIZE;
-			yIndex = y/Constants.TILESIZE;
+			tile = Transformer.transformPixelsCoordinatesToTile(point.getX() - Constants.TILESIZE/2, point.getY());
 			break;
 		case 180:
-			yIndex = (y - Constants.TILESIZE/2)/Constants.TILESIZE;
-			xIndex = x/Constants.TILESIZE;
+			tile = Transformer.transformPixelsCoordinatesToTile(point.getX(), point.getY() - Constants.TILESIZE/2);
 			break;
 		case 270:
-			xIndex = (x + Constants.TILESIZE/2)/Constants.TILESIZE;
-			yIndex = y/Constants.TILESIZE;
+			tile = Transformer.transformPixelsCoordinatesToTile(point.getX() + Constants.TILESIZE/2, point.getY());
 			break;
 		default:
 			System.out.println("Calculate Tile Position");
 			break;
 		}
-		return new Point2D(xIndex, yIndex);
+		return tile;
 	}
 }

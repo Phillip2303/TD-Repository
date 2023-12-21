@@ -2,8 +2,10 @@ package de.phillip.controllers;
 
 import de.phillip.animation.GameLoopTimer;
 import de.phillip.components.GameMenu;
+import de.phillip.gameUtils.Transformer;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Point2D;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
@@ -41,7 +43,10 @@ public class GameController implements EventHandler<MouseEvent> {
 
 	@Override
 	public void handle(MouseEvent event) {
-		System.out.println("X: " + event.getX());
-		System.out.println("Y: " + event.getY());
+		System.out.println("Old X: " + event.getX());
+		System.out.println("Old Y: " + event.getY());
+		Point2D point = Transformer.transformPixelsCoordinatesToTile(event.getX(), event.getY());
+		System.out.println("New X: " + point.getX());
+		System.out.println("New Y: " + point.getY());
 	}
 }
