@@ -20,6 +20,7 @@ public class ResourcePool {
 	private Image terrain;
 	private Image enemy1;
 	private Image turretBase;
+	private Image turretSprite;
 
 	private ResourcePool() {
 		
@@ -36,6 +37,7 @@ public class ResourcePool {
 		background = new Image(getClass().getResource("/assets/images/background.png").toString());
 		galaxy = new Image(getClass().getResource("/assets/images/galaxy.jpg").toString());
 		turretBase = new Image(getClass().getResource("/assets/images/turrets/turret-base.png").toString());
+		turretSprite = new Image(getClass().getResource("/assets/images/turrets/turret-1-sprite.png").toString());
 		terrain = new Image(getClass().getResource("/assets/images/tiles/terrain.png").toString());
 	//	enemy1 = new Image(getClass().getResource("/assets/images/enemies/enemy-red.png").toString());
 		terrainTiles1 = new Tile[Constants.TERRAINLAYER_HEIGHT][Constants.TERRAINLAYER_WIDTH];
@@ -45,7 +47,7 @@ public class ResourcePool {
 					for (int y = 0; y < terrainTiles1.length; y++) {
 						for (int x = 0; x < terrainTiles1[y].length; x++) {
 							int ID = scanner.nextInt();
-							terrainTiles1[y][x] = new TerrainTile(x*Constants.TILESIZE, y*Constants.TILESIZE, ID, Constants.TILESIZE);
+							terrainTiles1[y][x] = new TerrainTile(x, y, ID, Constants.TILESIZE);
 						}
 					}
 				}
@@ -123,6 +125,10 @@ public class ResourcePool {
 
 	public Image getTurretBase() {
 		return turretBase;
+	}
+
+	public Image getTurretSprite() {
+		return turretSprite;
 	}
 
 	public File loadLevelResource(int level) {

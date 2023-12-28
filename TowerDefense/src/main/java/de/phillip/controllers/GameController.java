@@ -43,10 +43,9 @@ public class GameController implements EventHandler<MouseEvent> {
 
 	@Override
 	public void handle(MouseEvent event) {
-		System.out.println("Old X: " + event.getX());
-		System.out.println("Old Y: " + event.getY());
-		Point2D point = Transformer.transformPixelsCoordinatesToTile(event.getX(), event.getY());
-		System.out.println("New X: " + point.getX());
-		System.out.println("New Y: " + point.getY());
+		if (isStarted) {
+			Point2D point = Transformer.transformPixelsCoordinatesToTile(event.getX(), event.getY());
+			layerManager.checkHoverTile(point);
+		}
 	}
 }

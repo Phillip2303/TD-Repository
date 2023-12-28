@@ -49,6 +49,7 @@ public class TowerDefense extends Application {
 		stackPane.getChildren().add(gameMenu);
 		Scene scene = new Scene(stackPane);
 		scene.setOnMouseClicked(gameController);
+		scene.setOnMouseMoved(gameController);
 		return scene;
 	}
 

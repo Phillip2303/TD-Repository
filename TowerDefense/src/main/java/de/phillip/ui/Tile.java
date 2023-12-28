@@ -1,5 +1,6 @@
 package de.phillip.ui;
 
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 
 public abstract class Tile {
@@ -9,11 +10,13 @@ public abstract class Tile {
 	private int ID;
 	private int width;
 	private int height;
+	private Point2D tileCoor;
 	
-	public Tile(int posX, int posY, int iD, int size) {
+	public Tile(int x, int y, int iD, int size) {
 		super();
-		this.posX = posX;
-		this.posY = posY;
+		tileCoor = new Point2D(x, y);
+		this.posX = x * size;
+		this.posY = y * size;
 		ID = iD;
 		this.width = size;
 		this.height = size;
@@ -32,6 +35,18 @@ public abstract class Tile {
 	}
 	public int getHeight() {
 		return height;
+	}
+	
+	public Point2D getTileCoor() {
+		return tileCoor;
+	}
+	
+	public boolean equals(Point2D point) {
+		if (tileCoor.getX() == point.getX() && tileCoor.getY() == point.getY()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	public abstract void drawToCanvas(GraphicsContext gc);

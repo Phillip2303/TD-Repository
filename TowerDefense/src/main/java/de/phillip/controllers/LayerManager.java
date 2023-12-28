@@ -5,6 +5,7 @@ import de.phillip.gameUtils.ResourcePool;
 import de.phillip.ui.ActionLayer;
 import de.phillip.ui.InfoLayer;
 import de.phillip.ui.TerrainLayer;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 
@@ -32,5 +33,9 @@ public class LayerManager {
 	
 	public void update(float secondsSinceLastFrame) {
 		actionLayer.update(secondsSinceLastFrame);
+	}
+	
+	public void checkHoverTile(Point2D point) {
+		infoLayer.checkHoverTile(point);
 	}
 }
