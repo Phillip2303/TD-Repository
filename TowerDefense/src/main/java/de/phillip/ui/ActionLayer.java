@@ -1,15 +1,21 @@
 package de.phillip.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.phillip.controllers.WaveController;
 import de.phillip.gameUtils.Constants;
 import de.phillip.gameUtils.ResourcePool;
 import de.phillip.gameUtils.Transformer;
+import de.phillip.models.Actor;
+import de.phillip.models.CanvasLayer;
+import de.phillip.models.Drawable;
 import de.phillip.models.Enemy;
-import de.phillip.rendering.Renderer;
+import de.phillip.models.Tile;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 
-public class ActionLayer extends Canvas {
+public class ActionLayer extends Canvas implements CanvasLayer {
 	
 	private int layerWidth;
 	private int layerHeight;
@@ -17,11 +23,10 @@ public class ActionLayer extends Canvas {
 	private int speedLevel = 85;
 	private Tile[][] paths;
 	private WaveController waveController;
-	private Renderer renderer;
+	private List<Actor> actors = new ArrayList<>();
 
 	public ActionLayer(double tileWidth, double tileHeight, int level) {
 		super(tileWidth*Constants.TILESIZE, tileHeight*Constants.TILESIZE);
-		renderer = new Renderer(getGraphicsContext2D());
 		this.level = level;
 		layerWidth = Constants.TERRAINLAYER_WIDTH;
 		layerHeight = Constants.TERRAINLAYER_HEIGHT;
@@ -37,14 +42,12 @@ public class ActionLayer extends Canvas {
 	}
 	
 	public void update(float secondsSinceLastFrame) {
-		renderer.prepare();
 		checkForNewEnemies(secondsSinceLastFrame);
 		updateEnemies(secondsSinceLastFrame);
-		renderer.render();
 	}
 	
 	private void updateEnemies(float secondsSinceLastFrame) {
-		renderer.getActors().forEach(actor -> {
+		actors.forEach(actor -> {
 			double speed = speedLevel*secondsSinceLastFrame;
 			Enemy enemy = (Enemy) actor;
 			Point2D currentPosition = calculateTilePosition(enemy.getCenter(), enemy.getRotation());
@@ -64,14 +67,14 @@ public class ActionLayer extends Canvas {
 				}
 			}
 		});
-		renderer.getActors().removeIf(b -> ((Enemy)b).getIsOff());
+		actors.removeIf(b -> ((Enemy)b).getIsOff());
 	}
 	
 	private void checkForNewEnemies(float secondsSinceLastFrame) {
 		if (waveController.hasMoreEnemies()) {
 			Enemy newEnemy = waveController.getEnemy(secondsSinceLastFrame);
 			if (newEnemy != null) {
-				renderer.getActors().add(newEnemy);
+				actors.add(newEnemy);
 			}
 		}
 	}
@@ -131,5 +134,17 @@ public class ActionLayer extends Canvas {
 			break;
 		}
 		return tile;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Drawable> getDrawables() {
+		return (List<Drawable>) (List<?>) actors;
+	}
+
+	@Override
+	public void prepareLayer() {
+		getGraphicsContext2D().clearRect(0, 0, Constants.TERRAINLAYER_WIDTH*Constants.TILESIZE, Constants.TERRAINLAYER_HEIGHT*Constants.TILESIZE);
+		
 	}
 }

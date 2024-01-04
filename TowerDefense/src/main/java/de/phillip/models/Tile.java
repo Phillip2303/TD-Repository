@@ -1,9 +1,9 @@
-package de.phillip.ui;
+package de.phillip.models;
 
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 
-public abstract class Tile {
+public abstract class Tile implements Drawable {
 	
 	private int posX;
 	private int posY;

@@ -2,7 +2,9 @@ package de.phillip.models;
 
 import de.phillip.gameUtils.Constants;
 import de.phillip.models.transferObjects.WaveBlockTO;
+import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.transform.Rotate;
 
 public class Enemy extends Actor {
 	
@@ -21,6 +23,7 @@ public class Enemy extends Actor {
 
 	@Override
 	public void drawToCanvas(GraphicsContext gc) {
+		transformContext(gc);
 		if (reachedEnd) {
 			gc.setGlobalAlpha(0.5);
 		} else {
@@ -83,5 +86,12 @@ public class Enemy extends Actor {
 		if (isDebug()) {
 			System.out.println("Enemy Debug -> Type: " + getType() + "; Index: " + getIndex() + "; Direction: " + getRotation() + "; Center: " + getCenter().getX() + " | "+ getCenter().getY());
 		}
+	}
+	
+	private void transformContext(GraphicsContext graphicsContext) {
+		Point2D center = getCenter();
+		Rotate rotate = new Rotate(getRotation(), center.getX(), center.getY());
+		graphicsContext.setTransform(rotate.getMxx(), rotate.getMyx(), rotate.getMxy(), rotate.getMyy(), rotate.getTx(),
+				rotate.getTy());
 	}
 }

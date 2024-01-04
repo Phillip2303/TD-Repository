@@ -8,8 +8,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Scanner;
 
-import de.phillip.ui.TerrainTile;
-import de.phillip.ui.Tile;
+import de.phillip.models.TerrainTile;
+import de.phillip.models.Tile;
 import javafx.scene.image.Image;
 
 public class ResourcePool {
@@ -21,6 +21,7 @@ public class ResourcePool {
 	private Image enemy1;
 	private Image turretBase;
 	private Image turretSprite;
+	private Image startWave;
 
 	private ResourcePool() {
 		
@@ -40,6 +41,7 @@ public class ResourcePool {
 		turretSprite = new Image(getClass().getResource("/assets/images/turrets/turret-1-sprite.png").toString());
 		terrain = new Image(getClass().getResource("/assets/images/tiles/terrain.png").toString());
 	//	enemy1 = new Image(getClass().getResource("/assets/images/enemies/enemy-red.png").toString());
+		startWave = new Image(getClass().getResource("/assets/images/startWave.png").toString());
 		terrainTiles1 = new Tile[Constants.TERRAINLAYER_HEIGHT][Constants.TERRAINLAYER_WIDTH];
 		try (InputStream input = getClass().getResourceAsStream("/assets/maps/terrain1.pxt")) {
 			try(Scanner scanner = new Scanner(input)) {
@@ -72,6 +74,10 @@ public class ResourcePool {
 		catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public Image getStartWave() {
+		return startWave;
 	}
 	
 	public Image getBackground() {

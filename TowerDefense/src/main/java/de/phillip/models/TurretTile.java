@@ -1,4 +1,4 @@
-package de.phillip.ui;
+package de.phillip.models;
 
 import de.phillip.gameUtils.Constants;
 import de.phillip.gameUtils.ResourcePool;

@@ -4,7 +4,7 @@ import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 
-public abstract class Actor {
+public abstract class Actor implements Drawable{
 
 	private double width;
 	private double height;

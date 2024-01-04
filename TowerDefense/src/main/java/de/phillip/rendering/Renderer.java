@@ -5,41 +5,33 @@ import java.util.List;
 
 import de.phillip.gameUtils.Constants;
 import de.phillip.models.Actor;
+import de.phillip.models.CanvasLayer;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Rotate;
 
 public class Renderer {
 
-	private GraphicsContext graphicsContext;
-	private List<Actor> actors = new ArrayList<>();
+	private List<CanvasLayer> canvasLayers = new ArrayList<>();
 	
-	public Renderer(GraphicsContext graphicsContext) {
-		this.graphicsContext = graphicsContext;
+	public Renderer() {
+		
 	}
 	
-	public List<Actor> getActors() {
-		return actors;
+	public void registerCanvasLayer(CanvasLayer canvasLayer) {
+		canvasLayers.add(canvasLayer);
 	}
 
 	public void render() {
-		graphicsContext.save();
-		for (Actor actor : actors) {
-			transformContext(actor);
-			actor.drawToCanvas(graphicsContext);
-		}
-		graphicsContext.restore();
-	}
-
-	private void transformContext(Actor actor) {
-		Point2D center = actor.getCenter();
-		Rotate rotate = new Rotate(actor.getRotation(), center.getX(), center.getY());
-		graphicsContext.setTransform(rotate.getMxx(), rotate.getMyx(), rotate.getMxy(), rotate.getMyy(), rotate.getTx(),
-				rotate.getTy());
+		canvasLayers.forEach(e -> {
+			e.getGraphicsContext2D().save();
+			e.getDrawables().forEach(d -> d.drawToCanvas(e.getGraphicsContext2D()));
+			e.getGraphicsContext2D().restore();
+		});
 	}
 	
 	public void prepare() {
-		graphicsContext.clearRect(0, 0, Constants.TERRAINLAYER_WIDTH*Constants.TILESIZE, Constants.TERRAINLAYER_HEIGHT*Constants.TILESIZE);
+		canvasLayers.forEach(e -> e.prepareLayer());
 	}
 
 }
