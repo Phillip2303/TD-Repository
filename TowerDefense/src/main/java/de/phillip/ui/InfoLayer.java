@@ -2,6 +2,7 @@ package de.phillip.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import de.phillip.gameUtils.Constants;
 import de.phillip.gameUtils.ResourcePool;
@@ -10,9 +11,12 @@ import de.phillip.models.CanvasButton;
 import de.phillip.models.CanvasLayer;
 import de.phillip.models.Drawable;
 import de.phillip.models.TurretTile;
+import javafx.event.ActionEvent;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 
 public class InfoLayer extends Canvas implements CanvasLayer {
 	
@@ -21,6 +25,9 @@ public class InfoLayer extends Canvas implements CanvasLayer {
 	private CanvasButton startWaveButton;
 	private Image startWave;
 	private List<Drawable> drawables = new ArrayList<>();
+	private Consumer<ActionEvent> consumer;
+	private TurretTile overlay;
+	private boolean hasSelected;
 
 	public InfoLayer(int tileWidth, int tileHeight, int level) {
 		super(tileWidth*Constants.TILESIZE, tileHeight*Constants.TILESIZE);
@@ -52,28 +59,82 @@ public class InfoLayer extends Canvas implements CanvasLayer {
 		}
 	}
 	
-	public void mouseMoved(double eventX, double eventY) {
-		Point2D tile = Transformer.transformPixelsCoordinatesToTile(eventX, eventY);
-		for(int y = 0; y < turretTiles.length; y++ ) {
-			for (int x = 0; x < turretTiles[y].length; x++) {
-				if (turretTiles[y][x].equals(tile)) {
-					turretTiles[y][x].setActive(true);
-					//System.out.println("Point X: " + point.getX());
-					//System.out.println("Point Y: " + point.getY());
-				} else {
-					turretTiles[y][x].setActive(false);
+	private void mouseMoved(double eventX, double eventY) {
+		if (hasSelected) {
+			overlay.setDrawPosition(eventX, eventY);
+			System.out.println("Point X: " + eventX);
+			System.out.println("Point Y: " + eventY);
+		} else {
+			Point2D tile = Transformer.transformPixelsCoordinatesToTile(eventX, eventY);
+			for(int y = 0; y < turretTiles.length; y++ ) {
+				for (int x = 0; x < turretTiles[y].length; x++) {
+					if (turretTiles[y][x].equals(tile)) {
+						turretTiles[y][x].setActive(true);
+						//System.out.println("Point X: " + point.getX());
+						//System.out.println("Point Y: " + point.getY());
+					} else {
+						turretTiles[y][x].setActive(false);
+					}
 				}
 			}
-		}
-		if (startWaveButton.contains(new Point2D(eventX, eventY))) {
-			startWaveButton.setActive(true);
-		} else {
-			startWaveButton.setActive(false);
+			if (startWaveButton.contains(new Point2D(eventX, eventY))) {
+				startWaveButton.setActive(true);
+			} else {
+				startWaveButton.setActive(false);
+			}
 		}
 	}
 	
-	public void mouseClicked(double x, double y) {
-		
+	private void mouseLeftClicked(double eventX, double eventY) {
+		if (startWaveButton.isActive()) {
+			ActionEvent startWave = new ActionEvent(startWaveButton, null);
+			consumer.accept(startWave);
+			drawables.remove(startWaveButton);
+		} else {
+			for(int y = 0; y < turretTiles.length; y++ ) {
+				for (int x = 0; x < turretTiles[y].length; x++) {
+					if (turretTiles[y][x].isActive()) {
+						TurretTile tempTurret = turretTiles[y][x];
+						System.out.println("ID: " + turretTiles[y][x].getID());
+						overlay = new TurretTile(tempTurret.getPosX(), tempTurret.getPosY(), tempTurret.getID(), Constants.TILESIZE);
+						overlay.setSprite(turretSprite);
+						overlay.setActive(true);
+						drawables.add(overlay);
+						hasSelected = true;
+					}
+				}
+			}
+		}
+	}
+	
+	private void mouseRightClicked(double x, double y) {
+		if (overlay != null) {
+			drawables.remove(overlay);
+			overlay = null;
+			hasSelected = false;
+		}
+	}
+	
+	public void handleMouseEvent(MouseEvent mouseEvent) {
+		switch (mouseEvent.getEventType().getName()) {
+		case "MOUSE_MOVED":
+			mouseMoved(mouseEvent.getX(), mouseEvent.getY());
+			break;
+		case "MOUSE_CLICKED":
+			switch (mouseEvent.getButton()) {
+				case PRIMARY:
+					mouseLeftClicked(mouseEvent.getX(), mouseEvent.getY());
+					break;
+				case SECONDARY:
+					mouseRightClicked(mouseEvent.getX(), mouseEvent.getY());
+					break;
+				default: 
+					break;
+			}
+			break;
+		default: 
+			break;
+		}
 	}
 
 	@Override
@@ -84,5 +145,9 @@ public class InfoLayer extends Canvas implements CanvasLayer {
 	@Override
 	public void prepareLayer() {
 		getGraphicsContext2D().drawImage(ResourcePool.getInstance().getBackground(), 0, 0);
+	}
+	
+	public void setOnAction(Consumer<ActionEvent> consumer) {
+		this.consumer = consumer;
 	}
 }

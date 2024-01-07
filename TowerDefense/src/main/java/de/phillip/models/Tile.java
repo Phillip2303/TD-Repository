@@ -11,21 +11,30 @@ public abstract class Tile implements Drawable {
 	private int width;
 	private int height;
 	private Point2D tileCoor;
+	private Point2D position;
 	
 	public Tile(int x, int y, int iD, int size) {
 		super();
 		tileCoor = new Point2D(x, y);
 		this.posX = x * size;
 		this.posY = y * size;
+		position = new Point2D(this.posX, this.posY);
 		ID = iD;
 		this.width = size;
 		this.height = size;
 	}
+	public void setDrawPosition(double x, double y) {
+		position = new Point2D(x, y);
+	}
+
+	public Point2D getDrawPosition() {
+		return position;
+	}
 	public int getPosX() {
-		return posX;
+		return (int) position.getX();
 	}
 	public int getPosY() {
-		return posY;
+		return (int) position.getY();
 	}
 	public int getID() {
 		return ID;

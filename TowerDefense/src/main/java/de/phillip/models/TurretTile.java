@@ -46,6 +46,10 @@ public class TurretTile extends Tile {
 		this.isActive = isActive;
 	}
 	
+	public boolean isActive() {
+		return isActive;
+	}
+	
 	public void setSprite(Image turretSprite) {
 		 this.turretSprite = turretSprite;
 	 }

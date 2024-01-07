@@ -33,6 +33,10 @@ public class CanvasButton implements Drawable {
 		this.isActive = isActive;
 	}
 	
+	public boolean isActive() {
+		return isActive;
+	}
+	
 	public boolean contains(Point2D point) {
 		return rectangle.contains(point);
 	}

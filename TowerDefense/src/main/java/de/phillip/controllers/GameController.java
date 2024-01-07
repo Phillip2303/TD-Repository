@@ -44,16 +44,7 @@ public class GameController implements EventHandler<MouseEvent> {
 	@Override
 	public void handle(MouseEvent event) {
 		if (isStarted) {
-			switch (event.getEventType().getName()) {
-				case "MOUSE_MOVED":
-					layerManager.mouseMoved(event.getX(), event.getY());
-					break;
-				case "MOUSE_CLICKED":
-					layerManager.mouseClicked(event.getX(), event.getY());
-					break;
-				default: 
-					break;
-			}
+			layerManager.handleMouseEvent(event);
 		}
 	}
 }
