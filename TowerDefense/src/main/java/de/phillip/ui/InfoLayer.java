@@ -28,6 +28,12 @@ public class InfoLayer extends Canvas implements CanvasLayer {
 	private Consumer<ActionEvent> consumer;
 	private TurretTile overlay;
 	private boolean hasSelected;
+	private State currentState = State.OBSERVE;
+	
+	public enum State {
+		OVERLAY,
+		OBSERVE;
+	}
 
 	public InfoLayer(int tileWidth, int tileHeight, int level) {
 		super(tileWidth*Constants.TILESIZE, tileHeight*Constants.TILESIZE);
@@ -60,11 +66,8 @@ public class InfoLayer extends Canvas implements CanvasLayer {
 	}
 	
 	private void mouseMoved(double eventX, double eventY) {
-		if (hasSelected) {
-			overlay.setDrawPosition(eventX, eventY);
-			System.out.println("Point X: " + eventX);
-			System.out.println("Point Y: " + eventY);
-		} else {
+		switch (currentState) {
+		case OBSERVE:
 			Point2D tile = Transformer.transformPixelsCoordinatesToTile(eventX, eventY);
 			for(int y = 0; y < turretTiles.length; y++ ) {
 				for (int x = 0; x < turretTiles[y].length; x++) {
@@ -82,36 +85,66 @@ public class InfoLayer extends Canvas implements CanvasLayer {
 			} else {
 				startWaveButton.setActive(false);
 			}
+			break;
+		case OVERLAY:
+			overlay.setDrawPosition(eventX - Constants.TILESIZE / 2, eventY - Constants.TILESIZE / 2);
+			/*System.out.println("Point X: " + eventX);
+			System.out.println("Point Y: " + eventY);*/
+			System.out.println("Point X: " + overlay.getPosX());
+			System.out.println("Point Y: " + overlay.getPosY());
+			break;
+		default: 
+			break;
 		}
 	}
 	
 	private void mouseLeftClicked(double eventX, double eventY) {
-		if (startWaveButton.isActive()) {
-			ActionEvent startWave = new ActionEvent(startWaveButton, null);
-			consumer.accept(startWave);
-			drawables.remove(startWaveButton);
-		} else {
-			for(int y = 0; y < turretTiles.length; y++ ) {
-				for (int x = 0; x < turretTiles[y].length; x++) {
-					if (turretTiles[y][x].isActive()) {
-						TurretTile tempTurret = turretTiles[y][x];
-						System.out.println("ID: " + turretTiles[y][x].getID());
-						overlay = new TurretTile(tempTurret.getPosX(), tempTurret.getPosY(), tempTurret.getID(), Constants.TILESIZE);
-						overlay.setSprite(turretSprite);
-						overlay.setActive(true);
-						drawables.add(overlay);
-						hasSelected = true;
+		switch (currentState) {
+		case OBSERVE:
+			if (startWaveButton.isActive()) {
+				ActionEvent startWaveEvent = new ActionEvent(startWaveButton, null);
+				consumer.accept(startWaveEvent);
+				drawables.remove(startWaveButton);
+			} else {
+				for(int y = 0; y < turretTiles.length; y++ ) {
+					for (int x = 0; x < turretTiles[y].length; x++) {
+						if (turretTiles[y][x].isActive()) {
+							TurretTile tempTurret = turretTiles[y][x];
+							System.out.println("ID: " + turretTiles[y][x].getID());
+							overlay = new TurretTile(tempTurret.getPosX() - Constants.TILESIZE / 2, tempTurret.getPosY() - Constants.TILESIZE / 2, tempTurret.getID(), Constants.TILESIZE);
+							overlay.setSprite(turretSprite);
+							overlay.setActive(true);
+							drawables.add(overlay);
+							currentState = State.OVERLAY;
+						}
 					}
 				}
 			}
+			break;
+		case OVERLAY:
+			ActionEvent overlayEvent = new ActionEvent(overlay, null);
+			consumer.accept(overlayEvent);
+			drawables.remove(overlay);
+			overlay = null;
+			currentState = State.OBSERVE;
+			
+			break;
+		default: 
+			break;
 		}
 	}
 	
 	private void mouseRightClicked(double x, double y) {
-		if (overlay != null) {
+		switch (currentState) {
+		case OBSERVE:
+			break;
+		case OVERLAY:
 			drawables.remove(overlay);
 			overlay = null;
-			hasSelected = false;
+			currentState = State.OBSERVE;
+			break;
+		default: 
+			break;
 		}
 	}
 	
@@ -145,6 +178,7 @@ public class InfoLayer extends Canvas implements CanvasLayer {
 	@Override
 	public void prepareLayer() {
 		getGraphicsContext2D().drawImage(ResourcePool.getInstance().getBackground(), 0, 0);
+		getGraphicsContext2D().clearRect(0, 0, Constants.TERRAINLAYER_WIDTH*Constants.TILESIZE, Constants.TERRAINLAYER_HEIGHT*Constants.TILESIZE);
 	}
 	
 	public void setOnAction(Consumer<ActionEvent> consumer) {

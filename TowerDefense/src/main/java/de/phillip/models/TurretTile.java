@@ -24,12 +24,32 @@ public class TurretTile extends Tile {
 						getHeight());
 				break;
 			case 1:
-				gc.drawImage(turretSprite, 0, 40, getWidth(), getHeight(), 
+				gc.drawImage(turretSprite, 0, 46, getWidth(), getHeight(), 
 						getPosX(), getPosY(), getWidth(), 
 						getHeight());
 				break;
 			case 2:
-				gc.drawImage(turretSprite, 0, 80, getWidth(), getHeight(), 
+				gc.drawImage(turretSprite, 0, 92, getWidth(), getHeight(), 
+						getPosX(), getPosY(), getWidth(), 
+						getHeight());
+				break;
+			case 3:
+				gc.drawImage(turretSprite, 0, 138, getWidth(), getHeight(), 
+						getPosX(), getPosY(), getWidth(), 
+						getHeight());
+				break;
+			case 4:
+				gc.drawImage(turretSprite, 0, 184, getWidth(), getHeight(), 
+						getPosX(), getPosY(), getWidth(), 
+						getHeight());
+				break;
+			case 5:
+				gc.drawImage(turretSprite, 0, 230, getWidth(), getHeight(), 
+						getPosX(), getPosY(), getWidth(), 
+						getHeight());
+				break;
+			case 6:
+				gc.drawImage(turretSprite, 0, 276, getWidth(), getHeight(), 
 						getPosX(), getPosY(), getWidth(), 
 						getHeight());
 				break;

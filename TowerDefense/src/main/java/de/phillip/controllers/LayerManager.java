@@ -3,6 +3,11 @@ package de.phillip.controllers;
 import java.util.function.Consumer;
 
 import de.phillip.gameUtils.Constants;
+import de.phillip.gameUtils.ResourcePool;
+import de.phillip.gameUtils.Transformer;
+import de.phillip.models.CanvasButton;
+import de.phillip.models.Tile;
+import de.phillip.models.TurretTile;
 import de.phillip.rendering.Renderer;
 import de.phillip.ui.ActionLayer;
 import de.phillip.ui.InfoLayer;
@@ -32,7 +37,7 @@ public class LayerManager implements Consumer<ActionEvent>{
 		renderer.registerCanvasLayer(infoLayer);
 		StackPane.setAlignment(terrainLayer, Pos.TOP_LEFT);
 		StackPane.setAlignment(actionLayer, Pos.TOP_LEFT);
-		stackPane.getChildren().addAll(infoLayer, terrainLayer, actionLayer);
+		stackPane.getChildren().addAll(terrainLayer, actionLayer, infoLayer);
 	}
 	
 	public void nextLevel() {
@@ -55,6 +60,23 @@ public class LayerManager implements Consumer<ActionEvent>{
 
 	@Override
 	public void accept(ActionEvent t) {
-		waveStarted = true;
+		if (t.getSource() instanceof CanvasButton) {
+			waveStarted = true;
+		} else if (t.getSource() instanceof TurretTile){
+			TurretTile overlay = (TurretTile) t.getSource();
+			checkValidTilePosition(overlay);
+		}
+	}
+	
+	private void checkValidTilePosition(TurretTile tile) {
+		Point2D pointCenter = tile.getCenter();
+		Point2D selectedTileCoor = Transformer.transformPixelsCoordinatesToTile(pointCenter.getX(), pointCenter.getY());
+		Tile[][] terrainTiles = ResourcePool.getInstance().getTerrainTiles(level);
+		Tile selectedTile = terrainTiles[(int) selectedTileCoor.getY()][(int) selectedTileCoor.getX()];
+		if (selectedTile.getID() == 8) {
+			System.out.println("Valid");
+		} else {
+			System.out.println("Not Valid");
+		}
 	}
 }

@@ -58,5 +58,10 @@ public abstract class Tile implements Drawable {
 		}
 	}
 	
+	public Point2D getCenter() {
+		Point2D pos = getDrawPosition();
+		return new Point2D(pos.getX() + width / 2, pos.getY() + height / 2);
+	}
+	
 	public abstract void drawToCanvas(GraphicsContext gc);
 }

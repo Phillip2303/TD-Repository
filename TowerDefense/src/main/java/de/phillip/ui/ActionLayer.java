@@ -145,6 +145,5 @@ public class ActionLayer extends Canvas implements CanvasLayer {
 	@Override
 	public void prepareLayer() {
 		getGraphicsContext2D().clearRect(0, 0, Constants.TERRAINLAYER_WIDTH*Constants.TILESIZE, Constants.TERRAINLAYER_HEIGHT*Constants.TILESIZE);
-		
 	}
 }

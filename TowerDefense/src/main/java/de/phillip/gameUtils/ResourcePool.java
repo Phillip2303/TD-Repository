@@ -38,7 +38,7 @@ public class ResourcePool {
 		background = new Image(getClass().getResource("/assets/images/background.png").toString());
 		galaxy = new Image(getClass().getResource("/assets/images/galaxy.jpg").toString());
 		turretBase = new Image(getClass().getResource("/assets/images/turrets/turret-base.png").toString());
-		turretSprite = new Image(getClass().getResource("/assets/images/turrets/turret-1-sprite.png").toString());
+		turretSprite = new Image(getClass().getResource("/assets/images/turrets/turrets_complete.png").toString());
 		terrain = new Image(getClass().getResource("/assets/images/tiles/terrain.png").toString());
 	//	enemy1 = new Image(getClass().getResource("/assets/images/enemies/enemy-red.png").toString());
 		startWave = new Image(getClass().getResource("/assets/images/startWave.png").toString());
