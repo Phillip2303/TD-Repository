@@ -2,6 +2,8 @@ package de.phillip;
 
 import de.phillip.components.GameMenu;
 import de.phillip.controllers.GameController;
+import de.phillip.events.FXEventBus;
+import de.phillip.events.GameEvent;
 import de.phillip.gameUtils.ResourcePool;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -43,13 +45,16 @@ public class TowerDefense extends Application {
                 BackgroundSize.DEFAULT);
 		stackPane.setBackground(new Background(bgi));
 		gameController = new GameController(stackPane);
-		gameMenu = new GameMenu(gameController);
-		gameController.setMenu(gameMenu);
+		gameMenu = new GameMenu();
 		gameMenu.setVisible(true);
 		stackPane.getChildren().add(gameMenu);
 		Scene scene = new Scene(stackPane);
-		scene.setOnMouseClicked(gameController);
-		scene.setOnMouseMoved(gameController);
+		scene.setOnMouseClicked(event -> {
+			FXEventBus.getInstance().fireEvent(event);
+		});
+		scene.setOnMouseMoved (event -> {
+			FXEventBus.getInstance().fireEvent(event);
+		});
 		return scene;
 	}
 

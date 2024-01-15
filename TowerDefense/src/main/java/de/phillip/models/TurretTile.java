@@ -3,6 +3,7 @@ package de.phillip.models;
 import de.phillip.gameUtils.Constants;
 import de.phillip.gameUtils.ResourcePool;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.Bloom;
 import javafx.scene.image.Image;
 
 public class TurretTile extends Tile {
@@ -16,50 +17,104 @@ public class TurretTile extends Tile {
 
 	@Override
 	public void drawToCanvas(GraphicsContext gc) {
-		if (isActive) {
+		Bloom bloom = new Bloom(0.1);
 			switch (getID()) {
 			case 0:
-				gc.drawImage(turretSprite, 0, 0, getWidth(), getHeight(), 
-						getPosX(), getPosY(), getWidth(), 
-						getHeight());
+				if (isActive) {
+					gc.setEffect(bloom);
+					gc.drawImage(turretSprite, 0, 0, getWidth(), getHeight(), 
+							getPosX(), getPosY(), getWidth(), 
+							getHeight());
+				} else {
+					gc.setEffect(null);
+					gc.drawImage(turretSprite, 0, 0, getWidth(), getHeight(), 
+							getPosX(), getPosY(), getWidth(), 
+							getHeight());
+				}
 				break;
 			case 1:
-				gc.drawImage(turretSprite, 0, 46, getWidth(), getHeight(), 
-						getPosX(), getPosY(), getWidth(), 
-						getHeight());
+				if (isActive) {
+					gc.setEffect(bloom);
+					gc.drawImage(turretSprite, 0, 46, getWidth(), getHeight(), 
+							getPosX(), getPosY(), getWidth(), 
+							getHeight());
+				} else {
+					gc.setEffect(null);
+					gc.drawImage(turretSprite, 0, 46, getWidth(), getHeight(), 
+							getPosX(), getPosY(), getWidth(), 
+							getHeight());
+				}
 				break;
 			case 2:
-				gc.drawImage(turretSprite, 0, 92, getWidth(), getHeight(), 
-						getPosX(), getPosY(), getWidth(), 
-						getHeight());
+				if (isActive) {
+					gc.setEffect(bloom);
+					gc.drawImage(turretSprite, 0, 92, getWidth(), getHeight(), 
+							getPosX(), getPosY(), getWidth(), 
+							getHeight());
+				} else {
+					gc.setEffect(null);
+					gc.drawImage(turretSprite, 0, 92, getWidth(), getHeight(), 
+							getPosX(), getPosY(), getWidth(), 
+							getHeight());
+				}
 				break;
 			case 3:
-				gc.drawImage(turretSprite, 0, 138, getWidth(), getHeight(), 
+				if (isActive) {
+					gc.setEffect(bloom);
+					gc.drawImage(turretSprite, 0, 138, getWidth(), getHeight(), 
 						getPosX(), getPosY(), getWidth(), 
 						getHeight());
+				} else {
+					gc.setEffect(null);
+					gc.drawImage(turretSprite, 0, 138, getWidth(), getHeight(), 
+						getPosX(), getPosY(), getWidth(), 
+						getHeight());
+				}
 				break;
 			case 4:
-				gc.drawImage(turretSprite, 0, 184, getWidth(), getHeight(), 
-						getPosX(), getPosY(), getWidth(), 
-						getHeight());
+				if (isActive) {
+					gc.setEffect(bloom);
+					gc.drawImage(turretSprite, 0, 184, getWidth(), getHeight(), 
+							getPosX(), getPosY(), getWidth(), 
+							getHeight());
+				} else {
+					gc.setEffect(null);
+					gc.drawImage(turretSprite, 0, 184, getWidth(), getHeight(), 
+							getPosX(), getPosY(), getWidth(), 
+							getHeight());
+				}
 				break;
 			case 5:
-				gc.drawImage(turretSprite, 0, 230, getWidth(), getHeight(), 
-						getPosX(), getPosY(), getWidth(), 
-						getHeight());
+				if (isActive) {
+					gc.setEffect(bloom);
+					gc.drawImage(turretSprite, 0, 230, getWidth(), getHeight(), 
+							getPosX(), getPosY(), getWidth(), 
+							getHeight());
+				} else {
+					gc.setEffect(null);
+					gc.drawImage(turretSprite, 0, 230, getWidth(), getHeight(), 
+							getPosX(), getPosY(), getWidth(), 
+							getHeight());
+				}
 				break;
 			case 6:
-				gc.drawImage(turretSprite, 0, 276, getWidth(), getHeight(), 
-						getPosX(), getPosY(), getWidth(), 
-						getHeight());
+				if (isActive) {
+					gc.setEffect(bloom);
+					gc.drawImage(turretSprite, 0, 276, getWidth(), getHeight(), 
+							getPosX(), getPosY(), getWidth(), 
+							getHeight());
+				} else {
+					gc.setEffect(null);
+					gc.drawImage(turretSprite, 0, 276, getWidth(), getHeight(), 
+							getPosX(), getPosY(), getWidth(), 
+							getHeight());
+				}
 				break;
 			default:
+				gc.setEffect(null);
 				gc.drawImage(ResourcePool.getInstance().getTurretBase(), getPosX(), getPosY(), getWidth(), getHeight());
 				break;
 			}
-		} else {
-			gc.drawImage(ResourcePool.getInstance().getTurretBase(), getPosX(), getPosY(), getWidth(), getHeight());
-		}
 	}
 	
 	public void setActive(boolean isActive) {

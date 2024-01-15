@@ -25,7 +25,6 @@ public class LayerManager implements Consumer<ActionEvent>{
 	private ActionLayer actionLayer;
 	private int level = 1;
 	private Renderer renderer;
-	private boolean waveStarted;
 	
 	public LayerManager(StackPane stackPane) {
 		renderer = new Renderer();
@@ -48,21 +47,13 @@ public class LayerManager implements Consumer<ActionEvent>{
 	
 	public void update(float secondsSinceLastFrame) {
 		renderer.prepare();
-		if (waveStarted) {
-			actionLayer.update(secondsSinceLastFrame);
-		}
+		actionLayer.update(secondsSinceLastFrame);
 		renderer.render();
-	}
-	
-	public void handleMouseEvent(MouseEvent mouseEvent) {
-		infoLayer.handleMouseEvent(mouseEvent);
 	}
 
 	@Override
 	public void accept(ActionEvent t) {
-		if (t.getSource() instanceof CanvasButton) {
-			waveStarted = true;
-		} else if (t.getSource() instanceof TurretTile){
+		if (t.getSource() instanceof TurretTile){
 			TurretTile overlay = (TurretTile) t.getSource();
 			checkValidTilePosition(overlay);
 		}

@@ -1,6 +1,8 @@
 package de.phillip.components;
 
 import de.phillip.controllers.GameController;
+import de.phillip.events.FXEventBus;
+import de.phillip.events.GameEvent;
 import javafx.animation.FadeTransition;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -12,13 +14,11 @@ import javafx.util.Duration;
 
 public class GameMenu extends Parent {
 	
-	private GameController gameController;
 	VBox startMenu;
 	private MenuState menuState = MenuState.START;
 	private MenuButton startButton;
 
-	public GameMenu(GameController gameController) {
-		this.gameController = gameController;
+	public GameMenu() {
 		createButtons();
 		createStartMenu();
 		Rectangle background = new Rectangle(1024, 1024);
@@ -50,7 +50,7 @@ public class GameMenu extends Parent {
 			ft.setToValue(0);
 			ft.setOnFinished(event2 -> {
 				setVisible(false);
-				gameController.startGame();
+				FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_START, null));
 			});
 			ft.play();
 		});

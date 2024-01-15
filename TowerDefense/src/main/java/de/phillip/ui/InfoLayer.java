@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import de.phillip.events.FXEventBus;
+import de.phillip.events.GameEvent;
 import de.phillip.gameUtils.Constants;
 import de.phillip.gameUtils.ResourcePool;
 import de.phillip.gameUtils.Transformer;
@@ -12,13 +14,15 @@ import de.phillip.models.CanvasLayer;
 import de.phillip.models.Drawable;
 import de.phillip.models.TurretTile;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
-public class InfoLayer extends Canvas implements CanvasLayer {
+public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<MouseEvent> {
 	
 	private TurretTile[][] turretTiles;
 	private Image turretSprite;
@@ -37,6 +41,8 @@ public class InfoLayer extends Canvas implements CanvasLayer {
 
 	public InfoLayer(int tileWidth, int tileHeight, int level) {
 		super(tileWidth*Constants.TILESIZE, tileHeight*Constants.TILESIZE);
+		FXEventBus.getInstance().addEventHandler(MouseEvent.MOUSE_CLICKED, this);
+		FXEventBus.getInstance().addEventHandler(MouseEvent.MOUSE_MOVED, this);
 		turretSprite = ResourcePool.getInstance().getTurretSprite();
 		startWave = ResourcePool.getInstance().getStartWave();
 		createTurretTiles();
@@ -102,8 +108,7 @@ public class InfoLayer extends Canvas implements CanvasLayer {
 		switch (currentState) {
 		case OBSERVE:
 			if (startWaveButton.isActive()) {
-				ActionEvent startWaveEvent = new ActionEvent(startWaveButton, null);
-				consumer.accept(startWaveEvent);
+				FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_STARTWAVE, null));
 				drawables.remove(startWaveButton);
 			} else {
 				for(int y = 0; y < turretTiles.length; y++ ) {
@@ -147,8 +152,24 @@ public class InfoLayer extends Canvas implements CanvasLayer {
 			break;
 		}
 	}
+
+	@Override
+	public List<Drawable> getDrawables() {
+		return drawables;
+	}
+
+	@Override
+	public void prepareLayer() {
+		getGraphicsContext2D().drawImage(ResourcePool.getInstance().getBackground(), 0, 0);
+		getGraphicsContext2D().clearRect(0, 0, Constants.TERRAINLAYER_WIDTH*Constants.TILESIZE, Constants.TERRAINLAYER_HEIGHT*Constants.TILESIZE);
+	}
 	
-	public void handleMouseEvent(MouseEvent mouseEvent) {
+	public void setOnAction(Consumer<ActionEvent> consumer) {
+		this.consumer = consumer;
+	}
+
+	@Override
+	public void handle(MouseEvent mouseEvent) {
 		switch (mouseEvent.getEventType().getName()) {
 		case "MOUSE_MOVED":
 			mouseMoved(mouseEvent.getX(), mouseEvent.getY());
@@ -168,20 +189,5 @@ public class InfoLayer extends Canvas implements CanvasLayer {
 		default: 
 			break;
 		}
-	}
-
-	@Override
-	public List<Drawable> getDrawables() {
-		return drawables;
-	}
-
-	@Override
-	public void prepareLayer() {
-		getGraphicsContext2D().drawImage(ResourcePool.getInstance().getBackground(), 0, 0);
-		getGraphicsContext2D().clearRect(0, 0, Constants.TERRAINLAYER_WIDTH*Constants.TILESIZE, Constants.TERRAINLAYER_HEIGHT*Constants.TILESIZE);
-	}
-	
-	public void setOnAction(Consumer<ActionEvent> consumer) {
-		this.consumer = consumer;
 	}
 }

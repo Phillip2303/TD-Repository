@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.phillip.controllers.WaveController;
+import de.phillip.events.FXEventBus;
+import de.phillip.events.GameEvent;
 import de.phillip.gameUtils.Constants;
 import de.phillip.gameUtils.ResourcePool;
 import de.phillip.gameUtils.Transformer;
@@ -12,10 +14,12 @@ import de.phillip.models.CanvasLayer;
 import de.phillip.models.Drawable;
 import de.phillip.models.Enemy;
 import de.phillip.models.Tile;
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.MouseEvent;
 
-public class ActionLayer extends Canvas implements CanvasLayer {
+public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<GameEvent> {
 	
 	private int layerWidth;
 	private int layerHeight;
@@ -24,9 +28,11 @@ public class ActionLayer extends Canvas implements CanvasLayer {
 	private Tile[][] paths;
 	private WaveController waveController;
 	private List<Actor> actors = new ArrayList<>();
+	private boolean waveStarted;
 
 	public ActionLayer(double tileWidth, double tileHeight, int level) {
 		super(tileWidth*Constants.TILESIZE, tileHeight*Constants.TILESIZE);
+		FXEventBus.getInstance().addEventHandler(GameEvent.TD_STARTWAVE, this);
 		this.level = level;
 		layerWidth = Constants.TERRAINLAYER_WIDTH;
 		layerHeight = Constants.TERRAINLAYER_HEIGHT;
@@ -42,8 +48,10 @@ public class ActionLayer extends Canvas implements CanvasLayer {
 	}
 	
 	public void update(float secondsSinceLastFrame) {
-		checkForNewEnemies(secondsSinceLastFrame);
-		updateEnemies(secondsSinceLastFrame);
+		if (waveStarted) {
+			checkForNewEnemies(secondsSinceLastFrame);
+			updateEnemies(secondsSinceLastFrame);
+		}
 	}
 	
 	private void updateEnemies(float secondsSinceLastFrame) {
@@ -145,5 +153,17 @@ public class ActionLayer extends Canvas implements CanvasLayer {
 	@Override
 	public void prepareLayer() {
 		getGraphicsContext2D().clearRect(0, 0, Constants.TERRAINLAYER_WIDTH*Constants.TILESIZE, Constants.TERRAINLAYER_HEIGHT*Constants.TILESIZE);
+	}
+
+	@Override
+	public void handle(GameEvent event) {
+		switch (event.getEventType().getName()) {
+		case "TD_STARTWAVE":
+			waveStarted = true;
+			break;
+		default: 
+			break;
+		}
+		
 	}
 }
