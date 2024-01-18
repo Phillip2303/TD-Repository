@@ -16,6 +16,9 @@ public class GameEvent extends Event {
 	
 	public static final EventType<GameEvent> TD_STARTWAVE =
             new EventType<>(GameEvent.ANY, "TD_STARTWAVE");
+	
+	public static final EventType<GameEvent> TD_PLACETURRET = 
+			new EventType<>(GameEvent.ANY, "TD_PLACETURRET");
 
 	public GameEvent(EventType<GameEvent> eventType, Object data) {
 		super(eventType);

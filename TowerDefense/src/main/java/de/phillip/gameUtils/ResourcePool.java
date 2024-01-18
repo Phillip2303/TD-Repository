@@ -20,8 +20,10 @@ public class ResourcePool {
 	private Image terrain;
 	private Image enemy1;
 	private Image turretBase;
-	private Image turretSprite;
+	private Image turretTileSprite;
 	private Image startWave;
+	private Image turretSprite;
+	private Image turretCannonSprite;
 
 	private ResourcePool() {
 		
@@ -38,7 +40,9 @@ public class ResourcePool {
 		background = new Image(getClass().getResource("/assets/images/background.png").toString());
 		galaxy = new Image(getClass().getResource("/assets/images/galaxy.jpg").toString());
 		turretBase = new Image(getClass().getResource("/assets/images/turrets/turret-base.png").toString());
-		turretSprite = new Image(getClass().getResource("/assets/images/turrets/turrets_complete.png").toString());
+		turretTileSprite = new Image(getClass().getResource("/assets/images/turrets/turrets_complete.png").toString());
+		turretSprite = new Image(getClass().getResource("/assets/images/turrets/turret-bases.png").toString());
+		turretCannonSprite = new Image(getClass().getResource("/assets/images/turrets/turret-cannons.png").toString());
 		terrain = new Image(getClass().getResource("/assets/images/tiles/terrain.png").toString());
 	//	enemy1 = new Image(getClass().getResource("/assets/images/enemies/enemy-red.png").toString());
 		startWave = new Image(getClass().getResource("/assets/images/startWave.png").toString());
@@ -133,8 +137,16 @@ public class ResourcePool {
 		return turretBase;
 	}
 
+	public Image getTurretTileSprite() {
+		return turretTileSprite;
+	}
+	
 	public Image getTurretSprite() {
 		return turretSprite;
+	}
+
+	public Image getTurretCannonSprite() {
+		return turretCannonSprite;
 	}
 
 	public File loadLevelResource(int level) {

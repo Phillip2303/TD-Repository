@@ -2,7 +2,6 @@ package de.phillip.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import de.phillip.events.FXEventBus;
 import de.phillip.events.GameEvent;
@@ -13,13 +12,10 @@ import de.phillip.models.CanvasButton;
 import de.phillip.models.CanvasLayer;
 import de.phillip.models.Drawable;
 import de.phillip.models.TurretTile;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<MouseEvent> {
@@ -29,7 +25,6 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Mouse
 	private CanvasButton startWaveButton;
 	private Image startWave;
 	private List<Drawable> drawables = new ArrayList<>();
-	private Consumer<ActionEvent> consumer;
 	private TurretTile overlay;
 	private boolean hasSelected;
 	private State currentState = State.OBSERVE;
@@ -43,7 +38,7 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Mouse
 		super(tileWidth*Constants.TILESIZE, tileHeight*Constants.TILESIZE);
 		FXEventBus.getInstance().addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 		FXEventBus.getInstance().addEventHandler(MouseEvent.MOUSE_MOVED, this);
-		turretSprite = ResourcePool.getInstance().getTurretSprite();
+		turretSprite = ResourcePool.getInstance().getTurretTileSprite();
 		startWave = ResourcePool.getInstance().getStartWave();
 		createTurretTiles();
 		createStartWaveButton();
@@ -111,9 +106,10 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Mouse
 				FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_STARTWAVE, null));
 				drawables.remove(startWaveButton);
 			} else {
+				Point2D tile = Transformer.transformPixelsCoordinatesToTile(eventX, eventY);
 				for(int y = 0; y < turretTiles.length; y++ ) {
 					for (int x = 0; x < turretTiles[y].length; x++) {
-						if (turretTiles[y][x].isActive()) {
+						if (turretTiles[y][x].equals(tile)) {
 							TurretTile tempTurret = turretTiles[y][x];
 							System.out.println("ID: " + turretTiles[y][x].getID());
 							overlay = new TurretTile(tempTurret.getPosX() - Constants.TILESIZE / 2, tempTurret.getPosY() - Constants.TILESIZE / 2, tempTurret.getID(), Constants.TILESIZE);
@@ -127,8 +123,7 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Mouse
 			}
 			break;
 		case OVERLAY:
-			ActionEvent overlayEvent = new ActionEvent(overlay, null);
-			consumer.accept(overlayEvent);
+			FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_PLACETURRET, overlay));
 			drawables.remove(overlay);
 			overlay = null;
 			currentState = State.OBSERVE;
@@ -144,12 +139,21 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Mouse
 		case OBSERVE:
 			break;
 		case OVERLAY:
+			invalidateTiles();
 			drawables.remove(overlay);
 			overlay = null;
 			currentState = State.OBSERVE;
 			break;
 		default: 
 			break;
+		}
+	}
+	
+	private void invalidateTiles() {
+		for(int y = 0; y < turretTiles.length; y++ ) {
+			for (int x = 0; x < turretTiles[y].length; x++) {
+				turretTiles[y][x].setActive(false);
+			}
 		}
 	}
 
@@ -162,10 +166,6 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Mouse
 	public void prepareLayer() {
 		getGraphicsContext2D().drawImage(ResourcePool.getInstance().getBackground(), 0, 0);
 		getGraphicsContext2D().clearRect(0, 0, Constants.TERRAINLAYER_WIDTH*Constants.TILESIZE, Constants.TERRAINLAYER_HEIGHT*Constants.TILESIZE);
-	}
-	
-	public void setOnAction(Consumer<ActionEvent> consumer) {
-		this.consumer = consumer;
 	}
 
 	@Override

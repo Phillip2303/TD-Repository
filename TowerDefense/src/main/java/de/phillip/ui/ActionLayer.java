@@ -14,9 +14,12 @@ import de.phillip.models.CanvasLayer;
 import de.phillip.models.Drawable;
 import de.phillip.models.Enemy;
 import de.phillip.models.Tile;
+import de.phillip.models.Turret;
+import de.phillip.models.TurretTile;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 
 public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<GameEvent> {
@@ -29,10 +32,15 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Gam
 	private WaveController waveController;
 	private List<Actor> actors = new ArrayList<>();
 	private boolean waveStarted;
+	private Image turretSprite;
+	private Image turretCannonSprite;
 
 	public ActionLayer(double tileWidth, double tileHeight, int level) {
 		super(tileWidth*Constants.TILESIZE, tileHeight*Constants.TILESIZE);
+		turretSprite = ResourcePool.getInstance().getTurretSprite();
+		turretCannonSprite = ResourcePool.getInstance().getTurretCannonSprite();
 		FXEventBus.getInstance().addEventHandler(GameEvent.TD_STARTWAVE, this);
+		FXEventBus.getInstance().addEventHandler(GameEvent.TD_PLACETURRET, this);
 		this.level = level;
 		layerWidth = Constants.TERRAINLAYER_WIDTH;
 		layerHeight = Constants.TERRAINLAYER_HEIGHT;
@@ -161,9 +169,34 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Gam
 		case "TD_STARTWAVE":
 			waveStarted = true;
 			break;
+		case "TD_PLACETURRET":
+			TurretTile overlay = (TurretTile) event.getData();
+			if (checkValidTilePosition(overlay)) {
+				placeTurret(overlay);
+			}
 		default: 
 			break;
 		}
-		
+	}
+	
+	private void placeTurret(TurretTile overlay) {
+		 Turret turret = new Turret(Constants.TILESIZE, Constants.TILESIZE, turretSprite, turretCannonSprite, overlay.getID());
+		 Point2D overlayCenter = overlay.getCenter();
+		 Point2D selectedTileCoor = Transformer.transformPixelsCoordinatesToTile(overlayCenter.getX(), overlayCenter.getY());
+		 turret.setDrawPosition(selectedTileCoor.getX() * Constants.TILESIZE, selectedTileCoor.getY() * Constants.TILESIZE);
+		 actors.add(turret);
+	}
+	
+	private boolean checkValidTilePosition(TurretTile overlay) {
+		Point2D overlayCenter = overlay.getCenter();
+		if (overlayCenter.getX() < layerWidth * Constants.TILESIZE) {
+			Point2D selectedTileCoor = Transformer.transformPixelsCoordinatesToTile(overlayCenter.getX(), overlayCenter.getY());
+			Tile[][] terrainTiles = ResourcePool.getInstance().getTerrainTiles(level);
+			Tile selectedTile = terrainTiles[(int) selectedTileCoor.getY()][(int) selectedTileCoor.getX()];
+			if (selectedTile.getID() == 8) {
+				return true;
+			}
+		}
+		return false;
 	}
 }
