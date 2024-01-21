@@ -3,6 +3,7 @@ package de.phillip.models;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.transform.Rotate;
 
 public abstract class Actor implements Drawable{
 
@@ -92,6 +93,13 @@ public abstract class Actor implements Drawable{
 
 	public void setDebug(boolean debug) {
 		this.debug = debug;
+	}
+	
+	public void transformContext(GraphicsContext graphicsContext) {
+		Point2D center = getCenter();
+		Rotate rotate = new Rotate(getRotation(), center.getX(), center.getY());
+		graphicsContext.setTransform(rotate.getMxx(), rotate.getMyx(), rotate.getMxy(), rotate.getMyy(), rotate.getTx(),
+				rotate.getTy());
 	}
 	
 	public abstract void drawToCanvas(GraphicsContext gc);

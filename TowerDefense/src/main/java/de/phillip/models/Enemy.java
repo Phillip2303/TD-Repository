@@ -23,6 +23,7 @@ public class Enemy extends Actor {
 
 	@Override
 	public void drawToCanvas(GraphicsContext gc) {
+		gc.save();
 		transformContext(gc);
 		if (reachedEnd) {
 			gc.setGlobalAlpha(0.5);
@@ -31,6 +32,7 @@ public class Enemy extends Actor {
 		}
 		gc.drawImage(waveBlock.getSprite(), 0, spriteIndex*Constants.TILESIZE, getWidth(), 
 				getHeight(), getDrawPosition().getX(), getDrawPosition().getY(), getWidth(), getHeight());
+		gc.restore();
 	}
 	
 	private void updateSpriteIndex() {
@@ -88,10 +90,5 @@ public class Enemy extends Actor {
 		}
 	}
 	
-	private void transformContext(GraphicsContext graphicsContext) {
-		Point2D center = getCenter();
-		Rotate rotate = new Rotate(getRotation(), center.getX(), center.getY());
-		graphicsContext.setTransform(rotate.getMxx(), rotate.getMyx(), rotate.getMxy(), rotate.getMyy(), rotate.getTx(),
-				rotate.getTy());
-	}
+	
 }

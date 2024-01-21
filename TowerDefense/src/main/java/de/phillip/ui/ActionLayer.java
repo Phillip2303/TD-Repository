@@ -2,6 +2,7 @@ package de.phillip.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import de.phillip.controllers.WaveController;
 import de.phillip.events.FXEventBus;
@@ -16,13 +17,15 @@ import de.phillip.models.Enemy;
 import de.phillip.models.Tile;
 import de.phillip.models.Turret;
 import de.phillip.models.TurretTile;
+import de.phillip.ui.InfoLayer.State;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 
-public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<GameEvent> {
+public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Event> {
 	
 	private int layerWidth;
 	private int layerHeight;
@@ -41,6 +44,7 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Gam
 		turretCannonSprite = ResourcePool.getInstance().getTurretCannonSprite();
 		FXEventBus.getInstance().addEventHandler(GameEvent.TD_STARTWAVE, this);
 		FXEventBus.getInstance().addEventHandler(GameEvent.TD_PLACETURRET, this);
+		FXEventBus.getInstance().addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 		this.level = level;
 		layerWidth = Constants.TERRAINLAYER_WIDTH;
 		layerHeight = Constants.TERRAINLAYER_HEIGHT;
@@ -58,7 +62,48 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Gam
 	public void update(float secondsSinceLastFrame) {
 		if (waveStarted) {
 			checkForNewEnemies(secondsSinceLastFrame);
-			updateEnemies(secondsSinceLastFrame);
+			updateActors(secondsSinceLastFrame);
+			//updateEnemies(secondsSinceLastFrame);
+		}
+	}
+	
+	private void updateActors(float secondsSinceLastFrame) {
+		actors.forEach(actor -> {
+			switch (actor.getClass().getName()) {
+			case "de.phillip.models.Enemy":
+				updateEnemy(secondsSinceLastFrame, (Enemy) actor);
+				break;
+			case "de.phillip.models.Turret":
+				updateTurret(secondsSinceLastFrame, (Turret) actor);
+				break;
+			default: 
+				break;
+			}
+		});
+		actors.removeIf(actor -> actor instanceof de.phillip.models.Enemy && ((Enemy)actor).getIsOff());
+	}
+	
+	private void updateTurret(float secondsSinceLastFrame, Turret turret) {
+		turret.setRotation(turret.getRotation() + 3);
+	}
+	
+	private void updateEnemy(float secondsSinceLastFrame, Enemy enemy) {
+		double speed = speedLevel*secondsSinceLastFrame;
+		Point2D currentPosition = calculateTilePosition(enemy.getCenter(), enemy.getRotation());
+		if (!enemy.hasReachedEnd() && paths[(int) currentPosition.getY()][(int) currentPosition.getX()].getID() == 9) {
+			enemy.setReachedEnd();
+			enemy.leavePath(speed);
+		} else {
+			if (!enemy.hasReachedEnd()) {
+				//check for path
+				if (!isPath(enemy, speed)) {
+					enemy.setRotation(getNewRotation(enemy));
+				}
+				enemy.setCurrentThrustVector(speed);
+				enemy.update();
+			} else {
+				enemy.leavePath(speed);
+			}
 		}
 	}
 	
@@ -164,19 +209,51 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Gam
 	}
 
 	@Override
-	public void handle(GameEvent event) {
+	public void handle(Event event) {
 		switch (event.getEventType().getName()) {
 		case "TD_STARTWAVE":
 			waveStarted = true;
 			break;
 		case "TD_PLACETURRET":
-			TurretTile overlay = (TurretTile) event.getData();
+			GameEvent gameEvent = (GameEvent) event;
+			TurretTile overlay = (TurretTile) gameEvent.getData();
 			if (checkValidTilePosition(overlay)) {
 				placeTurret(overlay);
 			}
+		case "MOUSE_CLICKED":
+			MouseEvent mouseEvent = (MouseEvent) event;
+			switch (mouseEvent.getButton()) {
+				case PRIMARY:
+					mouseLeftClicked(mouseEvent.getX(), mouseEvent.getY());
+					break;
+				case SECONDARY:
+					mouseRightClicked(mouseEvent.getX(), mouseEvent.getY());
+					break;
+				default: 
+					break;
+			}
+			break;
 		default: 
 			break;
 		}
+	}
+	
+	private void mouseLeftClicked(double eventX, double eventY) {
+		List<Actor> turrets = actors.stream().filter(actor -> actor instanceof Turret).collect(Collectors.toList());
+		Point2D selectedTileCoor = Transformer.transformPixelsCoordinatesToTile(eventX, eventY);
+		double x = selectedTileCoor.getX() * Constants.TILESIZE;
+		double y = selectedTileCoor.getY() * Constants.TILESIZE;
+		for (Actor turret: turrets) {
+			if (turret.getDrawPosition().getX() == x)  {
+				if (turret.getDrawPosition().getY() == y) {
+					((Turret) turret).select(true);
+				}
+			}
+		}
+	}
+	
+	private void mouseRightClicked(double x, double y) {
+		
 	}
 	
 	private void placeTurret(TurretTile overlay) {

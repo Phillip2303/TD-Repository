@@ -23,10 +23,10 @@ public class Renderer {
 	}
 
 	public void render() {
-		canvasLayers.forEach(e -> {
-			e.getGraphicsContext2D().save();
-			e.getDrawables().forEach(d -> d.drawToCanvas(e.getGraphicsContext2D()));
-			e.getGraphicsContext2D().restore();
+		canvasLayers.forEach(canvas -> {
+			canvas.getGraphicsContext2D().save();
+			canvas.getDrawables().forEach(d -> d.drawToCanvas(canvas.getGraphicsContext2D()));
+			canvas.getGraphicsContext2D().restore();
 		});
 	}
 	
