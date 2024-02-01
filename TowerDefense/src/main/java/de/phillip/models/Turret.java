@@ -3,6 +3,7 @@ package de.phillip.models;
 import de.phillip.events.FXEventBus;
 import de.phillip.gameUtils.Constants;
 import de.phillip.gameUtils.Transformer;
+import de.phillip.models.transferObjects.TurretTO;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -19,14 +20,16 @@ public class Turret extends Actor implements EventHandler<MouseEvent>{
 	private boolean isSelected;
 	private boolean isNew = true;
 	private boolean isDeleted;
-	private int range = 5;
+	private int range = 3;
 	private Color rangeColour = new Color(0.49803922f, 1.0f, 0.83137256f, 0.25);
+	TurretTO turret;
 
-	public Turret(double width, double height, Image turretBaseSprite, Image turretCannonSprite, int ID) {
+	public Turret(double width, double height, int ID, TurretTO turret) {
 		super(width, height);
 		FXEventBus.getInstance().addEventHandler(MouseEvent.MOUSE_CLICKED, this);
-		this.turretBaseSprite = turretBaseSprite;
-		this.turretCannonSprite = turretCannonSprite;
+		this.turret = turret;
+		this.turretBaseSprite = turret.getTurretSprite();
+		this.turretCannonSprite = turret.getCannonSprite();
 		this.ID = ID;
 	}
 	
@@ -42,7 +45,7 @@ public class Turret extends Actor implements EventHandler<MouseEvent>{
 			gc.setStroke(Color.WHITE);
 	        gc.setLineWidth(1);
 	        gc.strokeRect(getDrawPosition().getX(), getDrawPosition().getY(), Constants.TILESIZE, Constants.TILESIZE);
-	        int turretRange = range * Constants.TILESIZE;
+	        int turretRange = range * Constants.TILESIZE * 2;
 	        gc.setFill(rangeColour);
 	        gc.fillOval(getCenter().getX() - turretRange / 2, getCenter().getY() - turretRange / 2, turretRange, turretRange);
 		}
@@ -108,6 +111,10 @@ public class Turret extends Actor implements EventHandler<MouseEvent>{
 	
 	public boolean isDeleted() {
 		return isDeleted;
+	}
+
+	public int getRange() {
+		return range;
 	}
 
 }

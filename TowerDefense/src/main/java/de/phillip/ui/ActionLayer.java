@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import de.phillip.controllers.TurretController;
 import de.phillip.controllers.WaveController;
 import de.phillip.events.FXEventBus;
 import de.phillip.events.GameEvent;
@@ -26,22 +27,19 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 
 public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Event> {
-	
+
 	private int layerWidth;
 	private int layerHeight;
 	private int level;
 	private int speedLevel = 85;
 	private Tile[][] paths;
 	private WaveController waveController;
+	private TurretController turretController;
 	private List<Actor> actors = new ArrayList<>();
 	private boolean waveStarted;
-	private Image turretSprite;
-	private Image turretCannonSprite;
 
 	public ActionLayer(double tileWidth, double tileHeight, int level) {
-		super(tileWidth*Constants.TILESIZE, tileHeight*Constants.TILESIZE);
-		turretSprite = ResourcePool.getInstance().getTurretSprite();
-		turretCannonSprite = ResourcePool.getInstance().getTurretCannonSprite();
+		super(tileWidth * Constants.TILESIZE, tileHeight * Constants.TILESIZE);
 		FXEventBus.getInstance().addEventHandler(GameEvent.TD_STARTWAVE, this);
 		FXEventBus.getInstance().addEventHandler(GameEvent.TD_PLACETURRET, this);
 		this.level = level;
@@ -50,55 +48,61 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 		paths = ResourcePool.getInstance().getPaths(level);
 		waveController = new WaveController();
 		waveController.setLevel(level);
+		turretController = new TurretController();
+		turretController.setLevel(level);
+
 	}
 
-	public void setLevel(int level) { 
+	public void setLevel(int level) {
 		this.level = level;
 		paths = ResourcePool.getInstance().getPaths(level);
 		waveController.setLevel(level);
 	}
-	
+
 	public void update(float secondsSinceLastFrame) {
 		if (waveStarted) {
 			checkForNewEnemies(secondsSinceLastFrame);
-			//updateEnemies(secondsSinceLastFrame);
+			// updateEnemies(secondsSinceLastFrame);
 		}
 		updateActors(secondsSinceLastFrame);
 	}
-	
+
 	private void updateActors(float secondsSinceLastFrame) {
+		List<Enemy> enemies = actors.stream().filter(actor -> actor instanceof Enemy).map(actor -> (Enemy) actor)
+				.collect(Collectors.toList());
 		actors.forEach(actor -> {
 			switch (actor.getClass().getName()) {
 			case "de.phillip.models.Enemy":
 				updateEnemy(secondsSinceLastFrame, (Enemy) actor);
 				break;
 			case "de.phillip.models.Turret":
-				updateTurret(secondsSinceLastFrame, (Turret) actor);
+				updateTurret(secondsSinceLastFrame, (Turret) actor, enemies);
 				break;
-			default: 
+			default:
 				break;
 			}
 		});
-		actors.removeIf(actor -> actor instanceof de.phillip.models.Enemy && ((Enemy)actor).getIsOff());
-		actors.removeIf(actor -> actor instanceof de.phillip.models.Turret && ((Turret)actor).isDeleted());
+		actors.removeIf(actor -> actor instanceof de.phillip.models.Enemy && ((Enemy) actor).getIsOff());
+		actors.removeIf(actor -> actor instanceof de.phillip.models.Turret && ((Turret) actor).isDeleted());
 	}
-	
-	private void updateTurret(float secondsSinceLastFrame, Turret turret) {
+
+	private void updateTurret(float secondsSinceLastFrame, Turret turret, List<Enemy> enemies) {
 		if (turret.isDeleted()) {
 			turret.unregisterHandler();
 		}
+		attackEnemyInRange(turret, enemies);
 		turret.setRotation(turret.getRotation() + 3);
 	}
-	
+
 	private void updateEnemy(float secondsSinceLastFrame, Enemy enemy) {
-		double speed = speedLevel*secondsSinceLastFrame;
+		double speed = speedLevel * secondsSinceLastFrame;
 		Point2D currentPosition = calculateTilePosition(enemy.getCenter(), enemy.getRotation());
 		if (!enemy.hasReachedEnd() && paths[(int) currentPosition.getY()][(int) currentPosition.getX()].getID() == 9) {
 			enemy.setReachedEnd();
 			enemy.leavePath(speed);
 		} else {
 			if (!enemy.hasReachedEnd()) {
-				//check for path
+				// check for path
 				if (!isPath(enemy, speed)) {
 					enemy.setRotation(getNewRotation(enemy));
 				}
@@ -109,18 +113,19 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 			}
 		}
 	}
-	
+
 	private void updateEnemies(float secondsSinceLastFrame) {
 		actors.forEach(actor -> {
-			double speed = speedLevel*secondsSinceLastFrame;
+			double speed = speedLevel * secondsSinceLastFrame;
 			Enemy enemy = (Enemy) actor;
 			Point2D currentPosition = calculateTilePosition(enemy.getCenter(), enemy.getRotation());
-			if (!enemy.hasReachedEnd() && paths[(int) currentPosition.getY()][(int) currentPosition.getX()].getID() == 9) {
+			if (!enemy.hasReachedEnd()
+					&& paths[(int) currentPosition.getY()][(int) currentPosition.getX()].getID() == 9) {
 				enemy.setReachedEnd();
 				enemy.leavePath(speed);
 			} else {
 				if (!enemy.hasReachedEnd()) {
-					//check for path
+					// check for path
 					if (!isPath(enemy, speed)) {
 						enemy.setRotation(getNewRotation(enemy));
 					}
@@ -131,9 +136,9 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 				}
 			}
 		});
-		actors.removeIf(b -> ((Enemy)b).getIsOff());
+		actors.removeIf(b -> ((Enemy) b).getIsOff());
 	}
-	
+
 	private void checkForNewEnemies(float secondsSinceLastFrame) {
 		if (waveController.hasMoreEnemies()) {
 			Enemy newEnemy = waveController.getEnemy(secondsSinceLastFrame);
@@ -142,17 +147,18 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 			}
 		}
 	}
-	
+
 	private boolean isPath(Enemy enemy, double speed) {
-		Point2D futurePosition = enemy.getCenter().
-				add(enemy.calculateNewThrust(speed, Math.toRadians(-enemy.getRotation())));
+		Point2D futurePosition = enemy.getCenter()
+				.add(enemy.calculateNewThrust(speed, Math.toRadians(-enemy.getRotation())));
 		Point2D tilePosition = calculateTilePosition(futurePosition, enemy.getRotation());
-		if (paths[(int) tilePosition.getY()][(int) tilePosition.getX()].getID() == 1 || paths[(int) tilePosition.getY()][(int) tilePosition.getX()].getID() == 9) {
+		if (paths[(int) tilePosition.getY()][(int) tilePosition.getX()].getID() == 1
+				|| paths[(int) tilePosition.getY()][(int) tilePosition.getX()].getID() == 9) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	private double getNewRotation(Enemy enemy) {
 		Point2D tilePosition = calculateTilePosition(enemy.getCenter(), enemy.getRotation());
 		double rotation = 0;
@@ -177,21 +183,21 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 		}
 		return rotation;
 	}
-	
+
 	private Point2D calculateTilePosition(Point2D point, double rotation) {
 		Point2D tile = new Point2D(0, 0);
 		switch ((int) rotation) {
-		case 0: 
-			tile = Transformer.transformPixelsCoordinatesToTile(point.getX(), point.getY() + Constants.TILESIZE/2);
+		case 0:
+			tile = Transformer.transformPixelsCoordinatesToTile(point.getX(), point.getY() + Constants.TILESIZE / 2);
 			break;
 		case 90:
-			tile = Transformer.transformPixelsCoordinatesToTile(point.getX() - Constants.TILESIZE/2, point.getY());
+			tile = Transformer.transformPixelsCoordinatesToTile(point.getX() - Constants.TILESIZE / 2, point.getY());
 			break;
 		case 180:
-			tile = Transformer.transformPixelsCoordinatesToTile(point.getX(), point.getY() - Constants.TILESIZE/2);
+			tile = Transformer.transformPixelsCoordinatesToTile(point.getX(), point.getY() - Constants.TILESIZE / 2);
 			break;
 		case 270:
-			tile = Transformer.transformPixelsCoordinatesToTile(point.getX() + Constants.TILESIZE/2, point.getY());
+			tile = Transformer.transformPixelsCoordinatesToTile(point.getX() + Constants.TILESIZE / 2, point.getY());
 			break;
 		default:
 			System.out.println("Calculate Tile Position");
@@ -208,7 +214,8 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 
 	@Override
 	public void prepareLayer() {
-		getGraphicsContext2D().clearRect(0, 0, Constants.TERRAINLAYER_WIDTH*Constants.TILESIZE, Constants.TERRAINLAYER_HEIGHT*Constants.TILESIZE);
+		getGraphicsContext2D().clearRect(0, 0, Constants.TERRAINLAYER_WIDTH * Constants.TILESIZE,
+				Constants.TERRAINLAYER_HEIGHT * Constants.TILESIZE);
 	}
 
 	@Override
@@ -223,29 +230,53 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 			if (checkValidTilePosition(overlay)) {
 				placeTurret(overlay);
 			}
-		default: 
+		default:
 			break;
 		}
 	}
-		
+
 	private void placeTurret(TurretTile overlay) {
-		 Turret turret = new Turret(Constants.TILESIZE, Constants.TILESIZE, turretSprite, turretCannonSprite, overlay.getID());
-		 Point2D overlayCenter = overlay.getCenter();
-		 Point2D selectedTileCoor = Transformer.transformPixelsCoordinatesToTile(overlayCenter.getX(), overlayCenter.getY());
-		 turret.setDrawPosition(selectedTileCoor.getX() * Constants.TILESIZE, selectedTileCoor.getY() * Constants.TILESIZE);
-		 actors.add(turret);
+		Turret turret = turretController.createTurret(overlay.getID());
+		Point2D overlayCenter = overlay.getCenter();
+		Point2D selectedTileCoor = Transformer.transformPixelsCoordinatesToTile(overlayCenter.getX(),
+				overlayCenter.getY());
+		turret.setDrawPosition(selectedTileCoor.getX() * Constants.TILESIZE,
+				selectedTileCoor.getY() * Constants.TILESIZE);
+		actors.add(turret);
 	}
-	
+
 	private boolean checkValidTilePosition(TurretTile overlay) {
 		Point2D overlayCenter = overlay.getCenter();
 		if (overlayCenter.getX() < layerWidth * Constants.TILESIZE) {
-			Point2D selectedTileCoor = Transformer.transformPixelsCoordinatesToTile(overlayCenter.getX(), overlayCenter.getY());
+			Point2D selectedTileCoor = Transformer.transformPixelsCoordinatesToTile(overlayCenter.getX(),
+					overlayCenter.getY());
 			Tile[][] terrainTiles = ResourcePool.getInstance().getTerrainTiles(level);
 			Tile selectedTile = terrainTiles[(int) selectedTileCoor.getY()][(int) selectedTileCoor.getX()];
-			if (selectedTile.getID() == 8) {
+			if (selectedTile.getID() == 8 && checkFreeTile(selectedTileCoor)) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	private boolean checkFreeTile(Point2D selectedTileCoor) {
+		List<Turret> turrets = actors.stream().filter(actor -> actor instanceof Turret).map(actor -> (Turret) actor)
+				.collect(Collectors.toList());
+		for (Turret turret : turrets) {
+			if (turret.getDrawPosition().getX() == selectedTileCoor.getX() * Constants.TILESIZE
+					&& turret.getDrawPosition().getY() == selectedTileCoor.getY() * Constants.TILESIZE) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	private void attackEnemyInRange(Turret turret, List<Enemy> enemies) {
+		enemies.forEach(e -> {
+			if (Transformer.getDistance(e.getCenter().getX(), e.getCenter().getY(), turret.getCenter().getX(),
+					turret.getCenter().getY()) <= turret.getRange() * Constants.TILESIZE) {
+				System.out.println("Boom");
+			}
+		});
 	}
 }

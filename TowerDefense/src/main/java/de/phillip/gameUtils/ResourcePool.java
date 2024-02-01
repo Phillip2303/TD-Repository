@@ -22,8 +22,6 @@ public class ResourcePool {
 	private Image turretBase;
 	private Image turretTileSprite;
 	private Image startWave;
-	private Image turretSprite;
-	private Image turretCannonSprite;
 
 	private ResourcePool() {
 		
@@ -41,8 +39,7 @@ public class ResourcePool {
 		galaxy = new Image(getClass().getResource("/assets/images/galaxy.jpg").toString());
 		turretBase = new Image(getClass().getResource("/assets/images/turrets/turret-base.png").toString());
 		turretTileSprite = new Image(getClass().getResource("/assets/images/turrets/turrets_complete.png").toString());
-		turretSprite = new Image(getClass().getResource("/assets/images/turrets/turret-bases.png").toString());
-		turretCannonSprite = new Image(getClass().getResource("/assets/images/turrets/turret-cannons.png").toString());
+		
 		terrain = new Image(getClass().getResource("/assets/images/tiles/terrain.png").toString());
 	//	enemy1 = new Image(getClass().getResource("/assets/images/enemies/enemy-red.png").toString());
 		startWave = new Image(getClass().getResource("/assets/images/startWave.png").toString());
@@ -129,6 +126,10 @@ public class ResourcePool {
 		return new Image(getClass().getResource(resourcePath).toString());
 	}
 	
+	public Image getTurretSprite(String resourcePath) {
+		return new Image(getClass().getResource(resourcePath).toString());
+	}
+	
 	public Image getGalaxy() {
 		return galaxy;
 	}
@@ -140,17 +141,21 @@ public class ResourcePool {
 	public Image getTurretTileSprite() {
 		return turretTileSprite;
 	}
-	
-	public Image getTurretSprite() {
-		return turretSprite;
-	}
 
-	public Image getTurretCannonSprite() {
-		return turretCannonSprite;
-	}
-
-	public File loadLevelResource(int level) {
-		String resourcePath = "assets/level/enemy" + level + ".json";
+	public File loadLevelResource(int level, String actorType) {
+		String resourcePath = "assets/level/";
+		String actor = "";
+		switch (actorType) {
+			case "ENEMY":
+				actor = "enemy";
+				break;
+			case "TURRET":
+				actor = "turret";
+				break;
+			default:
+				break;
+		}
+		resourcePath = resourcePath + actor + level + ".json";
 		URL url = getClass().getClassLoader().getResource(resourcePath);
 		if (url == null) {
 			throw new IllegalArgumentException("file not found: " + resourcePath);

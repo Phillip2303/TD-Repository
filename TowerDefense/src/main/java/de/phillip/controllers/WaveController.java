@@ -41,7 +41,7 @@ public class WaveController {
 	private void loadLevelResource() {
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
-			wave = objectMapper.readValue(ResourcePool.getInstance().loadLevelResource(level), WaveTO.class);
+			wave = objectMapper.readValue(ResourcePool.getInstance().loadLevelResource(level, "ENEMY"), WaveTO.class);
 		} catch (StreamReadException e) {
 			e.printStackTrace();
 		} catch (DatabindException e) {
