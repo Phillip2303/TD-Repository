@@ -19,5 +19,12 @@ public final class Transformer {
 		double diffY = Math.abs(y1 - y2);
 		return (int) Math.hypot(diffX, diffY);
 	}
+	
+	public static int getDirection(double targetX, double targetY, double x, double y) {
+		double distX = targetX - x;
+		double distY = targetY - y;
+		double angleRadiant = Math.atan2(distY, distX);
+		return (int) Math.toDegrees(angleRadiant);
+	}
 
 }

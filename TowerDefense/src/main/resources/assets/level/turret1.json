@@ -2,6 +2,7 @@
   "damage" : 1,
   "range" : 3,
   "bulletCooldown" : 0.5,
+  "bulletSpeed" : 170,
   "turretSpritePath" : "/assets/images/turrets/turret-bases.png",
   "cannonSpritePath" : "/assets/images/turrets/turret-cannons.png"
 }

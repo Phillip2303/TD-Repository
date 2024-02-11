@@ -19,6 +19,7 @@ public class ResourcePool {
 	private Tile[][] terrainTiles1, path1;
 	private Image terrain;
 	private Image enemy1;
+	private Image bullet1;
 	private Image turretBase;
 	private Image turretTileSprite;
 	private Image startWave;
@@ -94,6 +95,10 @@ public class ResourcePool {
 		default:
 			return null;
 		}
+	}
+	
+	public Image getBullet(int ID) {
+		return new Image(getClass().getResource("/assets/images/turrets/bullet" + ID + ".png").toString());
 	}
 	
 	public Image getTerrain() {

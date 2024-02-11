@@ -9,6 +9,7 @@ public class TurretTO {
 	private int damage;
 	private int range;
 	private double bulletCooldown;
+	private int bulletSpeed;
 	private String turretSpritePath;
 	private String cannonSpritePath;
 	@JsonIgnore
@@ -42,6 +43,14 @@ public class TurretTO {
 	
 	public void setDamage(int damage) {
 		this.damage = damage;
+	}
+	
+	public int getBulletSpeed() {
+		return bulletSpeed;
+	}
+	
+	public void setBulletSpeed(int bulletSpeed) {
+		this.bulletSpeed = bulletSpeed;
 	}
 
 	public int getRange() {

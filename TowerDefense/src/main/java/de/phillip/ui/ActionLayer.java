@@ -12,6 +12,7 @@ import de.phillip.gameUtils.Constants;
 import de.phillip.gameUtils.ResourcePool;
 import de.phillip.gameUtils.Transformer;
 import de.phillip.models.Actor;
+import de.phillip.models.Bullet;
 import de.phillip.models.CanvasLayer;
 import de.phillip.models.Drawable;
 import de.phillip.models.Enemy;
@@ -70,28 +71,43 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 	private void updateActors(float secondsSinceLastFrame) {
 		List<Enemy> enemies = actors.stream().filter(actor -> actor instanceof Enemy).map(actor -> (Enemy) actor)
 				.collect(Collectors.toList());
+		List<Bullet> bullets = new ArrayList<>();
 		actors.forEach(actor -> {
 			switch (actor.getClass().getName()) {
 			case "de.phillip.models.Enemy":
 				updateEnemy(secondsSinceLastFrame, (Enemy) actor);
 				break;
 			case "de.phillip.models.Turret":
-				updateTurret(secondsSinceLastFrame, (Turret) actor, enemies);
+				updateTurret(secondsSinceLastFrame, (Turret) actor, enemies, bullets);
+				break;
+			case "de.phillip.models.Bullet":
+				updateBullet((Bullet) actor, secondsSinceLastFrame);
 				break;
 			default:
 				break;
 			}
 		});
+		actors.addAll(bullets);
 		actors.removeIf(actor -> actor instanceof de.phillip.models.Enemy && ((Enemy) actor).getIsOff());
 		actors.removeIf(actor -> actor instanceof de.phillip.models.Turret && ((Turret) actor).isDeleted());
 	}
 
-	private void updateTurret(float secondsSinceLastFrame, Turret turret, List<Enemy> enemies) {
+	private void updateTurret(float secondsSinceLastFrame, Turret turret, List<Enemy> enemies, List<Bullet>bullets)
+ {
 		if (turret.isDeleted()) {
 			turret.unregisterHandler();
+		} else {
+			if (turret.canReach(enemies)) {
+				Bullet bullet = turret.shoot();
+				bullets.add(bullet);
+			}
 		}
-		attackEnemyInRange(turret, enemies);
-		turret.setRotation(turret.getRotation() + 3);
+	}
+	
+	private void updateBullet(Bullet bullet, float secondsSinceLastFrame) {
+		double speed = bullet.getSpeedLevel() * secondsSinceLastFrame;
+		bullet.setCurrentThrustVector(speed);
+		bullet.update();
 	}
 
 	private void updateEnemy(float secondsSinceLastFrame, Enemy enemy) {
@@ -269,14 +285,5 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 			}
 		}
 		return true;
-	}
-
-	private void attackEnemyInRange(Turret turret, List<Enemy> enemies) {
-		enemies.forEach(e -> {
-			if (Transformer.getDistance(e.getCenter().getX(), e.getCenter().getY(), turret.getCenter().getX(),
-					turret.getCenter().getY()) <= turret.getRange() * Constants.TILESIZE) {
-				System.out.println("Boom");
-			}
-		});
 	}
 }

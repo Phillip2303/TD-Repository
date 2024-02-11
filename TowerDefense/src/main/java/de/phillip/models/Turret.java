@@ -1,7 +1,10 @@
 package de.phillip.models;
 
+import java.util.List;
+
 import de.phillip.events.FXEventBus;
 import de.phillip.gameUtils.Constants;
+import de.phillip.gameUtils.ResourcePool;
 import de.phillip.gameUtils.Transformer;
 import de.phillip.models.transferObjects.TurretTO;
 import javafx.event.Event;
@@ -22,7 +25,8 @@ public class Turret extends Actor implements EventHandler<MouseEvent>{
 	private boolean isDeleted;
 	private int range = 3;
 	private Color rangeColour = new Color(0.49803922f, 1.0f, 0.83137256f, 0.25);
-	TurretTO turret;
+	private TurretTO turret;
+	private Enemy target;
 
 	public Turret(double width, double height, int ID, TurretTO turret) {
 		super(width, height);
@@ -115,6 +119,39 @@ public class Turret extends Actor implements EventHandler<MouseEvent>{
 
 	public int getRange() {
 		return range;
+	}
+	
+	public boolean canReach(List<Enemy> enemies) {
+		if (target == null) {
+			for (Enemy enemy: enemies) {
+				if (Transformer.getDistance(enemy.getCenter().getX(), enemy.getCenter().getY(), getCenter().getX(),
+						getCenter().getY()) <= range * Constants.TILESIZE) {
+					target = enemy;
+					return true;
+				}
+			}
+			return false;
+		} else {
+			if (Transformer.getDistance(target.getCenter().getX(), target.getCenter().getY(), getCenter().getX(),
+					getCenter().getY()) <= range * Constants.TILESIZE) {
+				return true;
+			} else {
+				target = null;
+				return false;
+			}
+		}
+	}
+	
+	public Bullet shoot() {
+		Bullet bullet = null;
+		if (target != null) {
+			bullet = new Bullet(ResourcePool.getInstance().getBullet(1));
+			bullet.setDrawPosition(getCenter().getX(), getCenter().getY());
+			bullet.setRotation(Transformer.getDirection(target.getCenter().getX(), target.getCenter().getY(), getCenter().getX(), getCenter().getY()));
+			bullet.setSpeedLevel(turret.getBulletSpeed());
+			setRotation(Transformer.getDirection(target.getCenter().getX(), target.getCenter().getY(), getCenter().getX(), getCenter().getY()));
+		}
+		return bullet;
 	}
 
 }
