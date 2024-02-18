@@ -16,6 +16,8 @@ public class TurretTO {
 	 private Image turretSprite;
 	@JsonIgnore
 	 private Image cannonSprite;
+	@JsonIgnore
+	private Image bulletImage;
 	
 	public TurretTO() {
 		
@@ -83,5 +85,13 @@ public class TurretTO {
 
 	public void setCannonSpritePath(String cannonSpritePath) {
 		this.cannonSpritePath = cannonSpritePath;
+	}
+
+	public Image getBulletImage() {
+		return bulletImage;
+	}
+
+	public void setBulletImage(Image bulletImage) {
+		this.bulletImage = bulletImage;
 	}
 }

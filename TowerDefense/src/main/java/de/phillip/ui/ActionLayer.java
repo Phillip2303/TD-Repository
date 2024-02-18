@@ -90,16 +90,19 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 		actors.addAll(bullets);
 		actors.removeIf(actor -> actor instanceof de.phillip.models.Enemy && ((Enemy) actor).getIsOff());
 		actors.removeIf(actor -> actor instanceof de.phillip.models.Turret && ((Turret) actor).isDeleted());
+		actors.removeIf(actor -> actor instanceof de.phillip.models.Bullet && !((Bullet) actor).isInRange());
 	}
 
-	private void updateTurret(float secondsSinceLastFrame, Turret turret, List<Enemy> enemies, List<Bullet>bullets)
- {
+	private void updateTurret(float secondsSinceLastFrame, Turret turret, List<Enemy> enemies, List<Bullet>bullets) {
 		if (turret.isDeleted()) {
 			turret.unregisterHandler();
 		} else {
+			turret.cooldown(secondsSinceLastFrame);
 			if (turret.canReach(enemies)) {
 				Bullet bullet = turret.shoot();
-				bullets.add(bullet);
+				if (bullet != null) {
+					bullets.add(bullet);
+				}
 			}
 		}
 	}

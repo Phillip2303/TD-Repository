@@ -23,10 +23,12 @@ public class Turret extends Actor implements EventHandler<MouseEvent>{
 	private boolean isSelected;
 	private boolean isNew = true;
 	private boolean isDeleted;
-	private int range = 3;
+	private int range;
 	private Color rangeColour = new Color(0.49803922f, 1.0f, 0.83137256f, 0.25);
 	private TurretTO turret;
 	private Enemy target;
+	private float cooldownSeconds;
+	private boolean isCoolingDown;
 
 	public Turret(double width, double height, int ID, TurretTO turret) {
 		super(width, height);
@@ -35,6 +37,7 @@ public class Turret extends Actor implements EventHandler<MouseEvent>{
 		this.turretBaseSprite = turret.getTurretSprite();
 		this.turretCannonSprite = turret.getCannonSprite();
 		this.ID = ID;
+		range = turret.getRange();
 	}
 	
 	public void unregisterHandler() {
@@ -144,14 +147,25 @@ public class Turret extends Actor implements EventHandler<MouseEvent>{
 	
 	public Bullet shoot() {
 		Bullet bullet = null;
-		if (target != null) {
-			bullet = new Bullet(ResourcePool.getInstance().getBullet(1));
-			bullet.setDrawPosition(getCenter().getX(), getCenter().getY());
-			bullet.setRotation(Transformer.getDirection(target.getCenter().getX(), target.getCenter().getY(), getCenter().getX(), getCenter().getY()));
+		if (target != null && !isCoolingDown) {
+			bullet = new Bullet(turret.getBulletImage(), turret.getRange());
+			bullet.setStartPosition(getCenter().getX(), getCenter().getY());
+			bullet.setRotation(Transformer.getDirection(target.getCenter().getX(), target.getCenter().getY(), getCenter().getX(), getCenter().getY())-90);
 			bullet.setSpeedLevel(turret.getBulletSpeed());
 			setRotation(Transformer.getDirection(target.getCenter().getX(), target.getCenter().getY(), getCenter().getX(), getCenter().getY()));
+			isCoolingDown = true;
 		}
 		return bullet;
+	}
+	
+	public void cooldown(float secondsSinceLastFrame) {
+		if(isCoolingDown) {
+			cooldownSeconds += secondsSinceLastFrame;
+			if (cooldownSeconds >= turret.getBulletCooldown()) {
+				isCoolingDown = false;
+				cooldownSeconds = 0;
+			}
+		}
 	}
 
 }

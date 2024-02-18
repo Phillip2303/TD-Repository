@@ -49,7 +49,8 @@ public class TurretController {
 		turret.setTurretSprite(turretSprite);
 		Image cannonSprite = ResourcePool.getInstance().getTurretSprite(turret.getCannonSpritePath());
 		turret.setCannonSprite(cannonSprite);
-		
+		Image bulletImage = ResourcePool.getInstance().getBullet(level);
+		turret.setBulletImage(bulletImage);
 	}
 	
 	public Turret createTurret(int ID) {
