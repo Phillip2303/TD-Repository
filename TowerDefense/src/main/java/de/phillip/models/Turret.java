@@ -136,7 +136,7 @@ public class Turret extends Actor implements EventHandler<MouseEvent>{
 			return false;
 		} else {
 			if (Transformer.getDistance(target.getCenter().getX(), target.getCenter().getY(), getCenter().getX(),
-					getCenter().getY()) <= range * Constants.TILESIZE) {
+					getCenter().getY()) <= range * Constants.TILESIZE && target.isAlive()) {
 				return true;
 			} else {
 				target = null;

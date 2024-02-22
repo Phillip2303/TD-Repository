@@ -13,7 +13,7 @@ public class Bullet extends Actor {
 	private int speedLevel;
 	private Point2D startPosition;
 	private int range;
-	private boolean isInRange = true;
+	private boolean isAlive = true;
 
 	public Bullet(Image image, int range) {
 		super(image.getWidth(), image.getHeight());
@@ -39,8 +39,12 @@ public class Bullet extends Actor {
 		return speedLevel;
 	}
 
-	public boolean isInRange() {
-		return isInRange;
+	public boolean isAlive() {
+		return isAlive;
+	}
+
+	public void setAlive(boolean isAlive) {
+		this.isAlive = isAlive;
 	}
 
 	public void setSpeedLevel(int speedLevel) {
@@ -59,7 +63,7 @@ public class Bullet extends Actor {
 	
 	public void update() {
 		checkRange();
-		if (isInRange) {
+		if (isAlive) {
 			super.update();
 		}
 	}
@@ -67,10 +71,9 @@ public class Bullet extends Actor {
 	private void checkRange() {
 		if (Transformer.getDistance(startPosition.getX(), startPosition.getY(), getCenter().getX(),
 			getCenter().getY()) <= range * Constants.TILESIZE) {
-			isInRange = true;
+			isAlive = true;
 		} else {
-			isInRange = false;
+			isAlive = false;
 		}
-		System.out.println(isInRange);
 	}
 }

@@ -81,10 +81,10 @@ public abstract class Actor implements Drawable{
 		return currentThrustVector;
 	}
 
-	public boolean intersects(Actor moveableActor) {
+	public boolean intersects(Actor actor) {
 		Rectangle2D me = new Rectangle2D(position.getX(), position.getY(), getWidth(), getHeight());
-		return me.intersects(new Rectangle2D(moveableActor.getDrawPosition().getX(), moveableActor.getDrawPosition().getY(),
-				moveableActor.getWidth(), moveableActor.getHeight()));
+		return me.intersects(new Rectangle2D(actor.getDrawPosition().getX(), actor.getDrawPosition().getY(),
+				actor.getWidth(), actor.getHeight()));
 	}
 	
 	public boolean isDebug() {

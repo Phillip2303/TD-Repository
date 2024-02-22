@@ -4,6 +4,7 @@ import de.phillip.gameUtils.Constants;
 import de.phillip.models.transferObjects.WaveBlockTO;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 import javafx.scene.transform.Rotate;
 
 public class Enemy extends Actor {
@@ -15,15 +16,27 @@ public class Enemy extends Actor {
 	private boolean isOff;
 	private WaveBlockTO waveBlock;
 	private int index;
+	private int health;
+	private boolean alive = true;
+	
 
 	public Enemy(double width, double height, WaveBlockTO waveBlock) {
 		super(width, height);
 		this.waveBlock = waveBlock;
+		health = this.waveBlock.getHealth();
 	}
 
 	@Override
 	public void drawToCanvas(GraphicsContext gc) {
 		gc.save();
+		double width = (getWidth() / waveBlock.getHealth()) * health;
+		if (health > waveBlock.getHealth() / 4) {
+			gc.setFill(Color.GREEN);
+		} else {
+			gc.setFill(Color.RED);
+		}
+		gc.fillRect(getDrawPosition().getX(), getDrawPosition().getY(), width, 6);
+		System.out.println(waveBlock.getHealth());
 		transformContext(gc);
 		if (reachedEnd) {
 			gc.setGlobalAlpha(0.5);
@@ -80,8 +93,19 @@ public class Enemy extends Actor {
 		return index;
 	}
 	
+	public boolean isAlive() {
+		return alive;
+	}
+
 	public void setIndex(int index) {
 		this.index = index;
+	}
+	
+	public void reduceHealth() {
+		health -= 1;
+		if (health == 0) {
+			alive = false;
+		}
 	}
 	
 	public void debugOut() {

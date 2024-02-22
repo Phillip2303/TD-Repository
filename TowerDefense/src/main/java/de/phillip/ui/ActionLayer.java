@@ -81,16 +81,16 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 				updateTurret(secondsSinceLastFrame, (Turret) actor, enemies, bullets);
 				break;
 			case "de.phillip.models.Bullet":
-				updateBullet((Bullet) actor, secondsSinceLastFrame);
+				updateBullet((Bullet) actor, secondsSinceLastFrame, enemies);
 				break;
 			default:
 				break;
 			}
 		});
 		actors.addAll(bullets);
-		actors.removeIf(actor -> actor instanceof de.phillip.models.Enemy && ((Enemy) actor).getIsOff());
+		actors.removeIf(actor -> actor instanceof de.phillip.models.Enemy && (((Enemy) actor).getIsOff() || !((Enemy) actor).isAlive()));
 		actors.removeIf(actor -> actor instanceof de.phillip.models.Turret && ((Turret) actor).isDeleted());
-		actors.removeIf(actor -> actor instanceof de.phillip.models.Bullet && !((Bullet) actor).isInRange());
+		actors.removeIf(actor -> actor instanceof de.phillip.models.Bullet && !((Bullet) actor).isAlive());
 	}
 
 	private void updateTurret(float secondsSinceLastFrame, Turret turret, List<Enemy> enemies, List<Bullet>bullets) {
@@ -107,10 +107,16 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 		}
 	}
 	
-	private void updateBullet(Bullet bullet, float secondsSinceLastFrame) {
+	private void updateBullet(Bullet bullet, float secondsSinceLastFrame, List<Enemy> enemies) {
 		double speed = bullet.getSpeedLevel() * secondsSinceLastFrame;
 		bullet.setCurrentThrustVector(speed);
 		bullet.update();
+		for (Enemy enemy: enemies) {
+			if (bullet.intersects(enemy)) {
+				enemy.reduceHealth();
+				bullet.setAlive(false);
+			}
+		}
 	}
 
 	private void updateEnemy(float secondsSinceLastFrame, Enemy enemy) {
