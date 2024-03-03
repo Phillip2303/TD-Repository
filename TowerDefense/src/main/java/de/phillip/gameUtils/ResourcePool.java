@@ -110,7 +110,7 @@ public class ResourcePool {
 		case 1: 
 			return terrainTiles1;
 		case 2:
-			return null;
+			return terrainTiles1;
 		default:
 			return null;
 		}
@@ -121,7 +121,7 @@ public class ResourcePool {
 		case 1: 
 			return path1;
 		case 2:
-			return null;
+			return path1;
 		default:
 			return null;
 		}

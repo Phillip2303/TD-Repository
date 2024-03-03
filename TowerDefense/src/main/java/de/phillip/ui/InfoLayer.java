@@ -12,13 +12,14 @@ import de.phillip.models.CanvasButton;
 import de.phillip.models.CanvasLayer;
 import de.phillip.models.Drawable;
 import de.phillip.models.TurretTile;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 
-public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<MouseEvent> {
+public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event> {
 	
 	private TurretTile[][] turretTiles;
 	private Image turretSprite;
@@ -169,18 +170,20 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Mouse
 	}
 
 	@Override
-	public void handle(MouseEvent mouseEvent) {
-		switch (mouseEvent.getEventType().getName()) {
+	public void handle(Event event) {
+		switch (event.getEventType().getName()) {
 		case "MOUSE_MOVED":
-			mouseMoved(mouseEvent.getX(), mouseEvent.getY());
+			MouseEvent mouseMoveEvent = (MouseEvent) event;
+			mouseMoved(mouseMoveEvent.getX(), mouseMoveEvent.getY());
 			break;
 		case "MOUSE_CLICKED":
-			switch (mouseEvent.getButton()) {
+			MouseEvent mouseClickEvent = (MouseEvent) event;
+			switch (mouseClickEvent.getButton()) {
 				case PRIMARY:
-					mouseLeftClicked(mouseEvent.getX(), mouseEvent.getY());
+					mouseLeftClicked(mouseClickEvent.getX(), mouseClickEvent.getY());
 					break;
 				case SECONDARY:
-					mouseRightClicked(mouseEvent.getX(), mouseEvent.getY());
+					mouseRightClicked(mouseClickEvent.getX(), mouseClickEvent.getY());
 					break;
 				default: 
 					break;
@@ -189,5 +192,10 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Mouse
 		default: 
 			break;
 		}
+	}
+	
+	public void setLevel(int level) {
+		currentState = State.OBSERVE;
+		drawables.add(startWaveButton);
 	}
 }

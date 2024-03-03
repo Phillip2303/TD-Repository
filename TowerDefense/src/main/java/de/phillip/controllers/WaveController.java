@@ -27,6 +27,8 @@ public class WaveController {
 	
 	public void setLevel(int level) {
 		this.level = level;
+		blockIndex = 0;
+		enemyIndex = 0;
 		loadLevelResource();
 		createBlockSprites();
 	}

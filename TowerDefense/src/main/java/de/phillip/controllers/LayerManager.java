@@ -1,5 +1,7 @@
 package de.phillip.controllers;
 
+import de.phillip.events.FXEventBus;
+import de.phillip.events.GameEvent;
 import de.phillip.gameUtils.Constants;
 import de.phillip.gameUtils.ResourcePool;
 import de.phillip.gameUtils.Transformer;
@@ -9,11 +11,14 @@ import de.phillip.rendering.Renderer;
 import de.phillip.ui.ActionLayer;
 import de.phillip.ui.InfoLayer;
 import de.phillip.ui.TerrainLayer;
+import de.phillip.ui.InfoLayer.State;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.layout.StackPane;
 
-public class LayerManager {
+public class LayerManager implements EventHandler<Event>{
 	
 	private InfoLayer infoLayer;
 	private TerrainLayer terrainLayer;
@@ -22,6 +27,7 @@ public class LayerManager {
 	private Renderer renderer;
 	
 	public LayerManager(StackPane stackPane) {
+		FXEventBus.getInstance().addEventHandler(GameEvent.TD_NEXTLEVEL, this);
 		renderer = new Renderer();
 		infoLayer = new InfoLayer(Constants.TERRAINLAYER_HEIGHT, Constants.TERRAINLAYER_HEIGHT, level);
 		terrainLayer = new TerrainLayer(Constants.TERRAINLAYER_WIDTH, Constants.TERRAINLAYER_HEIGHT, level);
@@ -37,11 +43,23 @@ public class LayerManager {
 		level++;
 		actionLayer.setLevel(level);
 		terrainLayer.setLevel(level);
+		infoLayer.setLevel(level);
 	}
 	
 	public void update(float secondsSinceLastFrame) {
 		renderer.prepare();
 		actionLayer.update(secondsSinceLastFrame);
 		renderer.render();
+	}
+
+	@Override
+	public void handle(Event event) {
+		switch (event.getEventType().getName()) {
+		case "TD_NEXTLEVEL":
+			nextLevel();
+			break;
+		default:
+			break;
+		}
 	}
 }

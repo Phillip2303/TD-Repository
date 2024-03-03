@@ -38,6 +38,7 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 	private TurretController turretController;
 	private List<Actor> actors = new ArrayList<>();
 	private boolean waveStarted;
+	private boolean isCleaned;
 
 	public ActionLayer(double tileWidth, double tileHeight, int level) {
 		super(tileWidth * Constants.TILESIZE, tileHeight * Constants.TILESIZE);
@@ -62,7 +63,7 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 
 	public void update(float secondsSinceLastFrame) {
 		if (waveStarted) {
-			checkForNewEnemies(secondsSinceLastFrame);
+			addNewEnemies(secondsSinceLastFrame);
 			// updateEnemies(secondsSinceLastFrame);
 		}
 		updateActors(secondsSinceLastFrame);
@@ -71,26 +72,32 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 	private void updateActors(float secondsSinceLastFrame) {
 		List<Enemy> enemies = actors.stream().filter(actor -> actor instanceof Enemy).map(actor -> (Enemy) actor)
 				.collect(Collectors.toList());
-		List<Bullet> bullets = new ArrayList<>();
-		actors.forEach(actor -> {
-			switch (actor.getClass().getName()) {
-			case "de.phillip.models.Enemy":
-				updateEnemy(secondsSinceLastFrame, (Enemy) actor);
-				break;
-			case "de.phillip.models.Turret":
-				updateTurret(secondsSinceLastFrame, (Turret) actor, enemies, bullets);
-				break;
-			case "de.phillip.models.Bullet":
-				updateBullet((Bullet) actor, secondsSinceLastFrame, enemies);
-				break;
-			default:
-				break;
-			}
-		});
-		actors.addAll(bullets);
-		actors.removeIf(actor -> actor instanceof de.phillip.models.Enemy && (((Enemy) actor).getIsOff() || !((Enemy) actor).isAlive()));
-		actors.removeIf(actor -> actor instanceof de.phillip.models.Turret && ((Turret) actor).isDeleted());
-		actors.removeIf(actor -> actor instanceof de.phillip.models.Bullet && !((Bullet) actor).isAlive());
+		if (!waveController.hasMoreEnemies() && enemies.isEmpty() && !isCleaned) {
+			System.out.println("All enemies gone");
+			cleanUpLevel();
+			FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_NEXTLEVEL, null));
+		} else {
+			List<Bullet> bullets = new ArrayList<>();
+			actors.forEach(actor -> {
+				switch (actor.getClass().getName()) {
+				case "de.phillip.models.Enemy":
+					updateEnemy(secondsSinceLastFrame, (Enemy) actor);
+					break;
+				case "de.phillip.models.Turret":
+					updateTurret(secondsSinceLastFrame, (Turret) actor, enemies, bullets);
+					break;
+				case "de.phillip.models.Bullet":
+					updateBullet((Bullet) actor, secondsSinceLastFrame, enemies);
+					break;
+				default:
+					break;
+				}
+			});
+			actors.addAll(bullets);
+			actors.removeIf(actor -> actor instanceof de.phillip.models.Enemy && (((Enemy) actor).getIsOff() || !((Enemy) actor).isAlive()));
+			actors.removeIf(actor -> actor instanceof de.phillip.models.Turret && ((Turret) actor).isDeleted());
+			actors.removeIf(actor -> actor instanceof de.phillip.models.Bullet && !((Bullet) actor).isAlive());
+		}
 	}
 
 	private void updateTurret(float secondsSinceLastFrame, Turret turret, List<Enemy> enemies, List<Bullet>bullets) {
@@ -164,7 +171,7 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 		actors.removeIf(b -> ((Enemy) b).getIsOff());
 	}
 
-	private void checkForNewEnemies(float secondsSinceLastFrame) {
+	private void addNewEnemies(float secondsSinceLastFrame) {
 		if (waveController.hasMoreEnemies()) {
 			Enemy newEnemy = waveController.getEnemy(secondsSinceLastFrame);
 			if (newEnemy != null) {
@@ -294,5 +301,13 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 			}
 		}
 		return true;
+	}
+	
+	private void cleanUpLevel() {
+		actors.removeIf(actor -> actor instanceof de.phillip.models.Turret);
+		actors.removeIf(actor -> actor instanceof de.phillip.models.Bullet);
+		isCleaned = true;
+		waveStarted = false;
+
 	}
 }
