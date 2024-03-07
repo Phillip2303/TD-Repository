@@ -29,6 +29,7 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 	private TurretTile overlay;
 	private boolean hasSelected;
 	private State currentState = State.OBSERVE;
+	private int level;
 	
 	public enum State {
 		OVERLAY,
@@ -37,11 +38,12 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 
 	public InfoLayer(int tileWidth, int tileHeight, int level) {
 		super(tileWidth*Constants.TILESIZE, tileHeight*Constants.TILESIZE);
+		this.level = level;
 		FXEventBus.getInstance().addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 		FXEventBus.getInstance().addEventHandler(MouseEvent.MOUSE_MOVED, this);
 		turretSprite = ResourcePool.getInstance().getTurretTileSprite();
 		startWave = ResourcePool.getInstance().getStartWave();
-		createTurretTiles();
+		createTurretTiles(this.level);
 		createStartWaveButton();
 	}
 	
@@ -50,20 +52,68 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 		drawables.add(startWaveButton);
 	}
 	
-	private void createTurretTiles() {
+	private void createTurretTiles(int level) {
 		int ID = 0, xIndex = 0, yIndex = 0;
-		turretTiles = new TurretTile[2][4];
-		for(int y = 7; y < 9; y++) {
-			for (int x = 18; x < 22; x++) {
-				TurretTile turretTile = new TurretTile(x, y, ID, Constants.TILESIZE);
-				turretTiles[yIndex][xIndex] = turretTile;
-				turretTile.setSprite(turretSprite);
-				drawables.add(turretTile);
-				ID++;
-				xIndex++;
+		switch (level) {
+		case 1:
+			turretTiles = new TurretTile[1][2];
+			for(int y = 7; y < 8; y++) {
+				for (int x = 18; x < 20; x++) {
+					TurretTile turretTile = new TurretTile(x, y, ID, Constants.TILESIZE);
+					turretTiles[yIndex][xIndex] = turretTile;
+					turretTile.setSprite(turretSprite);
+					drawables.add(turretTile);
+					ID++;
+					xIndex++;
+				}
+				yIndex++;
+				xIndex = 0;
 			}
-			yIndex++;
-			xIndex = 0;
+			break;
+		case 2:
+			turretTiles = new TurretTile[1][4];
+			for(int y = 7; y < 8; y++) {
+				for (int x = 18; x < 22; x++) {
+					TurretTile turretTile = new TurretTile(x, y, ID, Constants.TILESIZE);
+					turretTiles[yIndex][xIndex] = turretTile;
+					turretTile.setSprite(turretSprite);
+					drawables.add(turretTile);
+					ID++;
+					xIndex++;
+				}
+				yIndex++;
+				xIndex = 0;
+			}
+			break;
+		case 3:
+			turretTiles = new TurretTile[2][4];
+			for(int y = 7; y < 9; y++) {
+				if (y == 7) {
+					for (int x = 18; x < 22; x++) {
+						TurretTile turretTile = new TurretTile(x, y, ID, Constants.TILESIZE);
+						turretTiles[yIndex][xIndex] = turretTile;
+						turretTile.setSprite(turretSprite);
+						drawables.add(turretTile);
+						ID++;
+						xIndex++;
+					}
+					yIndex++;
+					xIndex = 0;
+				} else {
+					for (int x = 18; x < 20; x++) {
+						TurretTile turretTile = new TurretTile(x, y, ID, Constants.TILESIZE);
+						turretTiles[yIndex][xIndex] = turretTile;
+						turretTile.setSprite(turretSprite);
+						drawables.add(turretTile);
+						ID++;
+						xIndex++;
+					}
+					yIndex++;
+					xIndex = 0;
+				}
+			}
+		default: 
+			break;
 		}
 	}
 	
@@ -73,12 +123,14 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 			Point2D tile = Transformer.transformPixelsCoordinatesToTile(eventX, eventY);
 			for(int y = 0; y < turretTiles.length; y++ ) {
 				for (int x = 0; x < turretTiles[y].length; x++) {
-					if (turretTiles[y][x].equals(tile)) {
-						turretTiles[y][x].setActive(true);
-						//System.out.println("Point X: " + point.getX());
-						//System.out.println("Point Y: " + point.getY());
-					} else {
-						turretTiles[y][x].setActive(false);
+					if (turretTiles[y][x] != null) {
+						if (turretTiles[y][x].equals(tile)) {
+							turretTiles[y][x].setActive(true);
+							//System.out.println("Point X: " + point.getX());
+							//System.out.println("Point Y: " + point.getY());
+						} else {
+							turretTiles[y][x].setActive(false);
+						}
 					}
 				}
 			}
@@ -110,14 +162,16 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 				Point2D tile = Transformer.transformPixelsCoordinatesToTile(eventX, eventY);
 				for(int y = 0; y < turretTiles.length; y++ ) {
 					for (int x = 0; x < turretTiles[y].length; x++) {
-						if (turretTiles[y][x].equals(tile)) {
-							TurretTile tempTurret = turretTiles[y][x];
-							System.out.println("ID: " + turretTiles[y][x].getID());
-							overlay = new TurretTile(tempTurret.getPosX() - Constants.TILESIZE / 2, tempTurret.getPosY() - Constants.TILESIZE / 2, tempTurret.getID(), Constants.TILESIZE);
-							overlay.setSprite(turretSprite);
-							overlay.setActive(true);
-							drawables.add(overlay);
-							currentState = State.OVERLAY;
+						if (turretTiles[y][x] != null) {
+							if (turretTiles[y][x].equals(tile)) {
+								TurretTile tempTurret = turretTiles[y][x];
+								System.out.println("ID: " + turretTiles[y][x].getID());
+								overlay = new TurretTile(tempTurret.getPosX() - Constants.TILESIZE / 2, tempTurret.getPosY() - Constants.TILESIZE / 2, tempTurret.getID(), Constants.TILESIZE);
+								overlay.setSprite(turretSprite);
+								overlay.setActive(true);
+								drawables.add(overlay);
+								currentState = State.OVERLAY;
+							}	
 						}
 					}
 				}
@@ -153,7 +207,9 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 	private void invalidateTiles() {
 		for(int y = 0; y < turretTiles.length; y++ ) {
 			for (int x = 0; x < turretTiles[y].length; x++) {
-				turretTiles[y][x].setActive(false);
+				if (turretTiles[y][x] != null) {
+					turretTiles[y][x].setActive(false);
+				}
 			}
 		}
 	}
@@ -195,7 +251,9 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 	}
 	
 	public void setLevel(int level) {
+		this.level = level;
 		currentState = State.OBSERVE;
 		drawables.add(startWaveButton);
+		createTurretTiles(this.level);
 	}
 }

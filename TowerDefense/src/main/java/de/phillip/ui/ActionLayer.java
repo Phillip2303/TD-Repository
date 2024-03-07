@@ -59,6 +59,7 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 		this.level = level;
 		paths = ResourcePool.getInstance().getPaths(level);
 		waveController.setLevel(level);
+		isCleaned = false;
 	}
 
 	public void update(float secondsSinceLastFrame) {
