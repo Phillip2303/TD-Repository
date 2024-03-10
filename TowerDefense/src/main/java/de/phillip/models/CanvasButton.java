@@ -25,6 +25,7 @@ public class CanvasButton implements Drawable {
 			gc.setEffect(bloom);
 			gc.drawImage(image, rectangle.getMinX(), rectangle.getMinY());
 		} else {
+			gc.setEffect(null);
 			gc.drawImage(image, rectangle.getMinX(), rectangle.getMinY());
 		}
 	}

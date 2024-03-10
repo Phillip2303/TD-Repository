@@ -16,6 +16,7 @@ import de.phillip.models.Bullet;
 import de.phillip.models.CanvasLayer;
 import de.phillip.models.Drawable;
 import de.phillip.models.Enemy;
+import de.phillip.models.GameInfo;
 import de.phillip.models.Tile;
 import de.phillip.models.Turret;
 import de.phillip.models.TurretTile;
@@ -39,12 +40,15 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 	private List<Actor> actors = new ArrayList<>();
 	private boolean waveStarted;
 	private boolean isCleaned;
+	private GameInfo gameInfo;
 
 	public ActionLayer(double tileWidth, double tileHeight, int level) {
 		super(tileWidth * Constants.TILESIZE, tileHeight * Constants.TILESIZE);
 		FXEventBus.getInstance().addEventHandler(GameEvent.TD_STARTWAVE, this);
 		FXEventBus.getInstance().addEventHandler(GameEvent.TD_PLACETURRET, this);
 		this.level = level;
+		gameInfo = GameInfo.getInstance();
+		gameInfo.setLevel(level);
 		layerWidth = Constants.TERRAINLAYER_WIDTH;
 		layerHeight = Constants.TERRAINLAYER_HEIGHT;
 		paths = ResourcePool.getInstance().getPaths(level);
@@ -59,6 +63,7 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 		this.level = level;
 		paths = ResourcePool.getInstance().getPaths(level);
 		waveController.setLevel(level);
+		gameInfo.setLevel(level);
 		isCleaned = false;
 	}
 
@@ -74,7 +79,6 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 		List<Enemy> enemies = actors.stream().filter(actor -> actor instanceof Enemy).map(actor -> (Enemy) actor)
 				.collect(Collectors.toList());
 		if (!waveController.hasMoreEnemies() && enemies.isEmpty() && !isCleaned) {
-			System.out.println("All enemies gone");
 			cleanUpLevel();
 			FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_NEXTLEVEL, null));
 		} else {
@@ -122,6 +126,10 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 		for (Enemy enemy: enemies) {
 			if (bullet.intersects(enemy)) {
 				enemy.reduceHealth();
+				if (!enemy.isAlive()) {
+					gameInfo.increaseMoney(enemy.getMoney());
+					System.out.println("Money: " +  gameInfo.getMoney());
+				}
 				bullet.setAlive(false);
 			}
 		}

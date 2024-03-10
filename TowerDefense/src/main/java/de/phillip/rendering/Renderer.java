@@ -6,6 +6,7 @@ import java.util.List;
 import de.phillip.gameUtils.Constants;
 import de.phillip.models.Actor;
 import de.phillip.models.CanvasLayer;
+import de.phillip.models.GameInfo;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.transform.Rotate;
@@ -15,7 +16,6 @@ public class Renderer {
 	private List<CanvasLayer> canvasLayers = new ArrayList<>();
 	
 	public Renderer() {
-		
 	}
 	
 	public void registerCanvasLayer(CanvasLayer canvasLayer) {

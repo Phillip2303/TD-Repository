@@ -4,24 +4,28 @@
     "health" : 10,
     "imagePath" : "/assets/images/enemies/enemy-blue.png",
     "amount" : 10,
+    "money" : 100,
     "type" : "BLUE-1"
   }, {
     "speed" : 85,
     "health" : 15,
     "imagePath" : "/assets/images/enemies/enemy-green.png",
     "amount" : 10,
+    "money" : 150,
     "type" : "GREEN-1"
   }, {
     "speed" : 85,
     "health" : 10,
     "imagePath" : "/assets/images/enemies/enemy-blue.png",
     "amount" : 10,
+    "money" : 100,
     "type" : "BLUE-1"
   }, {
     "speed" : 85,
     "health" : 15,
     "imagePath" : "/assets/images/enemies/enemy-green.png",
     "amount" : 10,
+    "money" : 150,
     "type" : "GREEN-1"
   } ],
   "waveCount" : 4,

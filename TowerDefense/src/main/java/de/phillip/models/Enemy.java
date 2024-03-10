@@ -17,6 +17,7 @@ public class Enemy extends Actor {
 	private WaveBlockTO waveBlock;
 	private int index;
 	private int health;
+	private int money;
 	private boolean alive = true;
 	
 
@@ -24,6 +25,7 @@ public class Enemy extends Actor {
 		super(width, height);
 		this.waveBlock = waveBlock;
 		health = this.waveBlock.getHealth();
+		money = this.waveBlock.getMoney();
 	}
 
 	@Override
@@ -36,7 +38,6 @@ public class Enemy extends Actor {
 			gc.setFill(Color.RED);
 		}
 		gc.fillRect(getDrawPosition().getX(), getDrawPosition().getY(), width, 6);
-		System.out.println(waveBlock.getHealth());
 		transformContext(gc);
 		if (reachedEnd) {
 			gc.setGlobalAlpha(0.5);
@@ -93,6 +94,14 @@ public class Enemy extends Actor {
 		return index;
 	}
 	
+	public int getMoney() {
+		return money;
+	}
+
+	public void setMoney(int money) {
+		this.money = money;
+	}
+
 	public boolean isAlive() {
 		return alive;
 	}

@@ -28,7 +28,7 @@ public class ResourcePool {
 		
 	}
 	
-	public static ResourcePool getInstance () {
+	public static ResourcePool getInstance() {
 		if(resourcePool == null) {
 			resourcePool = new ResourcePool();
 		}

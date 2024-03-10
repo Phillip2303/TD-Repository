@@ -43,6 +43,7 @@ public class LayerManager implements EventHandler<Event>{
 		level++;
 		actionLayer.setLevel(level);
 		terrainLayer.setLevel(level);
+		
 		infoLayer.setLevel(level);
 	}
 	

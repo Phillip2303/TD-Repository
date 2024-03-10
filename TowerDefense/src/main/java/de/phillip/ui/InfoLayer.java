@@ -11,6 +11,7 @@ import de.phillip.gameUtils.Transformer;
 import de.phillip.models.CanvasButton;
 import de.phillip.models.CanvasLayer;
 import de.phillip.models.Drawable;
+import de.phillip.models.GameInfo;
 import de.phillip.models.TurretTile;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -30,6 +31,7 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 	private boolean hasSelected;
 	private State currentState = State.OBSERVE;
 	private int level;
+	private GameInfo gameInfo;
 	
 	public enum State {
 		OVERLAY,
@@ -39,12 +41,14 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 	public InfoLayer(int tileWidth, int tileHeight, int level) {
 		super(tileWidth*Constants.TILESIZE, tileHeight*Constants.TILESIZE);
 		this.level = level;
+		gameInfo = GameInfo.getInstance();
 		FXEventBus.getInstance().addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 		FXEventBus.getInstance().addEventHandler(MouseEvent.MOUSE_MOVED, this);
 		turretSprite = ResourcePool.getInstance().getTurretTileSprite();
 		startWave = ResourcePool.getInstance().getStartWave();
 		createTurretTiles(this.level);
 		createStartWaveButton();
+		drawables.add(gameInfo);
 	}
 	
 	private void createStartWaveButton() {
@@ -126,8 +130,6 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 					if (turretTiles[y][x] != null) {
 						if (turretTiles[y][x].equals(tile)) {
 							turretTiles[y][x].setActive(true);
-							//System.out.println("Point X: " + point.getX());
-							//System.out.println("Point Y: " + point.getY());
 						} else {
 							turretTiles[y][x].setActive(false);
 						}
@@ -142,10 +144,6 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 			break;
 		case OVERLAY:
 			overlay.setDrawPosition(eventX - Constants.TILESIZE / 2, eventY - Constants.TILESIZE / 2);
-			/*System.out.println("Point X: " + eventX);
-			System.out.println("Point Y: " + eventY);*/
-			System.out.println("Point X: " + overlay.getPosX());
-			System.out.println("Point Y: " + overlay.getPosY());
 			break;
 		default: 
 			break;
@@ -251,9 +249,11 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 	}
 	
 	public void setLevel(int level) {
+		drawables.clear();
 		this.level = level;
 		currentState = State.OBSERVE;
 		drawables.add(startWaveButton);
+		drawables.add(gameInfo);
 		createTurretTiles(this.level);
 	}
 }
