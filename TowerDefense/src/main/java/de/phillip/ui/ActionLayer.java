@@ -46,6 +46,7 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 		super(tileWidth * Constants.TILESIZE, tileHeight * Constants.TILESIZE);
 		FXEventBus.getInstance().addEventHandler(GameEvent.TD_STARTWAVE, this);
 		FXEventBus.getInstance().addEventHandler(GameEvent.TD_PLACETURRET, this);
+		FXEventBus.getInstance().addEventHandler(GameEvent.TD_REMOVETURRET, this);
 		this.level = level;
 		gameInfo = GameInfo.getInstance();
 		gameInfo.setLevel(level);
@@ -100,7 +101,7 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 			});
 			actors.addAll(bullets);
 			actors.removeIf(actor -> actor instanceof de.phillip.models.Enemy && (((Enemy) actor).getIsOff() || !((Enemy) actor).isAlive()));
-			actors.removeIf(actor -> actor instanceof de.phillip.models.Turret && ((Turret) actor).isDeleted());
+		//	actors.removeIf(actor -> actor instanceof de.phillip.models.Turret && ((Turret) actor).isDeleted());
 			actors.removeIf(actor -> actor instanceof de.phillip.models.Bullet && !((Bullet) actor).isAlive());
 		}
 	}
@@ -266,11 +267,19 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 			waveStarted = true;
 			break;
 		case "TD_PLACETURRET":
-			GameEvent gameEvent = (GameEvent) event;
-			TurretTile overlay = (TurretTile) gameEvent.getData();
+			GameEvent gameEvent1 = (GameEvent) event;
+			TurretTile overlay = (TurretTile) gameEvent1.getData();
 			if (checkValidTilePosition(overlay)) {
 				placeTurret(overlay);
 			}
+			break;
+		case "TD_REMOVETURRET":
+			GameEvent gameEvent2 = (GameEvent) event;
+			Turret turret = (Turret) gameEvent2.getData();
+			turret.unregisterHandler();
+			actors.remove(turret);
+			gameInfo.increaseMoney(turret.getCost() / 2);
+			break;
 		default:
 			break;
 		}
@@ -278,12 +287,25 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 
 	private void placeTurret(TurretTile overlay) {
 		Turret turret = turretController.createTurret(overlay.getID());
+		if (!checkValidPurchase(turret)) {
+			return;
+		}
+		turret.registerHandler();
 		Point2D overlayCenter = overlay.getCenter();
 		Point2D selectedTileCoor = Transformer.transformPixelsCoordinatesToTile(overlayCenter.getX(),
 				overlayCenter.getY());
 		turret.setDrawPosition(selectedTileCoor.getX() * Constants.TILESIZE,
 				selectedTileCoor.getY() * Constants.TILESIZE);
 		actors.add(turret);
+		gameInfo.decreaseMoney(turret.getCost());
+	}
+	
+	private boolean checkValidPurchase(Turret turret) {
+		if (gameInfo.getMoney() >= turret.getCost()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private boolean checkValidTilePosition(TurretTile overlay) {

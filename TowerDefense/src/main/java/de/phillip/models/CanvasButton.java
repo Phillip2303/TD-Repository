@@ -20,10 +20,12 @@ public class CanvasButton implements Drawable {
 	@Override
 	public void drawToCanvas(GraphicsContext gc) {
 		if (isActive) {
+			gc.save();
 			Bloom bloom = new Bloom();
 			bloom.setThreshold(0.1);
 			gc.setEffect(bloom);
 			gc.drawImage(image, rectangle.getMinX(), rectangle.getMinY());
+			gc.restore();
 		} else {
 			gc.setEffect(null);
 			gc.drawImage(image, rectangle.getMinX(), rectangle.getMinY());

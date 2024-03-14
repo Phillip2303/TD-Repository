@@ -4,5 +4,6 @@
   "bulletCooldown" : 0.5,
   "bulletSpeed" : 170,
   "turretSpritePath" : "/assets/images/turrets/turret-bases.png",
-  "cannonSpritePath" : "/assets/images/turrets/turret-cannons.png"
+  "cannonSpritePath" : "/assets/images/turrets/turret-cannons.png",
+  "cost": 100
 }

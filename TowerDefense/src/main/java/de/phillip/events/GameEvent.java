@@ -22,6 +22,9 @@ public class GameEvent extends Event {
 	
 	public static final EventType<GameEvent> TD_NEXTLEVEL =
 			new EventType<>(GameEvent.ANY, "TD_NEXTLEVEL");
+	
+	public static final EventType<GameEvent> TD_REMOVETURRET = 
+			new EventType<>(GameEvent.ANY, "TD_REMOVETURRET");
 
 	public GameEvent(EventType<GameEvent> eventType, Object data) {
 		super(eventType);

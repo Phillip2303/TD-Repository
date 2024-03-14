@@ -38,6 +38,10 @@ public class GameInfo implements Drawable {
 	public void increaseMoney(int money) {
 		this.money += money;
 	}
+	
+	public void decreaseMoney(int money) {
+		this.money -= money;
+	}
 
 	public int getHealth() {
 		return health;

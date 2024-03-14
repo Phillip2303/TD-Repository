@@ -3,6 +3,7 @@ package de.phillip.models;
 import java.util.List;
 
 import de.phillip.events.FXEventBus;
+import de.phillip.events.GameEvent;
 import de.phillip.gameUtils.Constants;
 import de.phillip.gameUtils.ResourcePool;
 import de.phillip.gameUtils.Transformer;
@@ -32,7 +33,6 @@ public class Turret extends Actor implements EventHandler<MouseEvent>{
 
 	public Turret(double width, double height, int ID, TurretTO turret) {
 		super(width, height);
-		FXEventBus.getInstance().addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 		this.turret = turret;
 		this.turretBaseSprite = turret.getTurretSprite();
 		this.turretCannonSprite = turret.getCannonSprite();
@@ -100,6 +100,7 @@ public class Turret extends Actor implements EventHandler<MouseEvent>{
 	private void mouseRightClicked(double eventX, double eventY) {
 		if (isSelected) {
 			isDeleted = true;
+			FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_REMOVETURRET, this));
 		}
 	}
 
@@ -166,6 +167,14 @@ public class Turret extends Actor implements EventHandler<MouseEvent>{
 				cooldownSeconds = 0;
 			}
 		}
+	}
+	
+	public int getCost() {
+		return turret.getCost();
+	}
+	
+	public void registerHandler() {
+		FXEventBus.getInstance().addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 	}
 
 }

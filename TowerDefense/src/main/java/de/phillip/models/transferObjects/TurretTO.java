@@ -12,6 +12,7 @@ public class TurretTO {
 	private int bulletSpeed;
 	private String turretSpritePath;
 	private String cannonSpritePath;
+	private int cost;
 	@JsonIgnore
 	 private Image turretSprite;
 	@JsonIgnore
@@ -93,5 +94,13 @@ public class TurretTO {
 
 	public void setBulletImage(Image bulletImage) {
 		this.bulletImage = bulletImage;
+	}
+
+	public int getCost() {
+		return cost;
+	}
+
+	public void setCost(int cost) {
+		this.cost = cost;
 	}
 }

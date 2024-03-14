@@ -17,6 +17,7 @@ public class TurretTile extends Tile {
 
 	@Override
 	public void drawToCanvas(GraphicsContext gc) {
+		gc.save();
 		Bloom bloom = new Bloom(0.1);
 			switch (getID()) {
 			case 0:
@@ -115,6 +116,7 @@ public class TurretTile extends Tile {
 				gc.drawImage(ResourcePool.getInstance().getTurretBase(), getPosX(), getPosY(), getWidth(), getHeight());
 				break;
 			}
+		gc.restore();
 	}
 	
 	public void setActive(boolean isActive) {
