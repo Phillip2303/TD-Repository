@@ -98,7 +98,7 @@ public class ResourcePool {
 	}
 	
 	public Image getBullet(int ID) {
-		return new Image(getClass().getResource("/assets/images/turrets/bullet" + ID + ".png").toString());
+		return new Image(getClass().getResource("/assets/images/turrets/bullet" + 1 + ".png").toString());
 	}
 	
 	public Image getTerrain() {

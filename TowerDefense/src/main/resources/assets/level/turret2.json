@@ -13,6 +13,20 @@
     "bulletSpeed" : 200,
     "cost" : 200,
     "id" : 1
+  }, {
+    "damage" : 3,
+    "range" : 5,
+    "bulletCooldown" : 0.45,
+    "bulletSpeed" : 220,
+    "cost" : 400,
+    "id" : 2
+  }, {
+    "damage" : 3,
+    "range" : 5,
+    "bulletCooldown" : 0.4,
+    "bulletSpeed" : 300,
+    "cost" : 600,
+    "id" : 3
   } ],
   "turretSpritePath" : "/assets/images/turrets/turret-bases.png",
   "cannonSpritePath" : "/assets/images/turrets/turret-cannons.png"

@@ -10,9 +10,8 @@ public class TurretTO {
 	private int range;
 	private double bulletCooldown;
 	private int bulletSpeed;
-	private String turretSpritePath;
-	private String cannonSpritePath;
 	private int cost;
+	private int id;
 	@JsonIgnore
 	 private Image turretSprite;
 	@JsonIgnore
@@ -22,22 +21,6 @@ public class TurretTO {
 	
 	public TurretTO() {
 		
-	}
-	
-	public Image getTurretSprite() {
-		return turretSprite;
-	}
-
-	public void setTurretSprite(Image turretSprite) {
-		this.turretSprite = turretSprite;
-	}
-
-	public Image getCannonSprite() {
-		return cannonSprite;
-	}
-
-	public void setCannonSprite(Image cannonSprite) {
-		this.cannonSprite = cannonSprite;
 	}
 	
 	public int getDamage() {
@@ -72,20 +55,36 @@ public class TurretTO {
 		this.bulletCooldown = bulletCooldown;
 	}
 
-	public String getTurretSpritePath() {
-		return turretSpritePath;
+	public int getCost() {
+		return cost;
 	}
 
-	public void setTurretSpritePath(String turretSpritePath) {
-		this.turretSpritePath = turretSpritePath;
+	public void setCost(int cost) {
+		this.cost = cost;
 	}
 
-	public String getCannonSpritePath() {
-		return cannonSpritePath;
+	public int getId() {
+		return id;
 	}
 
-	public void setCannonSpritePath(String cannonSpritePath) {
-		this.cannonSpritePath = cannonSpritePath;
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Image getTurretSprite() {
+		return turretSprite;
+	}
+
+	public void setTurretSprite(Image turretSprite) {
+		this.turretSprite = turretSprite;
+	}
+
+	public Image getCannonSprite() {
+		return cannonSprite;
+	}
+
+	public void setCannonSprite(Image cannonSprite) {
+		this.cannonSprite = cannonSprite;
 	}
 
 	public Image getBulletImage() {
@@ -94,13 +93,5 @@ public class TurretTO {
 
 	public void setBulletImage(Image bulletImage) {
 		this.bulletImage = bulletImage;
-	}
-
-	public int getCost() {
-		return cost;
-	}
-
-	public void setCost(int cost) {
-		this.cost = cost;
 	}
 }

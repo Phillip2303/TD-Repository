@@ -1,6 +1,7 @@
 package de.phillip.controllers;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
@@ -10,12 +11,13 @@ import de.phillip.gameUtils.Constants;
 import de.phillip.gameUtils.ResourcePool;
 import de.phillip.models.Turret;
 import de.phillip.models.transferObjects.TurretTO;
+import de.phillip.models.transferObjects.TurretsTO;
 import javafx.scene.image.Image;
 
 public class TurretController {
 	
 	private int level;
-	private TurretTO turret;
+	private TurretsTO turrets;
 
 	public TurretController() {
 		
@@ -34,7 +36,7 @@ public class TurretController {
 	private void loadLevelResource() {
 		ObjectMapper objectMapper = new ObjectMapper();
 		try {
-			turret = objectMapper.readValue(ResourcePool.getInstance().loadLevelResource(level, "TURRET"), TurretTO.class);
+			turrets = objectMapper.readValue(ResourcePool.getInstance().loadLevelResource(level, "TURRET"), TurretsTO.class);
 		} catch (StreamReadException e) {
 			e.printStackTrace();
 		} catch (DatabindException e) {
@@ -45,15 +47,18 @@ public class TurretController {
 	}
 	
 	private void createTurretSprites() {
-		Image turretSprite = ResourcePool.getInstance().getTurretSprite(turret.getTurretSpritePath());
-		turret.setTurretSprite(turretSprite);
-		Image cannonSprite = ResourcePool.getInstance().getTurretSprite(turret.getCannonSpritePath());
-		turret.setCannonSprite(cannonSprite);
-		Image bulletImage = ResourcePool.getInstance().getBullet(level);
-		turret.setBulletImage(bulletImage);
+		turrets.getTurrets().forEach(b -> {
+			Image turretSprite = ResourcePool.getInstance().getTurretSprite(turrets.getTurretSpritePath());
+			b.setTurretSprite(turretSprite);
+			Image cannonSprite = ResourcePool.getInstance().getTurretSprite(turrets.getCannonSpritePath());
+			b.setCannonSprite(cannonSprite);
+			Image bulletImage = ResourcePool.getInstance().getBullet(level);
+			b.setBulletImage(bulletImage);
+		});
 	}
 	
 	public Turret createTurret(int ID) {
+		TurretTO turret = turrets.getTurrets().stream().filter(a -> a.getId() == ID).collect(Collectors.toList()).get(0);
 		return new Turret(Constants.TILESIZE, Constants.TILESIZE, ID, turret);
 	}
 

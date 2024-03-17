@@ -8,4 +8,5 @@ public interface CanvasLayer {
 	public List<Drawable> getDrawables();
 	public GraphicsContext getGraphicsContext2D();
 	public void prepareLayer();
+	public void updateLayer(float secondsSinceLastFrame);
 }

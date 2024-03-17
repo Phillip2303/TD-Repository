@@ -1,0 +1,47 @@
+{
+  "turrets" : [ {
+    "damage" : 1,
+    "range" : 3,
+    "bulletCooldown" : 0.5,
+    "bulletSpeed" : 170,
+    "cost" : 100,
+    "id" : 0
+  }, {
+    "damage" : 2,
+    "range" : 4,
+    "bulletCooldown" : 0.5,
+    "bulletSpeed" : 200,
+    "cost" : 200,
+    "id" : 1
+  }, {
+    "damage" : 3,
+    "range" : 5,
+    "bulletCooldown" : 0.45,
+    "bulletSpeed" : 220,
+    "cost" : 400,
+    "id" : 2
+  }, {
+    "damage" : 3,
+    "range" : 5,
+    "bulletCooldown" : 0.4,
+    "bulletSpeed" : 300,
+    "cost" : 600,
+    "id" : 3
+  }, {
+    "damage" : 5,
+    "range" : 7,
+    "bulletCooldown" : 0.35,
+    "bulletSpeed" : 300,
+    "cost" : 1000,
+    "id" : 4
+  }, {
+    "damage" : 10,
+    "range" : 10,
+    "bulletCooldown" : 0.3,
+    "bulletSpeed" : 500,
+    "cost" : 1500,
+    "id" : 5
+  } ],
+  "turretSpritePath" : "/assets/images/turrets/turret-bases.png",
+  "cannonSpritePath" : "/assets/images/turrets/turret-cannons.png"
+}

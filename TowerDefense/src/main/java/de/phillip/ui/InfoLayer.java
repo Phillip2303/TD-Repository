@@ -222,6 +222,10 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 		getGraphicsContext2D().drawImage(ResourcePool.getInstance().getBackground(), 0, 0);
 		getGraphicsContext2D().clearRect(0, 0, Constants.TERRAINLAYER_WIDTH*Constants.TILESIZE, Constants.TERRAINLAYER_HEIGHT*Constants.TILESIZE);
 	}
+	
+	public void updateLayer(float secondsSinceLastFrame) {
+
+	}
 
 	@Override
 	public void handle(Event event) {
