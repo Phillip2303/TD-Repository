@@ -3,6 +3,7 @@ package de.phillip.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.phillip.controllers.TurretController;
 import de.phillip.events.FXEventBus;
 import de.phillip.events.GameEvent;
 import de.phillip.gameUtils.Constants;
@@ -13,6 +14,7 @@ import de.phillip.models.CanvasLayer;
 import de.phillip.models.Drawable;
 import de.phillip.models.GameInfo;
 import de.phillip.models.TurretTile;
+import de.phillip.models.transferObjects.TurretTO;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -32,21 +34,23 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 	private State currentState = State.OBSERVE;
 	private int level;
 	private GameInfo gameInfo;
+	private TurretController turretController;
 	
 	public enum State {
 		OVERLAY,
 		OBSERVE;
 	}
 
-	public InfoLayer(int tileWidth, int tileHeight, int level) {
+	public InfoLayer(int tileWidth, int tileHeight, int level, TurretController turretController) {
 		super(tileWidth*Constants.TILESIZE, tileHeight*Constants.TILESIZE);
 		this.level = level;
+		this.turretController = turretController;
 		gameInfo = GameInfo.getInstance();
 		FXEventBus.getInstance().addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 		FXEventBus.getInstance().addEventHandler(MouseEvent.MOUSE_MOVED, this);
 		turretSprite = ResourcePool.getInstance().getTurretTileSprite();
 		startWave = ResourcePool.getInstance().getStartWave();
-		createTurretTiles(this.level);
+		createTurretTiles(turretController.getTurrets().size());
 		createStartWaveButton();
 		drawables.add(gameInfo);
 	}
@@ -56,61 +60,65 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 		drawables.add(startWaveButton);
 	}
 	
-	private void createTurretTiles(int level) {
-		int ID = 0, xIndex = 0, yIndex = 0;
-		switch (level) {
-		case 1:
+	private void createTurretTiles(int length) {
+		int xIndex = 0, yIndex = 0, listIndex = 0;
+		switch (length) {
+		case 2:
 			turretTiles = new TurretTile[1][2];
 			for(int y = 7; y < 8; y++) {
 				for (int x = 18; x < 20; x++) {
+					int ID = turretController.getTurrets().get(listIndex).getId();
 					TurretTile turretTile = new TurretTile(x, y, ID, Constants.TILESIZE);
 					turretTiles[yIndex][xIndex] = turretTile;
 					turretTile.setSprite(turretSprite);
+					turretTile.setTurretTO(turretController.getTurrets().get(listIndex));
 					drawables.add(turretTile);
-					ID++;
 					xIndex++;
+					listIndex++;
 				}
-				yIndex++;
-				xIndex = 0;
 			}
 			break;
-		case 2:
+		case 4:
 			turretTiles = new TurretTile[1][4];
 			for(int y = 7; y < 8; y++) {
 				for (int x = 18; x < 22; x++) {
+					int ID = turretController.getTurrets().get(listIndex).getId();
 					TurretTile turretTile = new TurretTile(x, y, ID, Constants.TILESIZE);
 					turretTiles[yIndex][xIndex] = turretTile;
 					turretTile.setSprite(turretSprite);
+					turretTile.setTurretTO(turretController.getTurrets().get(listIndex));
 					drawables.add(turretTile);
-					ID++;
 					xIndex++;
+					listIndex++;
 				}
-				yIndex++;
-				xIndex = 0;
 			}
 			break;
-		case 3:
+		case 6:
 			turretTiles = new TurretTile[2][4];
 			for(int y = 7; y < 9; y++) {
 				if (y == 7) {
 					for (int x = 18; x < 22; x++) {
+						int ID = turretController.getTurrets().get(listIndex).getId();
 						TurretTile turretTile = new TurretTile(x, y, ID, Constants.TILESIZE);
 						turretTiles[yIndex][xIndex] = turretTile;
 						turretTile.setSprite(turretSprite);
+						turretTile.setTurretTO(turretController.getTurrets().get(listIndex));
 						drawables.add(turretTile);
-						ID++;
 						xIndex++;
+						listIndex++;
 					}
 					yIndex++;
 					xIndex = 0;
 				} else {
 					for (int x = 18; x < 20; x++) {
+						int ID = turretController.getTurrets().get(listIndex).getId();
 						TurretTile turretTile = new TurretTile(x, y, ID, Constants.TILESIZE);
 						turretTiles[yIndex][xIndex] = turretTile;
 						turretTile.setSprite(turretSprite);
+						turretTile.setTurretTO(turretController.getTurrets().get(listIndex));
 						drawables.add(turretTile);
-						ID++;
 						xIndex++;
+						listIndex++;
 					}
 					yIndex++;
 					xIndex = 0;
@@ -224,7 +232,19 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 	}
 	
 	public void updateLayer(float secondsSinceLastFrame) {
-
+		checkTurretVisibility();
+	}
+	
+	public void checkTurretVisibility() {
+		for(int y = 0; y < turretTiles.length; y++) {
+			for (int x = 0; x < turretTiles[y].length; x++) {
+				if (turretTiles[y][x].getCost() <= gameInfo.getMoney()) {
+					turretTiles[y][x].setVisible(true);
+				} else {
+					turretTiles[y][x].setVisible(false);
+				}
+			}
+		}
 	}
 
 	@Override
@@ -258,6 +278,6 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 		currentState = State.OBSERVE;
 		drawables.add(startWaveButton);
 		drawables.add(gameInfo);
-		createTurretTiles(this.level);
+		createTurretTiles(turretController.getTurrets().size());
 	}
 }

@@ -1,6 +1,7 @@
 package de.phillip.controllers;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.exc.StreamReadException;
@@ -19,8 +20,9 @@ public class TurretController {
 	private int level;
 	private TurretsTO turrets;
 
-	public TurretController() {
-		
+	public TurretController(int level) {
+		this.level = level;
+		setLevel(this.level);
 	}
 	
 	public int getLevel() {
@@ -60,6 +62,10 @@ public class TurretController {
 	public Turret createTurret(int ID) {
 		TurretTO turret = turrets.getTurrets().stream().filter(a -> a.getId() == ID).collect(Collectors.toList()).get(0);
 		return new Turret(Constants.TILESIZE, Constants.TILESIZE, ID, turret);
+	}
+	
+	public List<TurretTO> getTurrets() {
+		return turrets.getTurrets();
 	}
 
 }

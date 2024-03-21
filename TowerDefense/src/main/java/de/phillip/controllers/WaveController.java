@@ -21,8 +21,9 @@ public class WaveController {
 	private float enemyDelay;
 	private float blockDelay;
 
-	public WaveController() {
-
+	public WaveController(int level) {
+		this.level = level;
+		setLevel(this.level);
 	}
 	
 	public void setLevel(int level) {

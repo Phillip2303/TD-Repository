@@ -42,7 +42,7 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 	private boolean isCleaned;
 	private GameInfo gameInfo;
 
-	public ActionLayer(double tileWidth, double tileHeight, int level) {
+	public ActionLayer(double tileWidth, double tileHeight, int level, TurretController turretController, WaveController waveController) {
 		super(tileWidth * Constants.TILESIZE, tileHeight * Constants.TILESIZE);
 		FXEventBus.getInstance().addEventHandler(GameEvent.TD_STARTWAVE, this);
 		FXEventBus.getInstance().addEventHandler(GameEvent.TD_PLACETURRET, this);
@@ -53,10 +53,8 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 		layerWidth = Constants.TERRAINLAYER_WIDTH;
 		layerHeight = Constants.TERRAINLAYER_HEIGHT;
 		paths = ResourcePool.getInstance().getPaths(level);
-		waveController = new WaveController();
-		waveController.setLevel(level);
-		turretController = new TurretController();
-		turretController.setLevel(level);
+		this.waveController = waveController;
+		this.turretController = turretController;
 
 	}
 
