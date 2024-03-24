@@ -35,6 +35,7 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 	private int level;
 	private GameInfo gameInfo;
 	private TurretController turretController;
+	private boolean newLevel; 
 	
 	public enum State {
 		OVERLAY,
@@ -175,6 +176,7 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 								overlay = new TurretTile(tempTurret.getPosX() - Constants.TILESIZE / 2, tempTurret.getPosY() - Constants.TILESIZE / 2, tempTurret.getID(), Constants.TILESIZE);
 								overlay.setSprite(turretSprite);
 								overlay.setActive(true);
+								overlay.setVisible(true);
 								drawables.add(overlay);
 								currentState = State.OVERLAY;
 							}	
@@ -232,18 +234,28 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 	}
 	
 	public void updateLayer(float secondsSinceLastFrame) {
+		if (newLevel) {
+			createTurretTiles(turretController.getTurrets().size());
+			newLevel = false;
+		}
 		checkTurretVisibility();
 	}
 	
 	public void checkTurretVisibility() {
-		for(int y = 0; y < turretTiles.length; y++) {
-			for (int x = 0; x < turretTiles[y].length; x++) {
-				if (turretTiles[y][x].getCost() <= gameInfo.getMoney()) {
-					turretTiles[y][x].setVisible(true);
-				} else {
-					turretTiles[y][x].setVisible(false);
+		try {
+			for(int y = 0; y < turretTiles.length; y++) {
+				for (int x = 0; x < turretTiles[y].length; x++) {
+						if (turretTiles[y][x] != null) {
+							if (turretTiles[y][x].getCost() <= gameInfo.getMoney()) {
+								turretTiles[y][x].setVisible(true);
+							} else {
+								turretTiles[y][x].setVisible(false);
+							}
+						}
 				}
 			}
+		} catch (NullPointerException e){
+			e.printStackTrace();
 		}
 	}
 
@@ -278,6 +290,6 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 		currentState = State.OBSERVE;
 		drawables.add(startWaveButton);
 		drawables.add(gameInfo);
-		createTurretTiles(turretController.getTurrets().size());
+		newLevel = true;
 	}
 }

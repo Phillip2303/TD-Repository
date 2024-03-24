@@ -24,111 +24,54 @@ public class TurretTile extends Tile {
 		Bloom bloom = new Bloom(0.1);
 			switch (getID()) {
 			case 0:
-				if (isActive) {
-					if (isVisible) {
-						gc.setGlobalAlpha(1.0);
-						gc.setEffect(bloom);
-						gc.drawImage(turretSprite, 0, 0, getWidth(), getHeight(), 
-								getPosX(), getPosY(), getWidth(), 
-								getHeight());
-					} else {
-						gc.setGlobalAlpha(0.5);
-						gc.setEffect(null);
-						gc.drawImage(turretSprite, 0, 0, getWidth(), getHeight(), 
-								getPosX(), getPosY(), getWidth(), 
-								getHeight());
-					}
-				} else {
-					gc.setGlobalAlpha(1.0);
-					gc.setEffect(null);
-					gc.drawImage(turretSprite, 0, 0, getWidth(), getHeight(), 
-							getPosX(), getPosY(), getWidth(), 
-							getHeight());
-				}
+				drawImage(bloom, gc, 0);
 				break;
 			case 1:
-				if (isActive && isVisible) {
-					gc.setEffect(bloom);
-					gc.drawImage(turretSprite, 0, 46, getWidth(), getHeight(), 
-							getPosX(), getPosY(), getWidth(), 
-							getHeight());
-				} else {
-					gc.setEffect(null);
-					gc.drawImage(turretSprite, 0, 46, getWidth(), getHeight(), 
-							getPosX(), getPosY(), getWidth(), 
-							getHeight());
-				}
+				drawImage(bloom, gc, 46);
 				break;
 			case 2:
-				if (isActive && isVisible) {
-					gc.setEffect(bloom);
-					gc.drawImage(turretSprite, 0, 92, getWidth(), getHeight(), 
-							getPosX(), getPosY(), getWidth(), 
-							getHeight());
-				} else {
-					gc.setEffect(null);
-					gc.drawImage(turretSprite, 0, 92, getWidth(), getHeight(), 
-							getPosX(), getPosY(), getWidth(), 
-							getHeight());
-				}
+				drawImage(bloom, gc, 92);
 				break;
 			case 3:
-				if (isActive && isVisible) {
-					gc.setEffect(bloom);
-					gc.drawImage(turretSprite, 0, 138, getWidth(), getHeight(), 
-						getPosX(), getPosY(), getWidth(), 
-						getHeight());
-				} else {
-					gc.setEffect(null);
-					gc.drawImage(turretSprite, 0, 138, getWidth(), getHeight(), 
-						getPosX(), getPosY(), getWidth(), 
-						getHeight());
-				}
+				drawImage(bloom, gc, 138);
 				break;
 			case 4:
-				if (isActive && isVisible) {
-					gc.setEffect(bloom);
-					gc.drawImage(turretSprite, 0, 184, getWidth(), getHeight(), 
-							getPosX(), getPosY(), getWidth(), 
-							getHeight());
-				} else {
-					gc.setEffect(null);
-					gc.drawImage(turretSprite, 0, 184, getWidth(), getHeight(), 
-							getPosX(), getPosY(), getWidth(), 
-							getHeight());
-				}
+				drawImage(bloom, gc, 184);
 				break;
 			case 5:
-				if (isActive && isVisible) {
-					gc.setEffect(bloom);
-					gc.drawImage(turretSprite, 0, 230, getWidth(), getHeight(), 
-							getPosX(), getPosY(), getWidth(), 
-							getHeight());
-				} else {
-					gc.setEffect(null);
-					gc.drawImage(turretSprite, 0, 230, getWidth(), getHeight(), 
-							getPosX(), getPosY(), getWidth(), 
-							getHeight());
-				}
+				drawImage(bloom, gc, 230);
 				break;
 			case 6:
-				if (isActive && isVisible) {
-					gc.setEffect(bloom);
-					gc.drawImage(turretSprite, 0, 276, getWidth(), getHeight(), 
-							getPosX(), getPosY(), getWidth(), 
-							getHeight());
-				} else {
-					gc.setEffect(null);
-					gc.drawImage(turretSprite, 0, 276, getWidth(), getHeight(), 
-							getPosX(), getPosY(), getWidth(), 
-							getHeight());
-				}
+				drawImage(bloom, gc, 276);
 				break;
 			default:
 				gc.setEffect(null);
 				gc.drawImage(ResourcePool.getInstance().getTurretBase(), getPosX(), getPosY(), getWidth(), getHeight());
 				break;
 			}
+		gc.restore();
+	}
+	
+	public void drawImage(Bloom bloom, GraphicsContext gc, double sy) {
+		gc.save();
+		if (isVisible) {
+			gc.setGlobalAlpha(1);
+			if (isActive) {
+				gc.setEffect(bloom);
+			} else {
+				gc.setEffect(null);
+			}
+			gc.drawImage(turretSprite, 0, sy, getWidth(), getHeight(), 
+					getPosX(), getPosY(), getWidth(), 
+					getHeight());
+		} else {
+			gc.setGlobalAlpha(0.5);
+			gc.setEffect(null);
+			gc.drawImage(turretSprite, 0, sy, getWidth(), getHeight(), 
+					getPosX(), getPosY(), getWidth(), 
+					getHeight());
+			gc.setGlobalAlpha(1);
+		}
 		gc.restore();
 	}
 	
