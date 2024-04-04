@@ -11,6 +11,10 @@ public class TurretTile extends Tile {
 	
 	private boolean isActive;
 	private boolean isVisible;
+	public boolean isVisible() {
+		return isVisible;
+	}
+
 	private Image turretSprite;
 	private TurretTO turretTO;
 

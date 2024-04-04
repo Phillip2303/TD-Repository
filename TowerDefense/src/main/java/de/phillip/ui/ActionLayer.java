@@ -128,7 +128,6 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 				enemy.reduceHealth();
 				if (!enemy.isAlive()) {
 					gameInfo.increaseMoney(enemy.getMoney());
-					System.out.println("Money: " +  gameInfo.getMoney());
 				}
 				bullet.setAlive(false);
 			}

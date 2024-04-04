@@ -20,6 +20,7 @@ public class WaveController {
 	private int blockIndex, enemyIndex;
 	private float enemyDelay;
 	private float blockDelay;
+	private int currentWave;
 
 	public WaveController(int level) {
 		this.level = level;
@@ -29,6 +30,7 @@ public class WaveController {
 	public void setLevel(int level) {
 		this.level = level;
 		blockIndex = 0;
+		currentWave = 0;
 		enemyIndex = 0;
 		loadLevelResource();
 		createBlockSprites();
@@ -68,10 +70,15 @@ public class WaveController {
 		return false;
 	}
 	
+	public int getCurrentWave() {
+		return currentWave + 1;
+	}
+
 	public Enemy getEnemy(float secondsSinceLastFrame) {
 		enemyDelay += secondsSinceLastFrame;
 		blockDelay += secondsSinceLastFrame;
 		if (blockDelay > wave.getBlockDelay()) {
+			currentWave = blockIndex;
 			if (enemyDelay > wave.getEnemyDelay()) {
 				if (wave.getWaveBlocks().get(blockIndex).getAmount() > 0) {
 					Enemy enemy = new Enemy(Constants.TILESIZE, Constants.TILESIZE, wave.getWaveBlocks().get(blockIndex));
@@ -82,6 +89,7 @@ public class WaveController {
 						enemyIndex = 0;
 						blockIndex++;
 						blockDelay = 0;
+						
 					}
 					enemyDelay = 0;
 					return enemy;
@@ -94,6 +102,10 @@ public class WaveController {
 		}
 		
 		return null;
+	}
+	
+	public int getWaveCount() {
+		return wave.getWaveCount();
 	}
 
 }

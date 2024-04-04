@@ -33,7 +33,7 @@ public class LayerManager implements EventHandler<Event>{
 		renderer = new Renderer();
 		turretController = new TurretController(level);
 		waveController = new WaveController(level);
-		infoLayer = new InfoLayer(Constants.TERRAINLAYER_HEIGHT, Constants.TERRAINLAYER_HEIGHT, level, turretController);
+		infoLayer = new InfoLayer(Constants.TERRAINLAYER_HEIGHT, Constants.TERRAINLAYER_HEIGHT, level, turretController, waveController);
 		terrainLayer = new TerrainLayer(Constants.TERRAINLAYER_WIDTH, Constants.TERRAINLAYER_HEIGHT, level);
 		actionLayer = new ActionLayer(Constants.TERRAINLAYER_WIDTH, Constants.TERRAINLAYER_HEIGHT, level, turretController, waveController);
 		renderer.registerCanvasLayer(actionLayer);

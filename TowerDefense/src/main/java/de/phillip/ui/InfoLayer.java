@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.phillip.controllers.TurretController;
+import de.phillip.controllers.WaveController;
 import de.phillip.events.FXEventBus;
 import de.phillip.events.GameEvent;
 import de.phillip.gameUtils.Constants;
@@ -35,6 +36,7 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 	private int level;
 	private GameInfo gameInfo;
 	private TurretController turretController;
+	private WaveController waveController;
 	private boolean newLevel; 
 	
 	public enum State {
@@ -42,10 +44,11 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 		OBSERVE;
 	}
 
-	public InfoLayer(int tileWidth, int tileHeight, int level, TurretController turretController) {
+	public InfoLayer(int tileWidth, int tileHeight, int level, TurretController turretController, WaveController waveController) {
 		super(tileWidth*Constants.TILESIZE, tileHeight*Constants.TILESIZE);
 		this.level = level;
 		this.turretController = turretController;
+		this.waveController = waveController;
 		gameInfo = GameInfo.getInstance();
 		FXEventBus.getInstance().addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 		FXEventBus.getInstance().addEventHandler(MouseEvent.MOUSE_MOVED, this);
@@ -54,6 +57,7 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 		createTurretTiles(turretController.getTurrets().size());
 		createStartWaveButton();
 		drawables.add(gameInfo);
+		gameInfo.setWaveCount(waveController.getWaveCount());
 	}
 	
 	private void createStartWaveButton() {
@@ -165,20 +169,22 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 			if (startWaveButton.isActive()) {
 				FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_STARTWAVE, null));
 				drawables.remove(startWaveButton);
+				gameInfo.setDrawWaveCount(true);
 			} else {
 				Point2D tile = Transformer.transformPixelsCoordinatesToTile(eventX, eventY);
 				for(int y = 0; y < turretTiles.length; y++ ) {
 					for (int x = 0; x < turretTiles[y].length; x++) {
 						if (turretTiles[y][x] != null) {
-							if (turretTiles[y][x].equals(tile)) {
+							if (turretTiles[y][x].equals(tile) ) {
 								TurretTile tempTurret = turretTiles[y][x];
-								System.out.println("ID: " + turretTiles[y][x].getID());
-								overlay = new TurretTile(tempTurret.getPosX() - Constants.TILESIZE / 2, tempTurret.getPosY() - Constants.TILESIZE / 2, tempTurret.getID(), Constants.TILESIZE);
-								overlay.setSprite(turretSprite);
-								overlay.setActive(true);
-								overlay.setVisible(true);
-								drawables.add(overlay);
-								currentState = State.OVERLAY;
+								if (tempTurret.isVisible()) {
+									overlay = new TurretTile(tempTurret.getPosX() - Constants.TILESIZE / 2, tempTurret.getPosY() - Constants.TILESIZE / 2, tempTurret.getID(), Constants.TILESIZE);
+									overlay.setSprite(turretSprite);
+									overlay.setActive(true);
+									overlay.setVisible(true);
+									//drawables.add(overlay);
+									currentState = State.OVERLAY;
+								}
 							}	
 						}
 					}
@@ -187,7 +193,7 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 			break;
 		case OVERLAY:
 			FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_PLACETURRET, overlay));
-			drawables.remove(overlay);
+			//drawables.remove(overlay);
 			overlay = null;
 			currentState = State.OBSERVE;
 			
@@ -203,7 +209,7 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 			break;
 		case OVERLAY:
 			invalidateTiles();
-			drawables.remove(overlay);
+			//drawables.remove(overlay);
 			overlay = null;
 			currentState = State.OBSERVE;
 			break;
@@ -239,6 +245,10 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 			newLevel = false;
 		}
 		checkTurretVisibility();
+		if (overlay != null) {
+			overlay.drawToCanvas(getGraphicsContext2D());
+		}
+		gameInfo.setCurrentWave(waveController.getCurrentWave());
 	}
 	
 	public void checkTurretVisibility() {
@@ -288,6 +298,9 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 		drawables.clear();
 		this.level = level;
 		currentState = State.OBSERVE;
+		gameInfo.setDrawWaveCount(false);
+		gameInfo.setCurrentWave(1);
+		gameInfo.setWaveCount(waveController.getWaveCount());
 		drawables.add(startWaveButton);
 		drawables.add(gameInfo);
 		newLevel = true;
