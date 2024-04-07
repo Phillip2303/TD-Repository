@@ -97,6 +97,10 @@ public class Enemy extends Actor {
 	public int getMoney() {
 		return money;
 	}
+	
+	public int getDamage() {
+		return waveBlock.getDamage();
+	}
 
 	public void setMoney(int money) {
 		this.money = money;

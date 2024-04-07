@@ -12,6 +12,7 @@ public class WaveBlockTO {
 	 private int amount;
 	 private int money;
 	 private String type;
+	 private int damage;
 	 @JsonIgnore
 	 private Image sprite;
 	 
@@ -73,5 +74,13 @@ public class WaveBlockTO {
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public int getDamage() {
+		return damage;
+	}
+
+	public void setDamage(int damage) {
+		this.damage = damage;
 	}
 }

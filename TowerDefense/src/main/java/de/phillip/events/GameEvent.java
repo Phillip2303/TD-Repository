@@ -25,6 +25,9 @@ public class GameEvent extends Event {
 	
 	public static final EventType<GameEvent> TD_REMOVETURRET = 
 			new EventType<>(GameEvent.ANY, "TD_REMOVETURRET");
+	
+	public static final EventType<GameEvent> TD_LOST = 
+			new EventType<>(GameEvent.ANY, "TD_LOST");
 
 	public GameEvent(EventType<GameEvent> eventType, Object data) {
 		super(eventType);

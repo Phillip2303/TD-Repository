@@ -11,10 +11,7 @@ public class TurretTile extends Tile {
 	
 	private boolean isActive;
 	private boolean isVisible;
-	public boolean isVisible() {
-		return isVisible;
-	}
-
+	private boolean isOverlay;
 	private Image turretSprite;
 	private TurretTO turretTO;
 
@@ -58,23 +55,29 @@ public class TurretTile extends Tile {
 	
 	public void drawImage(Bloom bloom, GraphicsContext gc, double sy) {
 		gc.save();
-		if (isVisible) {
-			gc.setGlobalAlpha(1);
-			if (isActive) {
-				gc.setEffect(bloom);
-			} else {
-				gc.setEffect(null);
-			}
+		if (isOverlay) {
 			gc.drawImage(turretSprite, 0, sy, getWidth(), getHeight(), 
 					getPosX(), getPosY(), getWidth(), 
 					getHeight());
 		} else {
-			gc.setGlobalAlpha(0.5);
-			gc.setEffect(null);
-			gc.drawImage(turretSprite, 0, sy, getWidth(), getHeight(), 
-					getPosX(), getPosY(), getWidth(), 
-					getHeight());
-			gc.setGlobalAlpha(1);
+			if (isVisible) {
+				gc.setGlobalAlpha(1);
+				if (isActive) {
+					gc.setEffect(bloom);
+				} else {
+					gc.setEffect(null);
+				}
+				gc.drawImage(turretSprite, 0, sy, getWidth(), getHeight(), 
+						getPosX(), getPosY(), getWidth(), 
+						getHeight());
+			} else {
+				gc.setGlobalAlpha(0.5);
+				gc.setEffect(null);
+				gc.drawImage(turretSprite, 0, sy, getWidth(), getHeight(), 
+						getPosX(), getPosY(), getWidth(), 
+						getHeight());
+				gc.setGlobalAlpha(1);
+			}
 		}
 		gc.restore();
 	}
@@ -101,5 +104,17 @@ public class TurretTile extends Tile {
 
 	public void setVisible(boolean isVisible) {
 		this.isVisible = isVisible;
+	}
+	
+	public boolean isVisible() {
+		return isVisible;
+	}
+
+	public boolean isOverlay() {
+		return isOverlay;
+	}
+
+	public void setOverlay(boolean isOverlay) {
+		this.isOverlay = isOverlay;
 	}
 }

@@ -1,5 +1,7 @@
 package de.phillip.models;
 
+import de.phillip.events.FXEventBus;
+import de.phillip.events.GameEvent;
 import de.phillip.gameUtils.Constants;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -31,6 +33,7 @@ public class GameInfo implements Drawable {
 		gc.setFill(Color.AQUAMARINE);
 		gc.setFont(new Font(20));
 		gc.fillText("Money: " + money + "\nLevel: " + level, 19 * Constants.TILESIZE - 8, 3.5 * Constants.TILESIZE);
+		gc.fillText("Health: " + health, 19 * Constants.TILESIZE, 18.5 * Constants.TILESIZE);
 		 //startWaveButton = new CanvasButton(startWave, 19 * Constants.TILESIZE - 8, 3 * Constants.TILESIZE, 120, 20);
 		if (drawWaveCount) {
 			gc.fillText("Wave: " + currentWave + " / " + waveCount, 19 * Constants.TILESIZE - 8 , 6 * Constants.TILESIZE);
@@ -53,8 +56,11 @@ public class GameInfo implements Drawable {
 		return health;
 	}
 
-	public void setHealth(int health) {
-		this.health = health;
+	public void decreaseHealth(int damage) {
+		health -= damage;
+		if (health == 0) {
+			FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_LOST, null));
+		}
 	}
 
 	public int getLevel() {
