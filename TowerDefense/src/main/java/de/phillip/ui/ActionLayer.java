@@ -70,7 +70,6 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 	public void updateLayer(float secondsSinceLastFrame) {
 		if (waveStarted) {
 			addNewEnemies(secondsSinceLastFrame);
-			// updateEnemies(secondsSinceLastFrame);
 		}
 		updateActors(secondsSinceLastFrame);
 	}
@@ -140,6 +139,7 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 		if (!enemy.hasReachedEnd() && paths[(int) currentPosition.getY()][(int) currentPosition.getX()].getID() == 9) {
 			enemy.setReachedEnd();
 			enemy.leavePath(speed);
+			gameInfo.decreaseHealth(enemy.getDamage());
 		} else {
 			if (!enemy.hasReachedEnd()) {
 				// check for path
@@ -152,31 +152,6 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 				enemy.leavePath(speed);
 			}
 		}
-	}
-
-	private void updateEnemies(float secondsSinceLastFrame) {
-		actors.forEach(actor -> {
-			double speed = speedLevel * secondsSinceLastFrame;
-			Enemy enemy = (Enemy) actor;
-			Point2D currentPosition = calculateTilePosition(enemy.getCenter(), enemy.getRotation());
-			if (!enemy.hasReachedEnd()
-					&& paths[(int) currentPosition.getY()][(int) currentPosition.getX()].getID() == 9) {
-				enemy.setReachedEnd();
-				enemy.leavePath(speed);
-			} else {
-				if (!enemy.hasReachedEnd()) {
-					// check for path
-					if (!isPath(enemy, speed)) {
-						enemy.setRotation(getNewRotation(enemy));
-					}
-					enemy.setCurrentThrustVector(speed);
-					enemy.update();
-				} else {
-					enemy.leavePath(speed);
-				}
-			}
-		});
-		actors.removeIf(b -> ((Enemy) b).getIsOff());
 	}
 
 	private void addNewEnemies(float secondsSinceLastFrame) {

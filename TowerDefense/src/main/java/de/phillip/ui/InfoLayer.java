@@ -179,10 +179,11 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 								TurretTile tempTurret = turretTiles[y][x];
 								if (tempTurret.isVisible()) {
 									overlay = new TurretTile(tempTurret.getPosX() - Constants.TILESIZE / 2, tempTurret.getPosY() - Constants.TILESIZE / 2, tempTurret.getID(), Constants.TILESIZE);
+									overlay.setOverlay(true);
 									overlay.setSprite(turretSprite);
 									overlay.setActive(true);
 									overlay.setVisible(true);
-									//drawables.add(overlay);
+									drawables.add(overlay);
 									currentState = State.OVERLAY;
 								}
 							}	
@@ -193,7 +194,7 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 			break;
 		case OVERLAY:
 			FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_PLACETURRET, overlay));
-			//drawables.remove(overlay);
+			drawables.remove(overlay);
 			overlay = null;
 			currentState = State.OBSERVE;
 			
@@ -209,7 +210,7 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 			break;
 		case OVERLAY:
 			invalidateTiles();
-			//drawables.remove(overlay);
+			drawables.remove(overlay);
 			overlay = null;
 			currentState = State.OBSERVE;
 			break;
@@ -245,9 +246,6 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 			newLevel = false;
 		}
 		checkTurretVisibility();
-		if (overlay != null) {
-			overlay.drawToCanvas(getGraphicsContext2D());
-		}
 		gameInfo.setCurrentWave(waveController.getCurrentWave());
 	}
 	

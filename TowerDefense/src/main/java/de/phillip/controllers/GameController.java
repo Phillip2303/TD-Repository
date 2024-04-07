@@ -21,6 +21,7 @@ public class GameController implements EventHandler<GameEvent> {
 	public GameController(StackPane stackPane) {
 		//layerManager = new LayerManager(stackPane);
 		FXEventBus.getInstance().addEventHandler(GameEvent.TD_START, this);
+		FXEventBus.getInstance().addEventHandler(GameEvent.TD_LOST, this);
 		this.stackPane = stackPane;
 		gameLoopTimer = new GameLoopTimer() {
 
@@ -45,8 +46,14 @@ public class GameController implements EventHandler<GameEvent> {
 			case "TD_START": 
 				startGame();
 				break;
+			case "TD_LOST":
+				stopGame();
 			default:
 				break;
 		}
+	}
+	
+	private void stopGame() {
+		gameLoopTimer.stop();
 	}
 }
