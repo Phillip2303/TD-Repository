@@ -2,6 +2,7 @@ package de.phillip.controllers;
 
 import de.phillip.animation.GameLoopTimer;
 import de.phillip.components.GameMenu;
+import de.phillip.components.MenuState;
 import de.phillip.events.FXEventBus;
 import de.phillip.events.GameEvent;
 import de.phillip.gameUtils.Transformer;
@@ -17,12 +18,15 @@ public class GameController implements EventHandler<GameEvent> {
 	private LayerManager layerManager;
 	private boolean isStarted;
 	private StackPane stackPane;
+	private GameMenu gameMenu;
 
-	public GameController(StackPane stackPane) {
+	public GameController(StackPane stackPane, GameMenu gameMenu) {
 		//layerManager = new LayerManager(stackPane);
 		FXEventBus.getInstance().addEventHandler(GameEvent.TD_START, this);
 		FXEventBus.getInstance().addEventHandler(GameEvent.TD_LOST, this);
+		FXEventBus.getInstance().addEventHandler(GameEvent.TD_REPEAT, this);
 		this.stackPane = stackPane;
+		this.gameMenu = gameMenu;
 		gameLoopTimer = new GameLoopTimer() {
 
 			@Override
@@ -48,6 +52,8 @@ public class GameController implements EventHandler<GameEvent> {
 				break;
 			case "TD_LOST":
 				stopGame();
+			case "TD_REPEAT":
+				repeatGame();
 			default:
 				break;
 		}
@@ -55,5 +61,11 @@ public class GameController implements EventHandler<GameEvent> {
 	
 	private void stopGame() {
 		gameLoopTimer.stop();
+		gameMenu.setMenuOptions(MenuState.REPEAT);
+		gameMenu.setVisible(true);
+	}
+	
+	private void repeatGame() {
+		System.out.println("Repeated Game");
 	}
 }

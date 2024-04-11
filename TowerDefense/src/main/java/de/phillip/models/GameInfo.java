@@ -58,7 +58,8 @@ public class GameInfo implements Drawable {
 
 	public void decreaseHealth(int damage) {
 		health -= damage;
-		if (health == 0) {
+		if (health <= 0) {
+			health = 0;
 			FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_LOST, null));
 		}
 	}

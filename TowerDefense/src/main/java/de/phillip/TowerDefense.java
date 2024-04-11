@@ -44,9 +44,9 @@ public class TowerDefense extends Application {
                 BackgroundPosition.DEFAULT,  
                 BackgroundSize.DEFAULT);
 		stackPane.setBackground(new Background(bgi));
-		gameController = new GameController(stackPane);
 		gameMenu = new GameMenu();
 		gameMenu.setVisible(true);
+		gameController = new GameController(stackPane, gameMenu);
 		stackPane.getChildren().add(gameMenu);
 		Scene scene = new Scene(stackPane);
 		scene.setOnMouseClicked(event -> {

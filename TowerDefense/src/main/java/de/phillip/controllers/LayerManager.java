@@ -41,6 +41,7 @@ public class LayerManager implements EventHandler<Event>{
 		StackPane.setAlignment(terrainLayer, Pos.TOP_LEFT);
 		StackPane.setAlignment(actionLayer, Pos.TOP_LEFT);
 		stackPane.getChildren().addAll(terrainLayer, actionLayer, infoLayer);
+		stackPane.getChildren().get(0).toFront();
 	}
 	
 	public void nextLevel() {

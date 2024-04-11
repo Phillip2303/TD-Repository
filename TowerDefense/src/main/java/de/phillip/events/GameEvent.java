@@ -28,6 +28,9 @@ public class GameEvent extends Event {
 	
 	public static final EventType<GameEvent> TD_LOST = 
 			new EventType<>(GameEvent.ANY, "TD_LOST");
+	
+	public static final EventType<GameEvent> TD_REPEAT =
+			new EventType<>(GameEvent.ANY, "TD_REPEAT");
 
 	public GameEvent(EventType<GameEvent> eventType, Object data) {
 		super(eventType);
