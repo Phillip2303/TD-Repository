@@ -16,6 +16,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 
 public class LayerManager implements EventHandler<Event>{
@@ -41,7 +42,10 @@ public class LayerManager implements EventHandler<Event>{
 		StackPane.setAlignment(terrainLayer, Pos.TOP_LEFT);
 		StackPane.setAlignment(actionLayer, Pos.TOP_LEFT);
 		stackPane.getChildren().addAll(terrainLayer, actionLayer, infoLayer);
-		stackPane.getChildren().get(0).toFront();
+		Node node = stackPane.getChildren().get(0);
+		node.toFront();
+	//	node.setVisible(true);
+		node.visibleProperty().set(false);
 	}
 	
 	public void nextLevel() {

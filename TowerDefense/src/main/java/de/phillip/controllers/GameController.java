@@ -3,12 +3,14 @@ package de.phillip.controllers;
 import de.phillip.animation.GameLoopTimer;
 import de.phillip.components.GameMenu;
 import de.phillip.components.MenuState;
+import de.phillip.components.SimpleGameMenu;
 import de.phillip.events.FXEventBus;
 import de.phillip.events.GameEvent;
 import de.phillip.gameUtils.Transformer;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 
@@ -18,9 +20,9 @@ public class GameController implements EventHandler<GameEvent> {
 	private LayerManager layerManager;
 	private boolean isStarted;
 	private StackPane stackPane;
-	private GameMenu gameMenu;
+	private SimpleGameMenu gameMenu;
 
-	public GameController(StackPane stackPane, GameMenu gameMenu) {
+	public GameController(StackPane stackPane, SimpleGameMenu gameMenu) {
 		//layerManager = new LayerManager(stackPane);
 		FXEventBus.getInstance().addEventHandler(GameEvent.TD_START, this);
 		FXEventBus.getInstance().addEventHandler(GameEvent.TD_LOST, this);
@@ -52,8 +54,10 @@ public class GameController implements EventHandler<GameEvent> {
 				break;
 			case "TD_LOST":
 				stopGame();
+				break;
 			case "TD_REPEAT":
 				repeatGame();
+				break;
 			default:
 				break;
 		}
@@ -61,8 +65,10 @@ public class GameController implements EventHandler<GameEvent> {
 	
 	private void stopGame() {
 		gameLoopTimer.stop();
-		gameMenu.setMenuOptions(MenuState.REPEAT);
-		gameMenu.setVisible(true);
+		/*gameMenu.setMenuOptions(MenuState.REPEAT);
+		gameMenu.setVisible(true);*/
+		Node node = stackPane.getChildren().get(3);
+		node.setVisible(true);
 	}
 	
 	private void repeatGame() {
