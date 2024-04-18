@@ -303,4 +303,10 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 		drawables.add(gameInfo);
 		newLevel = true;
 	}
+
+	@Override
+	public void resetLayer() {
+		// TODO Auto-generated method stub
+		
+	}
 }

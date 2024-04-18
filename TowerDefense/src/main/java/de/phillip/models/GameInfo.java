@@ -55,6 +55,10 @@ public class GameInfo implements Drawable {
 	public int getHealth() {
 		return health;
 	}
+	
+	public void resetHealth() {
+		health = 100;
+	}
 
 	public void decreaseHealth(int damage) {
 		health -= damage;
@@ -72,6 +76,7 @@ public class GameInfo implements Drawable {
 		this.level = level;
 		switch (level) {
 		case 1:
+			money = 500;
 			break;
 		case 2:
 			money += 200;

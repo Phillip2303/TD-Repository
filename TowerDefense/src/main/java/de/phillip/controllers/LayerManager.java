@@ -5,6 +5,7 @@ import de.phillip.events.GameEvent;
 import de.phillip.gameUtils.Constants;
 import de.phillip.gameUtils.ResourcePool;
 import de.phillip.gameUtils.Transformer;
+import de.phillip.models.GameInfo;
 import de.phillip.models.Tile;
 import de.phillip.models.TurretTile;
 import de.phillip.rendering.Renderer;
@@ -40,12 +41,10 @@ public class LayerManager implements EventHandler<Event>{
 		renderer.registerCanvasLayer(actionLayer);
 		renderer.registerCanvasLayer(infoLayer);
 		StackPane.setAlignment(terrainLayer, Pos.TOP_LEFT);
+		stackPane.getChildren().add(0, terrainLayer);
 		StackPane.setAlignment(actionLayer, Pos.TOP_LEFT);
-		stackPane.getChildren().addAll(terrainLayer, actionLayer, infoLayer);
-		Node node = stackPane.getChildren().get(0);
-		node.toFront();
-	//	node.setVisible(true);
-		node.visibleProperty().set(false);
+		stackPane.getChildren().add(1, actionLayer);
+		stackPane.getChildren().add(2, infoLayer);
 	}
 	
 	public void nextLevel() {
@@ -71,5 +70,15 @@ public class LayerManager implements EventHandler<Event>{
 		default:
 			break;
 		}
+	}
+	
+	public void reset() {
+		level = 1;
+		waveController.setLevel(level);
+		turretController.setLevel(level);
+		infoLayer.setLevel(level);
+		actionLayer.setLevel(level);
+		GameInfo.getInstance().setLevel(level);
+		GameInfo.getInstance().resetHealth();
 	}
 }

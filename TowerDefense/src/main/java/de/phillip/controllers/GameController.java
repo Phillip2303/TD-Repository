@@ -20,9 +20,9 @@ public class GameController implements EventHandler<GameEvent> {
 	private LayerManager layerManager;
 	private boolean isStarted;
 	private StackPane stackPane;
-	private SimpleGameMenu gameMenu;
+	private GameMenu gameMenu;
 
-	public GameController(StackPane stackPane, SimpleGameMenu gameMenu) {
+	public GameController(StackPane stackPane, GameMenu gameMenu) {
 		//layerManager = new LayerManager(stackPane);
 		FXEventBus.getInstance().addEventHandler(GameEvent.TD_START, this);
 		FXEventBus.getInstance().addEventHandler(GameEvent.TD_LOST, this);
@@ -41,9 +41,9 @@ public class GameController implements EventHandler<GameEvent> {
 	private void startGame() {
 		if (!isStarted) {
 			layerManager = new LayerManager(stackPane);
-			gameLoopTimer.start();
 			isStarted = true;
 		}
+		gameLoopTimer.start();
 	}
 
 	@Override
@@ -54,6 +54,7 @@ public class GameController implements EventHandler<GameEvent> {
 				break;
 			case "TD_LOST":
 				stopGame();
+				
 				break;
 			case "TD_REPEAT":
 				repeatGame();
@@ -64,14 +65,19 @@ public class GameController implements EventHandler<GameEvent> {
 	}
 	
 	private void stopGame() {
+		repeatGame();
 		gameLoopTimer.stop();
+
 		/*gameMenu.setMenuOptions(MenuState.REPEAT);
-		gameMenu.setVisible(true);*/
+		gameMenu.setVisible(true);
 		Node node = stackPane.getChildren().get(3);
-		node.setVisible(true);
+		node.setVisible(true);*/
+		
 	}
 	
 	private void repeatGame() {
+		layerManager.reset();
+		//startGame();
 		System.out.println("Repeated Game");
 	}
 }

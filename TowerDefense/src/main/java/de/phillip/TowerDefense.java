@@ -8,6 +8,7 @@ import de.phillip.events.FXEventBus;
 import de.phillip.events.GameEvent;
 import de.phillip.gameUtils.ResourcePool;
 import javafx.application.Application;
+import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
@@ -21,7 +22,7 @@ import javafx.stage.Stage;
 public class TowerDefense extends Application {
 	
 	private GameController gameController;
-	private SimpleGameMenu gameMenu;
+	private GameMenu gameMenu;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -41,7 +42,7 @@ public class TowerDefense extends Application {
 	}
 	
 	private Scene createScene() {
-		SimplePane pane = new SimplePane();
+		Group root = new Group();
 		StackPane stackPane = new StackPane();
 		BackgroundImage bgi = new BackgroundImage(ResourcePool.getInstance().getGalaxy(), BackgroundRepeat.NO_REPEAT,  
                 BackgroundRepeat.NO_REPEAT,  
@@ -50,11 +51,12 @@ public class TowerDefense extends Application {
 		stackPane.setBackground(new Background(bgi));
 		//gameMenu = new GameMenu();
 		//gameMenu.setVisible(true);
-		gameMenu = new SimpleGameMenu();
+		gameMenu = new GameMenu();
 		gameMenu.setVisible(true);
+		root.getChildren().addAll(stackPane, gameMenu);
 		gameController = new GameController(stackPane, gameMenu);
-		stackPane.getChildren().addAll(pane);
-		Scene scene = new Scene(stackPane);
+		//stackPane.getChildren().addAll(pane);
+		Scene scene = new Scene(root);
 		scene.setOnMouseClicked(event -> {
 			FXEventBus.getInstance().fireEvent(event);
 		});

@@ -33,7 +33,8 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 	private int layerWidth;
 	private int layerHeight;
 	private int level;
-	private int speedLevel = 85;
+	//private int speedLevel = 85;
+	private int speedLevel = 400;
 	private Tile[][] paths;
 	private WaveController waveController;
 	private TurretController turretController;
@@ -313,5 +314,11 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 		isCleaned = true;
 		waveStarted = false;
 
+	}
+
+	@Override
+	public void resetLayer() {
+		// TODO Auto-generated method stub
+		
 	}
 }

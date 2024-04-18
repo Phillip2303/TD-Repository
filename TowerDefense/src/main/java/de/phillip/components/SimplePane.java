@@ -18,6 +18,10 @@ public class SimplePane extends Pane {
 	private MenuButton startButton;
 	
 	public SimplePane() { 
+		setOnMouseClicked(e -> {
+			setVisible(false);
+			FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_START, null));
+		});
 		menu = new VBox(10);
 		setStyle("-fx-background-color:gray");
 		setOpacity(0.4);
@@ -25,8 +29,8 @@ public class SimplePane extends Pane {
 		createButtons();
 		menu.setTranslateX(350);
 		menu.setTranslateY(400);
-		menu.getChildren().addAll(exitButton, startButton);
-		getChildren().add(menu);
+		//menu.getChildren().addAll(exitButton, startButton);
+		getChildren().add(startButton);
 		
 		visibleProperty().addListener(new ChangeListener<Boolean>() {
 

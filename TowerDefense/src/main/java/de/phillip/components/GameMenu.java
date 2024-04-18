@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-public class GameMenu extends Pane {
+public class GameMenu extends Parent {
 	
 	VBox startMenu;
 	VBox repeatMenu;
@@ -94,22 +94,22 @@ public class GameMenu extends Pane {
 	private void addMenu() {
 		switch (menuState) {
 			case REPEAT:
-				repeatMenu.getChildren().addAll(repeatButton, exitButton);
+				//repeatMenu.getChildren().addAll(repeatButton, exitButton);
 				this.getChildren().add(repeatMenu);
 				break;
 			default:
 				break;
-	}
+		}
 	}
 	
 	private void removeMenu() {
-			switch (menuState) {
+			/*switch (menuState) {
 			case REPEAT:
 				repeatMenu.getChildren().removeAll(repeatButton, exitButton);
 				break;
 			default:
 				break;
-		}
+		}*/
 			this.getChildren().removeAll(startMenu, repeatMenu);
 	}
 	
@@ -124,7 +124,7 @@ public class GameMenu extends Pane {
 		repeatMenu = new VBox(10);
 		repeatMenu.setTranslateX(350);
 		repeatMenu.setTranslateY(400);
-		//repeatMenu.getChildren().addAll(repeatButtonRepeat, exitButtonRepeat);
+		repeatMenu.getChildren().addAll(repeatButton, exitButton);
 	}
 	
 	public void setMenuOptions(MenuState menuState) {
