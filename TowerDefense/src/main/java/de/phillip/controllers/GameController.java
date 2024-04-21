@@ -7,12 +7,14 @@ import de.phillip.components.SimpleGameMenu;
 import de.phillip.events.FXEventBus;
 import de.phillip.events.GameEvent;
 import de.phillip.gameUtils.Transformer;
+import javafx.animation.FadeTransition;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.util.Duration;
 
 public class GameController implements EventHandler<GameEvent> {
 	
@@ -54,7 +56,6 @@ public class GameController implements EventHandler<GameEvent> {
 				break;
 			case "TD_LOST":
 				stopGame();
-				
 				break;
 			case "TD_REPEAT":
 				repeatGame();
@@ -65,19 +66,20 @@ public class GameController implements EventHandler<GameEvent> {
 	}
 	
 	private void stopGame() {
-		repeatGame();
+		//repeatGame();
 		gameLoopTimer.stop();
-
-		/*gameMenu.setMenuOptions(MenuState.REPEAT);
+		FadeTransition ft = new FadeTransition(Duration.seconds(0.5), gameMenu);
+		ft.setFromValue(0);
+		ft.setToValue(1);
+		gameMenu.setMenuOptions(MenuState.REPEAT);
 		gameMenu.setVisible(true);
-		Node node = stackPane.getChildren().get(3);
-		node.setVisible(true);*/
+		ft.play();
 		
 	}
 	
 	private void repeatGame() {
 		layerManager.reset();
-		//startGame();
+		startGame();
 		System.out.println("Repeated Game");
 	}
 }

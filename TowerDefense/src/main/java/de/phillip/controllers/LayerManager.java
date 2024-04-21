@@ -74,11 +74,13 @@ public class LayerManager implements EventHandler<Event>{
 	
 	public void reset() {
 		level = 1;
-		waveController.setLevel(level);
+		/*waveController.setLevel(level);
 		turretController.setLevel(level);
 		infoLayer.setLevel(level);
-		actionLayer.setLevel(level);
-		GameInfo.getInstance().setLevel(level);
+		actionLayer.setLevel(level);*/
+		actionLayer.resetGame();
+		infoLayer.resetGame();
+		//GameInfo.getInstance().setLevel(level);
 		GameInfo.getInstance().resetHealth();
 	}
 }

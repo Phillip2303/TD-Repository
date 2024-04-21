@@ -61,7 +61,7 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 	}
 	
 	private void createStartWaveButton() {
-		startWaveButton = new CanvasButton(startWave, 19 * Constants.TILESIZE - 8, 6 * Constants.TILESIZE, 120, 20);
+		startWaveButton = new CanvasButton(startWave, 19 * Constants.TILESIZE - 8, 6 * Constants.TILESIZE - 16, 120, 20);
 		drawables.add(startWaveButton);
 	}
 	
@@ -305,8 +305,7 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 	}
 
 	@Override
-	public void resetLayer() {
-		// TODO Auto-generated method stub
-		
+	public void resetGame() {
+		setLevel(1);
 	}
 }

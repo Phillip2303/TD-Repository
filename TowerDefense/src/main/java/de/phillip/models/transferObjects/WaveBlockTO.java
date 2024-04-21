@@ -6,7 +6,6 @@ import javafx.scene.image.Image;
 
 public class WaveBlockTO {
 	
-	 private int speed;
 	 private int health;
 	 private String imagePath;
 	 private int amount;
@@ -27,14 +26,6 @@ public class WaveBlockTO {
 	 public Image getSprite() {
 		 return sprite;
 	 }
-
-	public int getSpeed() {
-		return speed;
-	}
-
-	public void setSpeed(int speed) {
-		this.speed = speed;
-	}
 
 	public int getHealth() {
 		return health;

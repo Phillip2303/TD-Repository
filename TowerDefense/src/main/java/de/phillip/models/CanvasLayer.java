@@ -9,5 +9,5 @@ public interface CanvasLayer {
 	public GraphicsContext getGraphicsContext2D();
 	public void prepareLayer();
 	public void updateLayer(float secondsSinceLastFrame);
-	public void resetLayer();
+	public void resetGame();
 }

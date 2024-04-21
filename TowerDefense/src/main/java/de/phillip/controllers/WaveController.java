@@ -108,4 +108,8 @@ public class WaveController {
 		return wave.getWaveCount();
 	}
 
+	public int getSpeedLevel() {
+		return wave.getSpeed();
+	}
+
 }

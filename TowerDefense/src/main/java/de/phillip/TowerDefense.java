@@ -42,21 +42,17 @@ public class TowerDefense extends Application {
 	}
 	
 	private Scene createScene() {
-		Group root = new Group();
 		StackPane stackPane = new StackPane();
 		BackgroundImage bgi = new BackgroundImage(ResourcePool.getInstance().getGalaxy(), BackgroundRepeat.NO_REPEAT,  
                 BackgroundRepeat.NO_REPEAT,  
                 BackgroundPosition.DEFAULT,  
                 BackgroundSize.DEFAULT);
 		stackPane.setBackground(new Background(bgi));
-		//gameMenu = new GameMenu();
-		//gameMenu.setVisible(true);
 		gameMenu = new GameMenu();
 		gameMenu.setVisible(true);
-		root.getChildren().addAll(stackPane, gameMenu);
 		gameController = new GameController(stackPane, gameMenu);
-		//stackPane.getChildren().addAll(pane);
-		Scene scene = new Scene(root);
+		stackPane.getChildren().addAll(gameMenu);
+		Scene scene = new Scene(stackPane);
 		scene.setOnMouseClicked(event -> {
 			FXEventBus.getInstance().fireEvent(event);
 		});

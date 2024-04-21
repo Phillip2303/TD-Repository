@@ -16,7 +16,7 @@ public class ResourcePool {
 	private static ResourcePool resourcePool;
 	private Image background;
 	private Image galaxy;
-	private Tile[][] terrainTiles1, path1;
+	private Tile[][] terrainTiles1;
 	private Image terrain;
 	private Image enemy1;
 	private Image bullet1;
@@ -52,22 +52,6 @@ public class ResourcePool {
 						for (int x = 0; x < terrainTiles1[y].length; x++) {
 							int ID = scanner.nextInt();
 							terrainTiles1[y][x] = new TerrainTile(x, y, ID, Constants.TILESIZE);
-						}
-					}
-				}
-			}
-		} 
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		path1 = new Tile[Constants.TERRAINLAYER_HEIGHT][Constants.TERRAINLAYER_WIDTH];
-		try (InputStream input = getClass().getResourceAsStream("/assets/maps/path1.pxt")) {
-			try(Scanner scanner = new Scanner(input)) {
-				while (scanner.hasNext()) {
-					for (int y = 0; y < path1.length; y++) {
-						for (int x = 0; x < path1[y].length; x++) {
-							int ID = scanner.nextInt();
-							path1[y][x] = new TerrainTile(x*Constants.TILESIZE, y*Constants.TILESIZE, ID, Constants.TILESIZE);
 						}
 					}
 				}
@@ -120,19 +104,25 @@ public class ResourcePool {
 		}
 	}
 	
-	public Tile[][] getPaths(int level) {
-		switch (level) {
-		case 1: 
-			return path1;
-		case 2:
-			return path1;
-		case 3: 
-			return path1;
-		case 4: 
-			return path1;
-		default:
-			return null;
+	public Tile[][] getPath(int level) {
+		String levelPath = "/assets/maps/path" + level + ".pxt";
+		Tile[][] path = new Tile[Constants.TERRAINLAYER_HEIGHT][Constants.TERRAINLAYER_WIDTH];
+		try (InputStream input = getClass().getResourceAsStream(levelPath)) {
+			try(Scanner scanner = new Scanner(input)) {
+				while (scanner.hasNext()) {
+					for (int y = 0; y < path.length; y++) {
+						for (int x = 0; x < path[y].length; x++) {
+							int ID = scanner.nextInt();
+							path[y][x] = new TerrainTile(x*Constants.TILESIZE, y*Constants.TILESIZE, ID, Constants.TILESIZE);
+						}
+					}
+				}
+			}
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
 		}
+		return path;
 	}
 	
 	public Image getEnemySprite(String resourcePath) {

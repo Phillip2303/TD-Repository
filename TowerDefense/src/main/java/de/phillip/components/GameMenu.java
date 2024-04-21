@@ -78,7 +78,7 @@ public class GameMenu extends Parent {
 	}
 	
 	private void createRepeatButton() {
-		repeatButton = new MenuButton("REPEAT LEVEL");
+		repeatButton = new MenuButton("REPEAT GAME");
 		repeatButton.setOnMouseClicked(event1 -> {
 			FadeTransition ft = new FadeTransition(Duration.seconds(0.5), this);
 			ft.setFromValue(1);

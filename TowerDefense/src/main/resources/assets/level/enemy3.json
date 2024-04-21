@@ -1,38 +1,35 @@
 {
   "waveBlocks" : [ {
     "damage" : 30,
-    "speed" : 85,
     "health" : 15,
     "imagePath" : "/assets/images/enemies/enemy-green.png",
     "amount" : 10,
-    "money" : 150,
+    "money" : 100,
     "type" : "GREEN-1"
   }, {
     "damage" : 40,
-    "speed" : 85,
-    "health" : 20,
+    "health" : 30,
     "imagePath" : "/assets/images/enemies/enemy-yellow.png",
     "amount" : 10,
-    "money" : 200,
+    "money" : 125,
     "type" : "YELLOW-1"
   }, {
     "damage" : 30,
-    "speed" : 85,
     "health" : 15,
     "imagePath" : "/assets/images/enemies/enemy-green.png",
     "amount" : 10,
-    "money" : 150,
+    "money" : 100,
     "type" : "GREEN-1"
   }, {
     "damage" : 40,
-    "speed" : 85,
-    "health" : 20,
+    "health" : 30,
     "imagePath" : "/assets/images/enemies/enemy-yellow.png",
     "amount" : 10,
-    "money" : 200,
+    "money" : 125,
     "type" : "YELLOW-1"
   } ],
   "waveCount" : 4,
   "blockDelay" : 5,
-  "enemyDelay" : 0.5
+  "enemyDelay" : 0.5,
+  "speed" : 130
 }

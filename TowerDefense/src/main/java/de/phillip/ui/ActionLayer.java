@@ -33,8 +33,6 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 	private int layerWidth;
 	private int layerHeight;
 	private int level;
-	//private int speedLevel = 85;
-	private int speedLevel = 400;
 	private Tile[][] paths;
 	private WaveController waveController;
 	private TurretController turretController;
@@ -53,19 +51,10 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 		gameInfo.setLevel(level);
 		layerWidth = Constants.TERRAINLAYER_WIDTH;
 		layerHeight = Constants.TERRAINLAYER_HEIGHT;
-		paths = ResourcePool.getInstance().getPaths(level);
+		paths = ResourcePool.getInstance().getPath(level);
 		this.waveController = waveController;
 		this.turretController = turretController;
 
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
-		paths = ResourcePool.getInstance().getPaths(level);
-		waveController.setLevel(level);
-		turretController.setLevel(level);
-		gameInfo.setLevel(level);
-		isCleaned = false;
 	}
 
 	public void updateLayer(float secondsSinceLastFrame) {
@@ -135,6 +124,7 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 	}
 
 	private void updateEnemy(float secondsSinceLastFrame, Enemy enemy) {
+		int speedLevel = waveController.getSpeedLevel();
 		double speed = speedLevel * secondsSinceLastFrame;
 		Point2D currentPosition = calculateTilePosition(enemy.getCenter(), enemy.getRotation());
 		if (!enemy.hasReachedEnd() && paths[(int) currentPosition.getY()][(int) currentPosition.getX()].getID() == 9) {
@@ -317,8 +307,19 @@ public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Eve
 	}
 
 	@Override
-	public void resetLayer() {
-		// TODO Auto-generated method stub
-		
+	public void resetGame() {
+		actors.clear();
+		setLevel(1);
+		waveStarted = false;
 	}
+	
+	public void setLevel(int level) {
+		this.level = level;
+		paths = ResourcePool.getInstance().getPath(level);
+		waveController.setLevel(level);
+		turretController.setLevel(level);
+		gameInfo.setLevel(level);
+		isCleaned = false;
+	}
+
 }

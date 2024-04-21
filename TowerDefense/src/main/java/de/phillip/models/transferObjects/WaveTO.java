@@ -8,6 +8,7 @@ public class WaveTO {
 	private int waveCount;
 	private int blockDelay;
 	private float enemyDelay;
+	private int speed;
 	
 	public WaveTO() {
 
@@ -43,6 +44,14 @@ public class WaveTO {
 
 	public void setEnemyDelay(float enemyDelay) {
 		this.enemyDelay = enemyDelay;
+	}
+	
+	public int getSpeed() {
+		return speed;
+	}
+
+	public void setSpeed(int speed) {
+		this.speed = speed;
 	}
 
 }
