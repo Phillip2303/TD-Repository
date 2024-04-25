@@ -1,6 +1,5 @@
 package de.phillip.events;
 
-import de.phillip.gameUtils.ResourcePool;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.event.EventType;

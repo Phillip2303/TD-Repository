@@ -14,8 +14,8 @@ import de.phillip.models.CanvasButton;
 import de.phillip.models.CanvasLayer;
 import de.phillip.models.Drawable;
 import de.phillip.models.GameInfo;
+import de.phillip.models.Turret;
 import de.phillip.models.TurretTile;
-import de.phillip.models.transferObjects.TurretTO;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
@@ -28,7 +28,9 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 	private TurretTile[][] turretTiles;
 	private Image turretSprite;
 	private CanvasButton startWaveButton;
+	private CanvasButton upgradeButton;
 	private Image startWave;
+	private Image upgrade;
 	private List<Drawable> drawables = new ArrayList<>();
 	private TurretTile overlay;
 	private boolean hasSelected;
@@ -52,17 +54,24 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 		gameInfo = GameInfo.getInstance();
 		FXEventBus.getInstance().addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 		FXEventBus.getInstance().addEventHandler(MouseEvent.MOUSE_MOVED, this);
+		FXEventBus.getInstance().addEventHandler(GameEvent.TD_SHOWUPGRADE, this);
 		turretSprite = ResourcePool.getInstance().getTurretTileSprite();
 		startWave = ResourcePool.getInstance().getStartWave();
+		upgrade = ResourcePool.getInstance().getUpgrade();
 		createTurretTiles(turretController.getTurrets().size());
 		createStartWaveButton();
 		drawables.add(gameInfo);
 		gameInfo.setWaveCount(waveController.getWaveCount());
+		createUpgradeButton(new Point2D(0, 0));
 	}
 	
 	private void createStartWaveButton() {
 		startWaveButton = new CanvasButton(startWave, 19 * Constants.TILESIZE - 8, 6 * Constants.TILESIZE - 16, 120, 20);
 		drawables.add(startWaveButton);
+	}
+	
+	private void createUpgradeButton(Point2D position) {
+		upgradeButton = new CanvasButton(upgrade, (int) position.getX() + 69, (int) position.getY(), 120, 20);
 	}
 	
 	private void createTurretTiles(int length) {
@@ -154,6 +163,11 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 			} else {
 				startWaveButton.setActive(false);
 			}
+			if (upgradeButton.contains(new Point2D(eventX, eventY))) {
+				upgradeButton.setActive(true);
+			} else {
+				upgradeButton.setActive(false);
+			}
 			break;
 		case OVERLAY:
 			overlay.setDrawPosition(eventX - Constants.TILESIZE / 2, eventY - Constants.TILESIZE / 2);
@@ -191,6 +205,14 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 					}
 				}
 			}
+			if (upgradeButton.isActive()) {
+				FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_UPGRADE, null));
+				drawables.remove(upgradeButton);
+				upgradeButton.setActive(false);
+			} else {
+				drawables.remove(upgradeButton);
+				upgradeButton.setActive(false);
+			}
 			break;
 		case OVERLAY:
 			FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_PLACETURRET, overlay));
@@ -207,6 +229,14 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 	private void mouseRightClicked(double x, double y) {
 		switch (currentState) {
 		case OBSERVE:
+			if (upgradeButton.isActive()) {
+				FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_UPGRADE, null));
+				drawables.remove(upgradeButton);
+				upgradeButton.setActive(false);
+			} else {
+				drawables.remove(upgradeButton);
+				upgradeButton.setActive(false);
+			}
 			break;
 		case OVERLAY:
 			invalidateTiles();
@@ -287,6 +317,11 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 					break;
 			}
 			break;
+		case "TD_SHOWUPGRADE":
+			GameEvent gameEvent1 = (GameEvent) event;
+			Turret turret = (Turret) gameEvent1.getData();
+			upgradeButton.setPosition((int) turret.getDrawPosition().getX(), (int) turret.getDrawPosition().getY());
+			drawables.add(upgradeButton);
 		default: 
 			break;
 		}

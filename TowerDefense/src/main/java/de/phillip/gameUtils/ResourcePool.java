@@ -20,6 +20,7 @@ public class ResourcePool {
 	private Image terrain;
 	private Image enemy1;
 	private Image bullet1;
+	private Image upgrade;
 	private Image turretBase;
 	private Image turretTileSprite;
 	private Image startWave;
@@ -44,6 +45,7 @@ public class ResourcePool {
 		terrain = new Image(getClass().getResource("/assets/images/tiles/terrain.png").toString());
 	//	enemy1 = new Image(getClass().getResource("/assets/images/enemies/enemy-red.png").toString());
 		startWave = new Image(getClass().getResource("/assets/images/startWave.png").toString());
+		upgrade = new Image(getClass().getResource("/assets/images/upgrade.png").toString());
 		terrainTiles1 = new Tile[Constants.TERRAINLAYER_HEIGHT][Constants.TERRAINLAYER_WIDTH];
 		try (InputStream input = getClass().getResourceAsStream("/assets/maps/terrain1.pxt")) {
 			try(Scanner scanner = new Scanner(input)) {
@@ -64,6 +66,10 @@ public class ResourcePool {
 	
 	public Image getStartWave() {
 		return startWave;
+	}
+	
+	public Image getUpgrade() {
+		return upgrade;
 	}
 	
 	public Image getBackground() {

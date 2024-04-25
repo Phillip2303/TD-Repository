@@ -3,21 +3,14 @@ package de.phillip.controllers;
 import de.phillip.events.FXEventBus;
 import de.phillip.events.GameEvent;
 import de.phillip.gameUtils.Constants;
-import de.phillip.gameUtils.ResourcePool;
-import de.phillip.gameUtils.Transformer;
 import de.phillip.models.GameInfo;
-import de.phillip.models.Tile;
-import de.phillip.models.TurretTile;
 import de.phillip.rendering.Renderer;
 import de.phillip.ui.ActionLayer;
 import de.phillip.ui.InfoLayer;
 import de.phillip.ui.TerrainLayer;
-import de.phillip.ui.InfoLayer.State;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.layout.StackPane;
 
 public class LayerManager implements EventHandler<Event>{

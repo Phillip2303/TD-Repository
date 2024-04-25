@@ -20,13 +20,10 @@ import de.phillip.models.GameInfo;
 import de.phillip.models.Tile;
 import de.phillip.models.Turret;
 import de.phillip.models.TurretTile;
-import de.phillip.ui.InfoLayer.State;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 
 public class ActionLayer extends Canvas implements CanvasLayer, EventHandler<Event> {
 

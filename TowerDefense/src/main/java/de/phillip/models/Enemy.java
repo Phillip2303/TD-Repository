@@ -2,10 +2,8 @@ package de.phillip.models;
 
 import de.phillip.gameUtils.Constants;
 import de.phillip.models.transferObjects.WaveBlockTO;
-import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.Rotate;
 
 public class Enemy extends Actor {
 	

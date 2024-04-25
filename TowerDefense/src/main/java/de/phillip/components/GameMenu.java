@@ -1,6 +1,5 @@
 package de.phillip.components;
 
-import de.phillip.controllers.GameController;
 import de.phillip.events.FXEventBus;
 import de.phillip.events.GameEvent;
 import javafx.animation.FadeTransition;
@@ -9,7 +8,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;

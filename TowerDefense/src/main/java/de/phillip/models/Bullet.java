@@ -2,7 +2,6 @@ package de.phillip.models;
 
 import de.phillip.gameUtils.Constants;
 import de.phillip.gameUtils.Transformer;
-import de.phillip.models.transferObjects.TurretTO;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;

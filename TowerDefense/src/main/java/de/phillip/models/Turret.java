@@ -5,10 +5,8 @@ import java.util.List;
 import de.phillip.events.FXEventBus;
 import de.phillip.events.GameEvent;
 import de.phillip.gameUtils.Constants;
-import de.phillip.gameUtils.ResourcePool;
 import de.phillip.gameUtils.Transformer;
 import de.phillip.models.transferObjects.TurretTO;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
@@ -22,6 +20,7 @@ public class Turret extends Actor implements EventHandler<MouseEvent>{
 	private Image turretCannonSprite;
 	private int ID;
 	private boolean isSelected;
+	private boolean selectedUpgrade;
 	private boolean isNew = true;
 	private boolean isDeleted;
 	private int range;
@@ -101,20 +100,35 @@ public class Turret extends Actor implements EventHandler<MouseEvent>{
 		if (isSelected) {
 			isDeleted = true;
 			FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_REMOVETURRET, this));
+		} else {
+			if (!selectedUpgrade)  {
+				if (checkForTurretClick(eventX, eventY)) {
+					FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_SHOWUPGRADE, this));
+					selectedUpgrade = true;
+				}
+			}
 		}
 	}
 
 	private void mouseLeftClicked(double eventX, double eventY) {
+		if (checkForTurretClick(eventX, eventY)) {
+			select(!isSelected);
+			return;
+		}
+		selectedUpgrade = false;
+		select(false);
+	}
+	
+	private boolean checkForTurretClick(double eventX, double eventY) {
 		Point2D selectedTileCoor = Transformer.transformPixelsCoordinatesToTile(eventX, eventY);
 		double x = selectedTileCoor.getX() * Constants.TILESIZE;
 		double y = selectedTileCoor.getY() * Constants.TILESIZE;
 		if (getDrawPosition().getX() == x)  {
 			if (getDrawPosition().getY() == y) {
-				select(!isSelected);
-				return;
+				return true;
 			}
 		}
-		select(false);
+		return false;
 	}
 	
 	public boolean isDeleted() {

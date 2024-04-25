@@ -1,21 +1,16 @@
 package de.phillip;
 
 import de.phillip.components.GameMenu;
-import de.phillip.components.SimpleGameMenu;
-import de.phillip.components.SimplePane;
 import de.phillip.controllers.GameController;
 import de.phillip.events.FXEventBus;
-import de.phillip.events.GameEvent;
 import de.phillip.gameUtils.ResourcePool;
 import javafx.application.Application;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 

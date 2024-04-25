@@ -31,6 +31,12 @@ public class GameEvent extends Event {
 	
 	public static final EventType<GameEvent> TD_REPEAT =
 			new EventType<>(GameEvent.ANY, "TD_REPEAT");
+	
+	public static final EventType<GameEvent> TD_SHOWUPGRADE =
+			new EventType<>(GameEvent.ANY, "TD_SHOWUPGRADE");
+	
+	public static final EventType<GameEvent> TD_UPGRADE =
+			new EventType<>(GameEvent.ANY, "TD_UPGRADE");
 
 	public GameEvent(EventType<GameEvent> eventType, Object data) {
 		super(eventType);

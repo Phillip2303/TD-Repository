@@ -43,5 +43,9 @@ public class CanvasButton implements Drawable {
 	public boolean contains(Point2D point) {
 		return rectangle.contains(point);
 	}
+	
+	public void setPosition(int posX, int posY) {
+		rectangle = new Rectangle2D(posX, posY, rectangle.getWidth(), rectangle.getHeight());
+	}
 
 }

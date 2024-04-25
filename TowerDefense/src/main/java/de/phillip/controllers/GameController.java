@@ -3,16 +3,10 @@ package de.phillip.controllers;
 import de.phillip.animation.GameLoopTimer;
 import de.phillip.components.GameMenu;
 import de.phillip.components.MenuState;
-import de.phillip.components.SimpleGameMenu;
 import de.phillip.events.FXEventBus;
 import de.phillip.events.GameEvent;
-import de.phillip.gameUtils.Transformer;
 import javafx.animation.FadeTransition;
-import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.geometry.Point2D;
-import javafx.scene.Node;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
