@@ -40,6 +40,7 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 	private TurretController turretController;
 	private WaveController waveController;
 	private boolean newLevel; 
+	private Turret selectedTurret;
 	
 	public enum State {
 		OVERLAY,
@@ -67,6 +68,7 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 	
 	private void createStartWaveButton() {
 		startWaveButton = new CanvasButton(startWave, 19 * Constants.TILESIZE - 8, 6 * Constants.TILESIZE - 16, 120, 20);
+		startWaveButton.setVisible(true);
 		drawables.add(startWaveButton);
 	}
 	
@@ -206,9 +208,13 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 				}
 			}
 			if (upgradeButton.isActive()) {
-				FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_UPGRADE, null));
-				drawables.remove(upgradeButton);
-				upgradeButton.setActive(false);
+				if (upgradeButton.isVisible()) {
+					//FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_UPGRADE, null));
+					turretController.upgrade(selectedTurret);
+					drawables.remove(upgradeButton);
+					upgradeButton.setActive(false);
+					//decrease money when upgrade
+				}
 			} else {
 				drawables.remove(upgradeButton);
 				upgradeButton.setActive(false);
@@ -229,14 +235,8 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 	private void mouseRightClicked(double x, double y) {
 		switch (currentState) {
 		case OBSERVE:
-			if (upgradeButton.isActive()) {
-				FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_UPGRADE, null));
-				drawables.remove(upgradeButton);
-				upgradeButton.setActive(false);
-			} else {
-				drawables.remove(upgradeButton);
-				upgradeButton.setActive(false);
-			}
+			drawables.remove(upgradeButton);
+			upgradeButton.setActive(false);
 			break;
 		case OVERLAY:
 			invalidateTiles();
@@ -319,11 +319,24 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 			break;
 		case "TD_SHOWUPGRADE":
 			GameEvent gameEvent1 = (GameEvent) event;
-			Turret turret = (Turret) gameEvent1.getData();
-			upgradeButton.setPosition((int) turret.getDrawPosition().getX(), (int) turret.getDrawPosition().getY());
+			selectedTurret = (Turret) gameEvent1.getData();
+			upgradeButton.setPosition((int) selectedTurret.getDrawPosition().getX() + Constants.TILESIZE, (int) selectedTurret.getDrawPosition().getY());
+			validateUpgradeButton();
 			drawables.add(upgradeButton);
 		default: 
 			break;
+		}
+	}
+	
+	private void validateUpgradeButton() {
+		if (turretController.canUpgrade(selectedTurret.getID())) {
+			if (turretController.costOfUpgrade(selectedTurret.getID()) <= gameInfo.getMoney()) {
+				upgradeButton.setVisible(true);
+			} else {
+				upgradeButton.setVisible(false);
+			}
+		} else {
+			upgradeButton.setVisible(false);
 		}
 	}
 	

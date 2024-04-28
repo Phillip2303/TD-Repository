@@ -67,5 +67,33 @@ public class TurretController {
 	public List<TurretTO> getTurrets() {
 		return turrets.getTurrets();
 	}
+	
+	public int costOfUpgrade(int ID) {
+		TurretTO turret = turrets.getTurrets().stream().filter(a -> a.getId() == ID + 1).collect(Collectors.toList()).get(0);
+		if (turret != null) { 
+			return turret.getCost();
+		} else {
+			return 1000000000;
+		}
+	}
+	
+	public boolean canUpgrade(int ID) {
+		TurretTO turret = turrets.getTurrets().stream().filter(a -> a.getId() == ID + 1).collect(Collectors.toList()).get(0);
+		if (turret != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public void upgrade(Turret selectedTurret) {
+		TurretTO turret = turrets.getTurrets().stream().filter(a -> a.getId() == selectedTurret.getID() + 1).collect(Collectors.toList()).get(0);
+		if (turret != null) {
+			selectedTurret.setTurret(turret);
+			selectedTurret.setID(turret.getId());
+			selectedTurret.setTurretBaseSprite(turret.getTurretSprite());
+			selectedTurret.setTurretCannonSprite(turret.getCannonSprite());
+		}
+	}
 
 }

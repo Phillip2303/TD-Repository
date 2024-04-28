@@ -106,6 +106,8 @@ public class Turret extends Actor implements EventHandler<MouseEvent>{
 					FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_SHOWUPGRADE, this));
 					selectedUpgrade = true;
 				}
+			} else {
+				selectedUpgrade = false;
 			}
 		}
 	}
@@ -187,6 +189,35 @@ public class Turret extends Actor implements EventHandler<MouseEvent>{
 		return turret.getCost();
 	}
 	
+	public int getID() {
+		return ID;
+	}
+
+	public void setID(int iD) {
+		ID = iD;
+	}
+
+	public void setTurret(TurretTO turret) {
+		this.turret = turret;
+		range = turret.getRange();
+	}
+
+	public Image getTurretBaseSprite() {
+		return turretBaseSprite;
+	}
+
+	public void setTurretBaseSprite(Image turretBaseSprite) {
+		this.turretBaseSprite = turretBaseSprite;
+	}
+
+	public Image getTurretCannonSprite() {
+		return turretCannonSprite;
+	}
+
+	public void setTurretCannonSprite(Image turretCannonSprite) {
+		this.turretCannonSprite = turretCannonSprite;
+	}
+
 	public void registerHandler() {
 		FXEventBus.getInstance().addEventHandler(MouseEvent.MOUSE_CLICKED, this);
 	}

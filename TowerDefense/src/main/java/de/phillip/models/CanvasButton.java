@@ -11,6 +11,8 @@ public class CanvasButton implements Drawable {
 	private Image image;
 	private Rectangle2D rectangle;
 	private boolean isActive;
+	private boolean isVisible;
+	
 
 	public CanvasButton(Image image, int posX, int posY, int width, int height) {
 		this.image = image;
@@ -19,17 +21,24 @@ public class CanvasButton implements Drawable {
 
 	@Override
 	public void drawToCanvas(GraphicsContext gc) {
-		if (isActive) {
-			gc.save();
-			Bloom bloom = new Bloom();
-			bloom.setThreshold(0.1);
-			gc.setEffect(bloom);
-			gc.drawImage(image, rectangle.getMinX(), rectangle.getMinY());
-			gc.restore();
+		gc.save();
+		if (isVisible) {
+			if (isActive) {
+				gc.setGlobalAlpha(1);
+				Bloom bloom = new Bloom();
+				bloom.setThreshold(0.1);
+				gc.setEffect(bloom);
+				gc.drawImage(image, rectangle.getMinX(), rectangle.getMinY());
+			} else {
+				gc.setEffect(null);
+				gc.drawImage(image, rectangle.getMinX(), rectangle.getMinY());
+			}
 		} else {
+			gc.setGlobalAlpha(0.5);
 			gc.setEffect(null);
 			gc.drawImage(image, rectangle.getMinX(), rectangle.getMinY());
 		}
+		gc.restore();
 	}
 	
 	public void setActive(boolean isActive) {
@@ -46,6 +55,14 @@ public class CanvasButton implements Drawable {
 	
 	public void setPosition(int posX, int posY) {
 		rectangle = new Rectangle2D(posX, posY, rectangle.getWidth(), rectangle.getHeight());
+	}
+	
+	public boolean isVisible() {
+		return isVisible;
+	}
+
+	public void setVisible(boolean isVisible) {
+		this.isVisible = isVisible;
 	}
 
 }
