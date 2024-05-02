@@ -209,8 +209,10 @@ public class InfoLayer extends Canvas implements CanvasLayer, EventHandler<Event
 			}
 			if (upgradeButton.isActive()) {
 				if (upgradeButton.isVisible()) {
+					int costOfOldTurret = selectedTurret.getCost();
 					//FXEventBus.getInstance().fireEvent(new GameEvent(GameEvent.TD_UPGRADE, null));
 					turretController.upgrade(selectedTurret);
+					gameInfo.decreaseMoney(selectedTurret.getCost() - costOfOldTurret);
 					drawables.remove(upgradeButton);
 					upgradeButton.setActive(false);
 					//decrease money when upgrade

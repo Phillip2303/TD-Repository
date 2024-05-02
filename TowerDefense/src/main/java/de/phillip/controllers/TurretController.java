@@ -78,8 +78,10 @@ public class TurretController {
 	}
 	
 	public boolean canUpgrade(int ID) {
-		TurretTO turret = turrets.getTurrets().stream().filter(a -> a.getId() == ID + 1).collect(Collectors.toList()).get(0);
-		if (turret != null) {
+		List<TurretTO> turretList = turrets.getTurrets().stream().filter(a -> a.getId() == ID + 1).toList();
+		if (!turretList.isEmpty()) {
+			TurretTO turret1 = turretList.get(0);
+			System.out.println(turret1);
 			return true;
 		} else {
 			return false;
